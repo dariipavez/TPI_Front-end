@@ -1,0 +1,3 @@
+Este será el archivo principal del desarrollo del front end, del que se encargaran Tiago Mansilla y Maximiliano Arnez.
+Esta parte del proyecto son las pantallas que verá el cliente con sus rutas y la que conectaremos con el backend para 
+que haya una interacción entre el cliente y el servidor.
