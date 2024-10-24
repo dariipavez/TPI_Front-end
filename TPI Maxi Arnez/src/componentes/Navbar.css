@@ -1,0 +1,25 @@
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #ccc;
+}
+
+.menu-categorias a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: black;
+}
+
+.buscador {
+  padding: 5px;
+  width: 200px;
+}
+
+.menu-iconos span {
+  margin: 0 10px;
+  cursor: pointer;
+}
+  

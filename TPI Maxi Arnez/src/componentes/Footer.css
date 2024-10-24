@@ -1,0 +1,87 @@
+/* .footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10 px;
+    background-color: #333;
+    color: white;
+  }
+  
+  .contacto, .metodos-pago, .ayuda {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  } */
+  
+  /* .metodos-pago{
+    margin: 0 auto;
+    display: flex;
+    
+   
+  } */
+
+
+
+  .metodos-pago img {
+    width: 50px;
+    height: 35px;
+    margin-right: 2px;
+    flex-direction: row;
+    gap: 5px;
+  }
+  
+   .menu-footer {
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    height: 130px;
+    gap: px;
+    
+       
+    
+  }
+  
+  .menu-footer p {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    
+    
+  }
+  
+  .contacto img {
+    width: 40px;
+    height: 35px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .IG{
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
+  }
+
+  .IG img{
+    width: 60px;
+    height: 35px;
+    
+
+  }
+  .Wsp{
+    margin: 0 auto;
+    display: flex;
+    gap: 60px;
+    
+  }
+
+  .Wsp img{
+    width: 40px;
+    height: 35px;
+    
+  }
+  
