@@ -1,8 +1,7 @@
-// Navbar.jsx
 import React from 'react';
 import './Navbar.css'; // Estilos específicos para el Navbar
 
-const Navbar = ({ handleOpenModal }) => {
+const Navbar = ({ handleOpenModal, handleOpenCarrito }) => {
   return (
     <header className="menu-header">
       <div className="logo">⭐</div>
@@ -14,8 +13,9 @@ const Navbar = ({ handleOpenModal }) => {
       <div className="menu-iconos">
         {/* Al hacer clic en el icono del usuario, se abre el modal */}
         <span className="icono-usuario" onClick={handleOpenModal}>👤</span>
-        <span className="icono-carrito">🛒</span>
-        <span className="icono-favoritos">⭐</span>
+        
+        {/* Icono del carrito de compras, se abre el modal del carrito */}
+        <span className="icono-carrito" onClick={handleOpenCarrito}>🛒</span>
       </div>
     </header>
   );
