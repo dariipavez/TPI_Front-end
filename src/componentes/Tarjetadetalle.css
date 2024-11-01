@@ -1,0 +1,60 @@
+/* TarjetaDetalle.css */
+.tarjeta-detalle {
+    display: flex;
+    gap: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 40px auto;
+  }
+  
+  .detalle-imagenes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .detalle-imagen {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f7f7;
+  }
+  
+  .detalle-imagen img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .detalle-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .detalle-info h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .detalle-info p {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0;
+  }
+  
+  .detalle-info .boton {
+    margin-top: 20px;
+    align-self: flex-start;
+  }
+  
