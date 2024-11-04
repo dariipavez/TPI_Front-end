@@ -1,7 +1,7 @@
 import React from 'react';
 import './Navbar.css';
 
-const Navbar = ({ handleOpenModal, handleOpenCarrito }) => {
+const Navbar = ({ handleOpenModal, handleOpenCarrito, onBuscar }) => {
   return (
     <header className="menu-header">
       {/* Logo reemplazado con una imagen */}
@@ -64,7 +64,12 @@ const Navbar = ({ handleOpenModal, handleOpenCarrito }) => {
         </div>
       </nav>
 
-      <input type="text" placeholder="¿Qué estás buscando?" className="buscador" />
+      <input 
+        type="text" 
+        placeholder="¿Qué estás buscando?" 
+        className="buscador"
+        onChange={(e) => onBuscar(e.target.value)} 
+      />
       
       <div className="menu-iconos">
         <span className="icono-usuario" onClick={handleOpenModal}>👤</span>
