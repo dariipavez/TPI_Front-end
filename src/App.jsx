@@ -1,16 +1,20 @@
+// App.jsx
 import React from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
-// import {Router, Route, Switch, Redirect} from "wouter"; ( es la importación)
+import Detalle from './componentes/Detalle'; // Importa Detalle
+import { Router, Route } from "wouter"; // Importa Router y Route de wouter
 
 function App() {
   return (
     <div className="App">
-      <Menu />
+      <Router>
+        <Route path="/" component={Menu} />
+        <Route path="/detalle/:productId" component={Detalle} />
+      </Router>
     </div>
-   
   );
 }
 
-
 export default App;
+

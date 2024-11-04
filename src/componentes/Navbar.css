@@ -1,3 +1,18 @@
+.logo img {
+  width: 110px; /* Ajusta el tamaño que necesites */
+  height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.menu-header {
+  display: flex;
+  align-items: center; /* Alinea verticalmente el contenido */
+  justify-content: space-between;
+  padding: 0px; /* Ajusta según tus preferencias */
+  height: 50px; /* Define la altura específica del Navbar */
+ 
+  }
+  
+
 .menu-header {
   display: flex;
   justify-content: space-between;
@@ -7,19 +22,88 @@
   border-bottom: 1px solid #ccc;
 }
 
-.menu-categorias a {
-  margin: 0 15px;
+.menu-categorias {
+  display: flex;
+  gap: 20px;
+}
+
+.menu-item {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  gap: 20px;
+  z-index: 1;
+}
+
+.menu-item:hover .dropdown-menu {
+  display: flex; /* Muestra el menú solo cuando el mouse está sobre el contenedor */
+}
+
+.dropdown-menu div {
+  min-width: 120px;
+}
+
+.dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dropdown-menu li {
+  margin: 5px 0;
+}
+/* Estilo para los enlaces principales */
+.menu-item > a {
+  color: #333; /* Color del texto principal */
   text-decoration: none;
-  color: black;
 }
 
-.buscador {
-  padding: 5px;
-  width: 200px;
+.menu-item > a:hover {
+  color: #333; /* Mantener el color igual al pasar el mouse */
 }
 
-.menu-iconos span {
-  margin: 0 10px;
+/* Estilo para los botones en el menú desplegable */
+.dropdown-button {
+  background: none;
+  border: none;
+  padding: 15px;
   cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  color: #333; /* Color de texto normal */
+  width: 100%;
 }
-  
+
+.dropdown-button:hover {
+  color: #007bff; /* Color azul solo al pasar el mouse */
+}
+/* Estilo para el contenedor de iconos */
+.menu-iconos {
+  display: flex;
+  gap: 15px; /* Aumenta el espacio entre los iconos */
+}
+
+/* Estilo para los iconos individuales */
+.icono-usuario,
+.icono-carrito {
+  font-size: 20px;
+  cursor: pointer; /* Cambia el cursor a pointer */
+  color: #333; /* Color normal de los iconos */
+  transition: color 0.3s; /* Animación suave para el cambio de color */
+}
+
+/* Efecto al pasar el mouse */
+.icono-usuario:hover,
+.icono-carrito:hover {
+  color: #007bff; /* Color azul al pasar el mouse */
+}
+

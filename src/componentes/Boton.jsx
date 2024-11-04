@@ -1,12 +1,14 @@
+// Boton.jsx
 import React from 'react';
-import './Boton.css';
+import './Boton.css'; // Asegúrate de tener un archivo de estilos para personalizar el botón.
 
-const Boton = ({ children, onClick, tipo = 'button' }) => {
+const Boton = ({ texto, onClick }) => {
   return (
-    <button className="boton" type={tipo} onClick={onClick}>
-      {children}
+    <button className="boton" onClick={onClick}>
+      {texto}
     </button>
   );
 };
 
 export default Boton;
+
