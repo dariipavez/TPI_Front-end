@@ -1,10 +1,11 @@
 import React from 'react';
 import './Navbar.css';
 
-const Navbar = ({ handleOpenModal, handleOpenCarrito }) => {
+
+
+const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar }) => {
   return (
     <header className="menu-header">
-      {/* Logo reemplazado con una imagen */}
       <div className="logo">
         <img src="/MDT.png" alt="Logo MDT" className="logo-imagen" />
       </div>
@@ -68,7 +69,7 @@ const Navbar = ({ handleOpenModal, handleOpenCarrito }) => {
       
       <div className="menu-iconos">
         <span className="icono-usuario" onClick={handleOpenModal}>👤</span>
-        <span className="icono-carrito" onClick={handleOpenCarrito}>🛒</span>
+        <span className="icono-carrito" onClick={handleOpenCarritoModal}>🛒</span> {/* Actualiza el prop aquí */}
       </div>
     </header>
   );

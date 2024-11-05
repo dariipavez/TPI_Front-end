@@ -1,27 +1,23 @@
-// Detalle.jsx
 import React, { useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import TarjetaDetalle from './Tarjetadetalle'; // Asegúrate de tener este componente
+import TarjetaDetalle from './Tarjetadetalle'; 
 import './Detalle.css';
 import './Modal.css';
 
 const Detalle = () => {
-  // Estados para los modals
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCarritoOpen, setIsCarritoOpen] = useState(false);
+  const [isCarritoModalOpen, setIsCarritoModalOpen] = useState(false);
 
-  // Funciones para abrir y cerrar los modals
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  const handleOpenCarrito = () => setIsCarritoOpen(true);
-  const handleCloseCarrito = () => setIsCarritoOpen(false);
-  
+  const handleOpenCarritoModal = () => setIsCarritoModalOpen(true);
+  const handleCloseCarritoModal = () => setIsCarritoModalOpen(false);
 
   return (
     <div className="detalle-pagina">
-      <Navbar handleOpenModal={handleOpenModal} handleOpenCarrito={handleOpenCarrito} />
+      <Navbar handleOpenModal={handleOpenModal} handleOpenCarritoModal={handleOpenCarritoModal} />
 
       <TarjetaDetalle />
 
@@ -41,14 +37,12 @@ const Detalle = () => {
             <p>¿No tiene una cuenta? <a href="#">Regístrese</a></p>
           </div>
         </div>
-      
       )}
-      
 
-      {isCarritoOpen && (
+      {isCarritoModalOpen && (
         <div className="modal-overlay">
           <div className="modal-carrito">
-            <button className="modal-close" onClick={handleCloseCarrito}>X</button>
+            <button className="modal-close" onClick={handleCloseCarritoModal}>X</button>
             <h2>Carro de compras</h2>
             <div className="carrito-producto">
               <img src="puma_suede_xl.jpg" alt="Puma Suede XL" className="carrito-producto-imagen" />
