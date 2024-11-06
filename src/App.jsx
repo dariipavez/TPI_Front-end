@@ -1,9 +1,9 @@
-// App.jsx
 import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
-import Detalle from './componentes/Detalle'; // Importa Detalle
-import { Router, Route } from "wouter"; // Importa Router y Route de wouter
+import Detalle from './componentes/Detalle';
+import Carrito from './componentes/Carrito'; // Importa la nueva página
+import { Router, Route } from "wouter";
 
 function App() {
   const [busqueda, setBusqueda] = useState('');
@@ -13,11 +13,22 @@ function App() {
   };
 
   return (
-    <div className="App"> 
+    <div className="App">
       <Router>
-        {/* Pasamos handleBuscar a Navbar para actualizar la búsqueda */}
-        <Menu busqueda={busqueda} onBuscar={handleBuscar} />
-        <Route path="/detalle/:productId" component={Detalle} />
+        {/* Ruta para la pantalla principal (Menu) */}
+        <Route path="/">
+          <Menu busqueda={busqueda} onBuscar={handleBuscar} />
+        </Route>
+
+        {/* Ruta para la pantalla de detalle */}
+        <Route path="/detalle/:productId">
+          <Detalle />
+        </Route>
+
+        {/* Ruta para la página del carrito */}
+        <Route path="/Carrito">
+          <Carrito />
+        </Route>
       </Router>
     </div>
   );

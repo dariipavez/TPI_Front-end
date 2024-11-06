@@ -1,0 +1,108 @@
+/* Tarjetaconfirmacion.css */
+
+.tarjetaconfirmacion {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tarjeta-imagen {
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #777;
+}
+
+.tarjeta-detalle {
+    flex: 1;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.tarjeta-detalle h3 {
+    font-size: 18px;
+    margin: 0 0 10px;
+    color: #333;
+}
+
+.selector-cantidad {
+    display: flex;
+    align-items: center; /* Alineación vertical de los elementos */
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.selector-cantidad button {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    font-size: 20px; /* Aumenté el tamaño de la fuente para que sea más visible */
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Alinea el contenido verticalmente */
+    justify-content: center; /* Alinea el contenido horizontalmente */
+}
+
+.selector-cantidad button:hover {
+    background-color: #e0e0e0;
+}
+
+.selector-cantidad span {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.tarjeta-precio {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.tarjeta-precio p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.tarjeta-precio p:first-child {
+    font-weight: bold;
+}
+
+/* Estilos del botón "Proceder al pago" */
+.boton-proceder {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.boton-proceder button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.boton-proceder button:hover {
+    background-color: #45a049;
+}
