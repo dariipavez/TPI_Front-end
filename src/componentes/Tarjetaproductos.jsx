@@ -8,7 +8,7 @@ const TarjetaProductos = ({ busqueda }) => {
     { id: 1, nombre: 'Buzo Essentials con Capucha', precio: '$40.000', imagen: 'buzo essentials marron.webp' },
     { id: 2, nombre: 'Remera Bomy Club Oversize', precio: '$15.000', imagen: 'remera_bomy_club-removebg-preview.png' },
     { id: 3, nombre: 'Pantalón Frandor Mom', precio: '$30.000', imagen: 'pantalon_mom-removebg-preview.png' },
-    { id: 4, nombre: 'Zapatillas Puma Suede XL', precio: '$25.000', imagen: 'zapatillas puma suede xl.webp' },
+    { id: 4, nombre: 'Zapatillas Puma Suede XL', precio: '$65.000', imagen: 'zapatillas puma suede xl.webp' },
     { id: 5, nombre: 'Buzo Retro AFA 2006', precio: '$22.000', imagen: 'buzo_retro_afa_2006-removebg-preview.png' },
     { id: 6, nombre: 'Camiseta Retro Francia 2006', precio: '$22.000', imagen: 'francia_2006-removebg-preview.png' },
     { id: 7, nombre: 'Pantalón River Plate 2024', precio: '$24.000', imagen: 'pantalon_river_actual-removebg-preview.png' },

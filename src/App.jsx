@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
 import Detalle from './componentes/Detalle';
-import Carrito from './componentes/Carrito'; // Importa la nueva página
+import Carrito from './componentes/Carrito'; // Página del carrito
+import TarjetaInfo from './componentes/Tarjetainfo'; // Asegúrate de que la ruta sea correcta
+
 import { Router, Route } from "wouter";
 
 function App() {
@@ -28,6 +30,11 @@ function App() {
         {/* Ruta para la página del carrito */}
         <Route path="/Carrito">
           <Carrito />
+        </Route>
+
+        {/* Ruta para la página de información de pago */}
+        <Route path="/Info">
+          <TarjetaInfo /> {/* Página donde se va a redirigir el usuario al hacer "Proceder al pago" */}
         </Route>
       </Router>
     </div>

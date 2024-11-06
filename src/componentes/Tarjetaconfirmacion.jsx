@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
+import { useLocation } from 'wouter';  // Usamos el hook useLocation de wouter
 import './Tarjetaconfirmacion.css';
 
 const Tarjetaconfirmacion = () => {
   const [cantidad, setCantidad] = useState(1);
   const precioIndividual = 65000;
-
   const total = precioIndividual * cantidad;
 
   const handleCantidadChange = (operacion) => {
@@ -13,6 +13,12 @@ const Tarjetaconfirmacion = () => {
     } else if (operacion === 'decrementar' && cantidad > 1) {
       setCantidad(cantidad - 1);
     }
+  };
+
+  const [, setLocation] = useLocation();  // useLocation es ahora el adecuado para la redirección
+
+  const handleProcederAlPago = () => {
+    setLocation('/Info');  // Redirige a la página de TarjetaInfo
   };
 
   return (
@@ -29,9 +35,9 @@ const Tarjetaconfirmacion = () => {
           <p>Precio: ${precioIndividual}</p>
           <p>Total: ${total}</p>
         </div>
-        {/* Aquí está el botón "Proceder al pago" */}
+        {/* Botón "Proceder al pago" */}
         <div className="boton-proceder">
-          <button onClick={() => alert("Proceder al pago")}>Proceder al pago</button>
+          <button onClick={handleProcederAlPago}>Proceder al pago</button>
         </div>
       </div>
     </div>

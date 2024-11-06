@@ -1,4 +1,16 @@
 /* TarjetaDetalle.css */
+
+/* Aseguramos que el contenedor de la tarjeta ocupe toda la altura y el ancho de la pantalla */
+.tarjeta-pagina {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center;     /* Centra verticalmente */
+  height: 100vh;           /* Usa toda la altura de la ventana */
+  margin: 0;               /* Elimina márgenes por defecto */
+  padding: 0 20px;         /* Añadimos algo de padding a los lados para evitar que la tarjeta toque los bordes */
+}
+
+/* La tarjeta detalle */
 .tarjeta-detalle {
   display: flex;
   gap: 20px;
@@ -7,16 +19,21 @@
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-  max-width: 800px;
-  margin: 40px auto;
+  width: 100%;            /* Aseguramos que la tarjeta ocupe todo el espacio disponible */
+  max-width: 800px;       /* Limita el tamaño máximo a 800px */
+  margin: 0 auto;         /* Esto centra la tarjeta horizontalmente en el contenedor */
 }
 
+/* Estilo para las imágenes del producto */
 .detalle-imagenes {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  flex: 1; /* Asegura que las imágenes ocupen el espacio a la izquierda */
+  display: flex;
+  justify-content: center;  /* Centra las imágenes horizontalmente */
+  align-items: center;      /* Centra las imágenes verticalmente */
+  gap: 10px;                /* Añadimos un pequeño espacio entre las imágenes */
 }
 
+/* Estilo para cada imagen */
 .detalle-imagen {
   width: 100px;
   height: 100px;
@@ -34,13 +51,15 @@
   height: auto;
 }
 
+/* Información del producto */
 .detalle-info {
-  flex: 1;
+  flex: 2; /* Asegura que el contenido de la derecha ocupe más espacio */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
+/* Títulos y párrafos del producto */
 .detalle-info h2 {
   font-size: 24px;
   color: #333;
@@ -53,7 +72,23 @@
   margin: 5px 0;
 }
 
+/* Estilo para el contenedor de los botones */
 .detalle-info .boton {
   margin-top: 20px;
-  align-self: flex-start;
+  display: flex;  /* Usamos flexbox para los botones */
+  gap: 15px;      /* Espacio entre los botones */
+}
+
+.detalle-info .boton button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.detalle-info .boton button:hover {
+  background-color: #0056b3;
 }
