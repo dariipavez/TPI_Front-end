@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
 import Detalle from './componentes/Detalle';
+import TarjetaInfo from './componentes/TarjetaInfo'; // Importa TarjetaInfo
 import { Router, Route } from "wouter";
 
 function App() {
@@ -12,18 +13,17 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className="App"> 
       <Router>
-        {/* Ruta para la pantalla principal (Menu) */}
-        <Route path="/">
-          <Menu busqueda={busqueda} onBuscar={handleBuscar} />
-        </Route>
+        {/* Temporalmente muestra TarjetaInfo en la ruta raíz */}
+        <Route path="/" component={TarjetaInfo} />
 
-        {/* Ruta para la pantalla de detalle */}
-        <Route path="/detalle/:productId">
-          <Detalle />
-        </Route>
-        </Router>
+        {/* Comenta o quita la línea de Menu temporalmente */}
+        {/* <Menu busqueda={busqueda} onBuscar={handleBuscar} /> */}
+
+        <Route path="/detalle/:productId" component={Detalle} />
+        <Route path="/info" component={TarjetaInfo} /> {/* Ruta normal de TarjetaInfo */}
+      </Router>
     </div>
   );
 }
