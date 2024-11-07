@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Router, Route, useLocation } from "wouter";  // Agregamos useLocation
+import { Router, Route, useLocation } from "wouter";
 import './Menu.css';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -8,23 +8,20 @@ import Detalle from './Detalle';
 import './Modal.css';
 
 const Menu = ({ busqueda, onBuscar }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal de inicio de sesión
-  const [isCarritoModalOpen, setIsCarritoModalOpen] = useState(false); // Modal del carrito
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCarritoModalOpen, setIsCarritoModalOpen] = useState(false);
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
-  // Usamos useLocation para navegar programáticamente
   const [, navigate] = useLocation();
 
-  // Funciones para abrir y cerrar el modal de inicio de sesión
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
-  // Funciones para abrir y cerrar el modal del carrito
   const handleOpenCarritoModal = () => setIsCarritoModalOpen(true);
   const handleCloseCarritoModal = () => setIsCarritoModalOpen(false);
 
-  // Función para navegar al carrito
   const handleContinuarCompra = () => {
-    navigate('/carrito');  // Redirige a la página del carrito
+    navigate('/carrito');
   };
 
   return (
@@ -32,14 +29,15 @@ const Menu = ({ busqueda, onBuscar }) => {
       <div className="menu">
         <Navbar 
           handleOpenModal={handleOpenModal} 
-          handleOpenCarritoModal={handleOpenCarritoModal} // Pasamos la función al Navbar
+          handleOpenCarritoModal={handleOpenCarritoModal} 
           onBuscar={onBuscar} 
+          isProfileMenuOpen={isProfileMenuOpen}
+          setIsProfileMenuOpen={setIsProfileMenuOpen}
         />
 
         <Route path="/" component={() => <TarjetaProductos busqueda={busqueda} />} />
         <Route path="/detalle/:productId" component={Detalle} />
 
-        {/* Modal de inicio de sesión */}
         {isModalOpen && (
           <div className="modal-overlay">
             <div className="modal-contenido">
@@ -66,7 +64,6 @@ const Menu = ({ busqueda, onBuscar }) => {
           </div>
         )}
 
-        {/* Modal del carrito */}
         {isCarritoModalOpen && (
           <div className="modal-overlay">
             <div className="modal-carrito">
@@ -79,7 +76,6 @@ const Menu = ({ busqueda, onBuscar }) => {
                   <p>$65.000</p>
                 </div>
               </div>
-              {/* Cuando el usuario haga clic en "Continuar compra", los redirigimos al carrito */}
               <button className="boton-continuar-compra" onClick={handleContinuarCompra}>Continuar compra</button>
             </div>
           </div>

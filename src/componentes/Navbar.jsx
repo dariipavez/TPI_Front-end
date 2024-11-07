@@ -1,9 +1,7 @@
 import React from 'react';
 import './Navbar.css';
 
-
-
-const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar }) => {
+const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar, isProfileMenuOpen, setIsProfileMenuOpen }) => {
   return (
     <header className="menu-header">
       <div className="logo">
@@ -73,14 +71,23 @@ const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar }) => {
       />
       
       <div className="menu-iconos">
-        <span className="icono-usuario" onClick={handleOpenModal}>👤</span>
-        <span className="icono-carrito" onClick={handleOpenCarritoModal}>🛒</span> {/* Actualiza el prop aquí */}
+        <span 
+          className="icono-usuario" 
+          onMouseEnter={() => setIsProfileMenuOpen(true)}
+          onMouseLeave={() => setIsProfileMenuOpen(false)}
+        >
+          👤
+          {isProfileMenuOpen && (
+            <div className="profile-menu">
+              <button className="profile-menu-item">Mi cuenta</button>
+              <button className="profile-menu-item">Cerrar sesión</button>
+            </div>
+          )}
+        </span>
+        <span className="icono-carrito" onClick={handleOpenCarritoModal}>🛒</span>
       </div>
     </header>
   );
 };
 
 export default Navbar;
-
-
-
