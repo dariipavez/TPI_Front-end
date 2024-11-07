@@ -162,3 +162,33 @@ font-size: 15px;
 .boton-continuar-compra:hover {
   background-color: #45a049;
 }
+.modal-submit-volver {
+  font-size: 1rem;
+  padding: 0.8rem;
+  background-color: #333; /* Color gris oscuro */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-submit-dark:hover {
+  background-color: #1a1a1a; /* Gris más oscuro al pasar el ratón */
+}
+
+.modal-back {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  color: #1d1f21;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.modal-back:hover {
+  color: #0056b3; /* Oscurece el color del botón al pasar el ratón */
+}

@@ -1,12 +1,13 @@
 import React from 'react';
+import { useLocation } from 'wouter'; // Importa useLocation de wouter
 import './Navbar.css';
 
-
-
 const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar }) => {
+  const [, navigate] = useLocation(); // Obtén navigate de useLocation
+
   return (
     <header className="menu-header">
-      <div className="logo">
+      <div className="logo" onClick={() => navigate('/')}> {/* Redirige al menú al hacer clic en el logo */}
         <img src="/MDT.png" alt="Logo MDT" className="logo-imagen" />
       </div>
       
@@ -43,8 +44,8 @@ const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar }) => {
             <div className="dropdown-column">
               <strong>Camisetas</strong>
               <ul>
-                <button className="dropdown-button">Retro</button>
-                <button className="dropdown-button">Actuales</button>              
+              <button className="dropdown-button" onClick={() => navigate('/retro')}>Retro</button>
+              <button className="dropdown-button">Actuales</button>              
               </ul>
             </div>
             <div className="dropdown-column">
@@ -69,7 +70,7 @@ const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar }) => {
       
       <div className="menu-iconos">
         <span className="icono-usuario" onClick={handleOpenModal}>👤</span>
-        <span className="icono-carrito" onClick={handleOpenCarritoModal}>🛒</span> {/* Actualiza el prop aquí */}
+        <span className="icono-carrito" onClick={handleOpenCarritoModal}>🛒</span>
       </div>
     </header>
   );
