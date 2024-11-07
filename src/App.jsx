@@ -4,6 +4,9 @@ import Menu from './componentes/Menu';
 import Detalle from './componentes/Detalle';
 import Carrito from './componentes/Carrito'; // Página del carrito
 import TarjetaInfo from './componentes/Tarjetainfo'; // Asegúrate de que la ruta sea correcta
+import Agradecimiento from './componentes/Agradecimiento';
+import Retro from './componentes/Retro';
+import Agregar from './componentes/Agregar'; // Importa el componente
 
 import { Router, Route } from "wouter";
 
@@ -17,24 +20,32 @@ function App() {
   return (
     <div className="App">
       <Router>
+
         {/* Ruta para la pantalla principal (Menu) */}
         <Route path="/">
           <Menu busqueda={busqueda} onBuscar={handleBuscar} />
         </Route>
 
-        {/* Ruta para la pantalla de detalle */}
-        <Route path="/detalle/:productId">
-          <Detalle />
-        </Route>
+        <Route path="/detalle/:productId" component={Detalle} />
 
-        {/* Ruta para la página del carrito */}
-        <Route path="/Carrito">
+        <Route path="/carrito">
           <Carrito />
         </Route>
 
-        {/* Ruta para la página de información de pago */}
-        <Route path="/Info">
-          <TarjetaInfo /> {/* Página donde se va a redirigir el usuario al hacer "Proceder al pago" */}
+        <Route path="/info">
+          <TarjetaInfo />
+        </Route>
+
+        <Route path="/agradecimiento">
+          <Agradecimiento />
+        </Route>
+
+        <Route path="/retro">
+          <Retro />
+        </Route>
+
+        <Route path="/agregar">
+         <Agregar />
         </Route>
       </Router>
     </div>

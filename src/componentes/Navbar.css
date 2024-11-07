@@ -1,6 +1,7 @@
 .logo img {
   width: 110px; /* Ajusta el tamaño que necesites */
   height: auto; /* Mantiene la proporción de la imagen */
+  cursor: pointer;
 }
 
 .menu-header {

@@ -1,6 +1,14 @@
 import React from 'react';
+import { useLocation } from 'wouter';
 import './Tarjetainfo.css';
 const TarjetaInfo = () => {
+  const [, navigate] = useLocation(); // Hook de navegación
+
+  const finalizarCompra = (event) => {
+    event.preventDefault(); // Evita el comportamiento predeterminado del formulario
+    navigate('/agradecimiento'); // Redirige a la pantalla de agradecimiento
+  };
+
   return (
     <div className="tarjeta-info-container">
       <div className="tarjeta-info">
@@ -123,7 +131,9 @@ const TarjetaInfo = () => {
               <input type="text" placeholder="CVV" maxLength="3" />
             </label>
           </div>
-          <button type="submit" className="boton-finalizar">
+
+          {/* Botón Finalizar Compra */}
+          <button type="button" className="boton-finalizar" onClick={finalizarCompra}>
             Finalizar Compra
           </button>
         </form>

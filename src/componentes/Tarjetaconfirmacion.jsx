@@ -45,3 +45,4 @@ const Tarjetaconfirmacion = () => {
 };
 
 export default Tarjetaconfirmacion;
+
