@@ -8,11 +8,9 @@ import Detalle from './Detalle';
 import './Modal.css';
 
 const Menu = ({ busqueda, onBuscar }) => {
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCarritoModalOpen, setIsCarritoModalOpen] = useState(false);
-  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal de inicio de sesión
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Modal de registro
+  const [isCarritoModalOpen, setIsCarritoModalOpen] = useState(false); // Modal del carrito
   const [, navigate] = useLocation();
 
   // Funciones para abrir y cerrar el modal de inicio de sesión
@@ -30,10 +28,6 @@ const Menu = ({ busqueda, onBuscar }) => {
   const handleOpenCarritoModal = () => setIsCarritoModalOpen(true);
   const handleCloseCarritoModal = () => setIsCarritoModalOpen(false);
 
-
-  const handleContinuarCompra = () => {
-    navigate('/carrito');
-
   // Función para manejar el envío del formulario de registro
   const handleRegisterSubmit = (e) => {
     e.preventDefault(); // Evita el comportamiento por defecto del formulario
@@ -46,16 +40,14 @@ const Menu = ({ busqueda, onBuscar }) => {
       <div className="menu">
         <Navbar 
           handleOpenModal={handleOpenModal} 
-          handleOpenCarritoModal={handleOpenCarritoModal} 
+          handleOpenCarritoModal={handleOpenCarritoModal} // Pasamos la función al Navbar
           onBuscar={onBuscar} 
-          isProfileMenuOpen={isProfileMenuOpen}
-          setIsProfileMenuOpen={setIsProfileMenuOpen}
-
         />
 
         <Route path="/" component={() => <TarjetaProductos busqueda={busqueda} />} />
         <Route path="/detalle/:productId" component={Detalle} />
 
+        {/* Modal de inicio de sesión */}
         {isModalOpen && (
           <div className="modal-overlay">
             <div className="modal-contenido">
@@ -72,6 +64,7 @@ const Menu = ({ busqueda, onBuscar }) => {
           </div>
         )}
 
+        {/* Modal del carrito */}
         {isCarritoModalOpen && (
           <div className="modal-overlay">
             <div className="modal-carrito">
@@ -117,6 +110,5 @@ const Menu = ({ busqueda, onBuscar }) => {
     </Router>
   );
 };
-}
-export default Menu;
 
+export default Menu;

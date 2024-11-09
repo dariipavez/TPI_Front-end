@@ -80,7 +80,7 @@ const Navbar = ({ handleOpenModal, handleOpenCarritoModal, onBuscar, isProfileMe
           onMouseEnter={() => setIsProfileMenuOpen(true)}
           onMouseLeave={() => setIsProfileMenuOpen(false)}
         >
-          👤
+          
           {isProfileMenuOpen && (
             <div className="profile-menu">
               <button className="profile-menu-item">Mi cuenta</button>
