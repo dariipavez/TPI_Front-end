@@ -4,13 +4,14 @@ import './Menu.css';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import TarjetaProductos from './Tarjetaproductos';
-import Detalle from './Detalle';
+import Tarjetadetalle from './Tarjetadetalle';
 import './Modal.css';
 
 const Menu = ({ busqueda, onBuscar }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal de inicio de sesión
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Modal de registro
   const [isCarritoModalOpen, setIsCarritoModalOpen] = useState(false); // Modal del carrito
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // Modal de cambiar contraseña
   const [, navigate] = useLocation();
 
   // Funciones para abrir y cerrar el modal de inicio de sesión
@@ -27,6 +28,13 @@ const Menu = ({ busqueda, onBuscar }) => {
   // Funciones para abrir y cerrar el modal del carrito
   const handleOpenCarritoModal = () => setIsCarritoModalOpen(true);
   const handleCloseCarritoModal = () => setIsCarritoModalOpen(false);
+
+  // Funciones para abrir y cerrar el modal de cambiar contraseña
+  const handleOpenPasswordModal = () => {
+    setIsModalOpen(false); // Cierra el modal de inicio de sesión
+    setIsPasswordModalOpen(true); // Abre el modal de cambiar contraseña
+  };
+  const handleClosePasswordModal = () => setIsPasswordModalOpen(false);
 
   // Función para manejar el envío del formulario de registro
   const handleRegisterSubmit = (e) => {
@@ -45,7 +53,7 @@ const Menu = ({ busqueda, onBuscar }) => {
         />
 
         <Route path="/" component={() => <TarjetaProductos busqueda={busqueda} />} />
-        <Route path="/detalle/:productId" component={Detalle} />
+<Route path="/detalle/:productId" component={Tarjetadetalle} />
 
         {/* Modal de inicio de sesión */}
         {isModalOpen && (
@@ -58,7 +66,7 @@ const Menu = ({ busqueda, onBuscar }) => {
                 <input type="password" placeholder="Ingrese su contraseña" className="modal-input" />
                 <button type="submit" className="modal-submit">Entrar</button>
               </form>
-              <p>¿Olvidó su contraseña?</p>
+              <p><a href="#" onClick={handleOpenPasswordModal}>¿Olvidó su contraseña?</a></p>
               <p>¿No tiene una cuenta? <a href="#" onClick={handleOpenRegisterModal}>Regístrese</a></p>
             </div>
           </div>
@@ -77,7 +85,7 @@ const Menu = ({ busqueda, onBuscar }) => {
                   <p>$65.000</p>
                 </div>
               </div>
-              <button className="boton-continuar-compra" onClick={() => navigate('/carrito')}>Continuar compra</button>
+              <button className="boton-continuar-compra" onClick={() => navigate('/confirmacion')}>Continuar compra</button>
             </div>
           </div>
         )}
@@ -100,6 +108,25 @@ const Menu = ({ busqueda, onBuscar }) => {
                 <input type="password" placeholder="Contraseña" required />
                 <input type="password" placeholder="Confirmar contraseña" required />
                 <button type="submit" className="modal-submit-dark">Crear</button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Modal de cambiar contraseña */}
+        {isPasswordModalOpen && (
+          <div className="modal-overlay">
+            <div className="modal-contenido">
+              {/* Botón para volver al modal de inicio de sesión */}
+              <button className="modal-back" onClick={() => { setIsPasswordModalOpen(false); setIsModalOpen(true); }}>
+                Volver
+              </button>
+              <form>
+                <button className="modal-close" onClick={handleClosePasswordModal}>X</button>
+                <h2>Cambiar Contraseña</h2>
+                <input type="password" placeholder="Nueva contraseña" required />
+                <input type="password" placeholder="Confirmar nueva contraseña" required />
+                <button type="submit" className="modal-submit-dark">Confirmar</button>
               </form>
             </div>
           </div>

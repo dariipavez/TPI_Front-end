@@ -1,6 +1,21 @@
-/* Tarjetaconfirmacion.css */
+.tarjeta-confirmacion-pagina {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+}
 
-.tarjetaconfirmacion {
+.tarjeta-confirmacion-contenido {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.tarjeta-confirmacion {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -19,11 +34,6 @@
     height: 100px;
     border-radius: 8px;
     background-color: #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: #777;
 }
 
 .tarjeta-detalle {
@@ -41,7 +51,7 @@
 
 .selector-cantidad {
     display: flex;
-    align-items: center; /* Alineación vertical de los elementos */
+    align-items: center;
     gap: 10px;
     margin-top: 10px;
 }
@@ -53,11 +63,11 @@
     border-radius: 4px;
     background-color: #fff;
     color: #333;
-    font-size: 20px; /* Aumenté el tamaño de la fuente para que sea más visible */
+    font-size: 20px;
     cursor: pointer;
     display: flex;
-    align-items: center; /* Alinea el contenido verticalmente */
-    justify-content: center; /* Alinea el contenido horizontalmente */
+    align-items: center;
+    justify-content: center;
 }
 
 .selector-cantidad button:hover {
@@ -81,11 +91,6 @@
     color: #333;
 }
 
-.tarjeta-precio p:first-child {
-    font-weight: bold;
-}
-
-/* Estilos del botón "Proceder al pago" */
 .boton-proceder {
     margin-top: 15px;
     display: flex;
@@ -106,4 +111,3 @@
 .boton-proceder button:hover {
     background-color: #45a049;
 }
-

@@ -9,6 +9,10 @@
     gap: 20px;
     padding: 20px;
   }
+
+  button{
+    color: gray;
+  }
  
   
   /* .menu-footer {

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
-import Detalle from './componentes/Detalle';
+import Tarjetadetalle from './componentes/Tarjetadetalle';
 import TarjetaInfo from './componentes/TarjetaInfo'; // Importa TarjetaInfo
-import Carrito from './componentes/Carrito';
+import Tarjetaconfirmacion from './componentes/TarjetaConfirmacion'; // Reemplaza Carrito por Tarjetaconfirmacion
 import Agradecimiento from './componentes/Agradecimiento';
 import Retro from './componentes/Retro';
 import Agregar from './componentes/Agregar'; // Importa el componente
 import Perfil from './componentes/Perfil';
-
 
 import { Router, Route } from "wouter";
 
@@ -22,15 +21,15 @@ function App() {
   return (
     <div className="App"> 
       <Router>
-        
-      <Route path="/">
+        <Route path="/">
           <Menu busqueda={busqueda} onBuscar={handleBuscar} />
         </Route>
 
-        <Route path="/detalle/:productId" component={Detalle} />
+        <Route path="/detalle/:productId" component={Tarjetadetalle} />
 
-        <Route path="/carrito">
-          <Carrito />
+        {/* Cambia la ruta de /carrito a /confirmacion, y usa el componente Tarjetaconfirmacion */}
+        <Route path="/confirmacion">
+          <Tarjetaconfirmacion />
         </Route>
 
         <Route path="/info">
@@ -43,16 +42,15 @@ function App() {
 
         <Route path="/retro">
           <Retro />
-        </Route>
+        </Route>  
 
         <Route path="/agregar">
-         <Agregar />
+          <Agregar />
         </Route>
 
         <Route path="/perfil">
-         <Perfil />
+          <Perfil />
         </Route>
-
       </Router>
     </div>
   );

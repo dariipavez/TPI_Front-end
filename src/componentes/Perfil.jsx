@@ -35,7 +35,6 @@ const Perfil = () => {
       <div className="perfil-container">
         <div className="perfil-sidebar">
           <button className="sidebar-button">Perfil</button>
-          <button className="sidebar-button">Métodos de Pago</button>
           <button className="sidebar-button">Cerrar sesión</button>
         </div>
         <div className="perfil-content">
