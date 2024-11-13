@@ -5,7 +5,6 @@ import Tarjetadetalle from './componentes/Tarjetadetalle';
 import TarjetaInfo from './componentes/TarjetaInfo'; // Importa TarjetaInfo
 import Tarjetaconfirmacion from './componentes/TarjetaConfirmacion'; // Reemplaza Carrito por Tarjetaconfirmacion
 import Agradecimiento from './componentes/Agradecimiento';
-import Retro from './componentes/Retro';
 import Agregar from './componentes/Agregar'; // Importa el componente
 import Perfil from './componentes/Perfil';
 
@@ -39,10 +38,6 @@ function App() {
         <Route path="/agradecimiento">
           <Agradecimiento />
         </Route>
-
-        <Route path="/retro">
-          <Retro />
-        </Route>  
 
         <Route path="/agregar">
           <Agregar />
