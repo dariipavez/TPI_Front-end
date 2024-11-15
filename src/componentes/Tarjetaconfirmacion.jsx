@@ -1,14 +1,15 @@
+// src/components/TarjetaConfirmacion.jsx
 import React from 'react';
-import { useLocation } from 'wouter';  // Usamos el hook useLocation de wouter
+import { useLocation } from 'wouter';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import './TarjetaConfirmacion.css';
 
 const TarjetaConfirmacion = () => {
-  const [, setLocation] = useLocation();  // useLocation es ahora el adecuado para la redirección
+  const [, setUbicacion] = useLocation();  // Cambiado para reflejar el contexto en español
 
-  const handleProcederAlPago = () => {
-    setLocation('/Info');  // Redirige a la página de TarjetaInfo
+  const manejarProcederAlPago = () => {
+    setUbicacion('/Info');  // Redirige a la página de TarjetaInfo
   };
 
   return (
@@ -22,7 +23,7 @@ const TarjetaConfirmacion = () => {
             <h3>Puma Suede XL</h3>
             {/* Botón "Proceder al pago" */}
             <div className="boton-proceder">
-              <button onClick={handleProcederAlPago}>Proceder al pago</button>
+              <button onClick={manejarProcederAlPago}>Proceder al pago</button>
             </div>
           </div>
         </div>

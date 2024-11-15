@@ -11,4 +11,3 @@ const Boton = ({ texto, onClick }) => {
 };
 
 export default Boton;
-

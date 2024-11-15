@@ -1,8 +1,9 @@
+// src/App.jsx
 import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
 import Tarjetadetalle from './componentes/Tarjetadetalle';
-import TarjetaInfo from './componentes/TarjetaInfo';
+import TarjetaInfo from './componentes/Tarjetainfo';
 import Tarjetaconfirmacion from './componentes/Tarjetaconfirmacion';
 import Agradecimiento from './componentes/Agradecimiento';
 import Agregar from './componentes/Agregar';
@@ -15,15 +16,15 @@ import { Router, Route } from "wouter";
 function App() {
   const [busqueda, setBusqueda] = useState('');
 
-  const handleBuscar = (query) => {
-    setBusqueda(query);
+  const manejarBusqueda = (consulta) => {
+    setBusqueda(consulta);
   };
 
   return (
     <div className="App"> 
       <Router>
         <Route path="/">
-          <Menu busqueda={busqueda} onBuscar={handleBuscar} />
+          <Menu busqueda={busqueda} onBuscar={manejarBusqueda} />
         </Route>
 
         <Route path="/detalle/:productId" component={Tarjetadetalle} />

@@ -75,10 +75,9 @@
 
 }
 
-/* Inputs dentro del modal */
 .modal-contenido input {
   display: block;
-  width: 327px;
+  min-width: 320px;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
@@ -211,10 +210,14 @@
   transition: background-color 0.3s ease;
 }
 
-.modal-submit-dark:hover {
+.modal-submit-dark {
   background-color: #1a1a1a; /* Gris más oscuro al pasar el ratón */
+  color: white;
 }
 
+.modal-submit-dark:hover{
+  background-color: #555050; /* Gris más oscuro al pasar el ratón */
+}
 .modal-back {
   position: absolute;
   top: 10px;

@@ -8,47 +8,47 @@ import Tarjetadetalle from './Tarjetadetalle';
 import './Modal.css';
 
 const Menu = ({ busqueda, onBuscar }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal de inicio de sesión
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false); // Modal de registro
-  const [isCarritoModalOpen, setIsCarritoModalOpen] = useState(false); // Modal del carrito
-  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false); // Modal de cambiar contraseña
-  const [, navigate] = useLocation();
+  const [modalAbierto, setModalAbierto] = useState(false); // Modal de inicio de sesión
+  const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false); // Modal de registro
+  const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false); // Modal del carrito
+  const [modalContraseñaAbierto, setModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
+  const [, navegar] = useLocation();
 
   // Funciones para abrir y cerrar el modal de inicio de sesión
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
+  const abrirModal = () => setModalAbierto(true);
+  const cerrarModal = () => setModalAbierto(false);
 
   // Funciones para abrir y cerrar el modal de registro
-  const handleOpenRegisterModal = () => {
-    setIsModalOpen(false); // Cierra el modal de inicio de sesión
-    setIsRegisterModalOpen(true); // Abre el modal de registro
+  const abrirModalRegistro = () => {
+    setModalAbierto(false); // Cierra el modal de inicio de sesión
+    setModalRegistroAbierto(true); // Abre el modal de registro
   };
-  const handleCloseRegisterModal = () => setIsRegisterModalOpen(false);
+  const cerrarModalRegistro = () => setModalRegistroAbierto(false);
 
   // Funciones para abrir y cerrar el modal del carrito
-  const handleOpenCarritoModal = () => setIsCarritoModalOpen(true);
-  const handleCloseCarritoModal = () => setIsCarritoModalOpen(false);
+  const abrirModalCarrito = () => setModalCarritoAbierto(true);
+  const cerrarModalCarrito = () => setModalCarritoAbierto(false);
 
   // Funciones para abrir y cerrar el modal de cambiar contraseña
-  const handleOpenPasswordModal = () => {
-    setIsModalOpen(false); // Cierra el modal de inicio de sesión
-    setIsPasswordModalOpen(true); // Abre el modal de cambiar contraseña
+  const abrirModalContraseña = () => {
+    setModalAbierto(false); // Cierra el modal de inicio de sesión
+    setModalContraseñaAbierto(true); // Abre el modal de cambiar contraseña
   };
-  const handleClosePasswordModal = () => setIsPasswordModalOpen(false);
+  const cerrarModalContraseña = () => setModalContraseñaAbierto(false);
 
   // Función para manejar el envío del formulario de registro
-  const handleRegisterSubmit = (e) => {
+  const manejarRegistroSubmit = (e) => {
     e.preventDefault(); // Evita el comportamiento por defecto del formulario
-    handleCloseRegisterModal(); // Cierra el modal de registro
-    navigate('/'); // Redirige al menú
+    cerrarModalRegistro(); // Cierra el modal de registro
+    navegar('/'); // Redirige al menú
   };
 
   return (
     <Router>
       <div className="menu">
         <Navbar 
-          handleOpenModal={handleOpenModal} 
-          handleOpenCarritoModal={handleOpenCarritoModal} // Pasamos la función al Navbar
+          handleOpenModal={abrirModal} 
+          handleOpenCarritoModal={abrirModalCarrito} // Pasamos la función al Navbar
           onBuscar={onBuscar} 
         />
 

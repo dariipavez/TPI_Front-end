@@ -1,11 +1,11 @@
-/* Estilo para la estructura de la página */
+/* Estructura general de la página */
 .tarjeta-pagina {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
 
-.tarjeta{
+.tarjeta {
   margin-left: 225px;
 }
 
@@ -34,7 +34,7 @@
   width: 100%;
 }
 
-/* Ajustes para el contenido de las fotos */
+/* Ajustes para las fotos */
 .tarjeta-detalle-fotos {
   display: flex;
   gap: 10px;
@@ -66,12 +66,57 @@
 .talle-opcion {
   cursor: pointer;
   padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  transition: all 0.3s ease;
 }
 
-.talle-opcion.selected {
-  font-weight: bold;
-  color: green;
+.talle-opcion.seleccionado {
+  background-color: #4caf50;
+  color: white;
+  border-color: #4caf50;
 }
+
+.selector-cantidad {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.selector-cantidad button {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.selector-cantidad button:hover {
+  background-color: #e0e0e0;
+}
+
+.selector-cantidad span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.tarjeta-precio {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.tarjeta-precio p {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #333;
+}
+
 .selector-cantidad{
   align-items: center;
   justify-content: center;

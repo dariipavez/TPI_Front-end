@@ -1,95 +1,96 @@
+// Perfil.jsx
 import React, { useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import './Perfil.css';
 
 const Perfil = () => {
-  const [perfilData, setPerfilData] = useState({
+  const [datosPerfil, setDatosPerfil] = useState({
     nombre: '',
     apellido: '',
-    email: '',
+    correo: '',
     fechaNacimiento: '',
     dni: '',
     genero: '',
     telefono: ''
   });
-  const [isEditing, setIsEditing] = useState(false);
+  const [estaEditando, setEstaEditando] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setPerfilData((prevData) => ({ ...prevData, [name]: value }));
+  const manejarCambio = (evento) => {
+    const { name, value } = evento.target;
+    setDatosPerfil((datosPrevios) => ({ ...datosPrevios, [name]: value }));
   };
 
-  const handleEditClick = () => {
-    setIsEditing(true);
+  const manejarClickEditar = () => {
+    setEstaEditando(true);
   };
 
-  const handleSaveClick = () => {
-    setIsEditing(false);
+  const manejarClickGuardar = () => {
+    setEstaEditando(false);
     // Aquí puedes agregar lógica para guardar los datos, si es necesario
   };
 
   return (
     <div>
       <Navbar />
-      <div className="perfil-container">
-        <div className="perfil-sidebar">
-          <button className="sidebar-button">Perfil</button>
-          <button className="sidebar-button">Cerrar sesión</button>
+      <div className="contenedor-perfil">
+        <div className="barra-lateral-perfil">
+          <button className="boton-barra-lateral">Perfil</button>
+          <button className="boton-barra-lateral">Cerrar sesión</button>
         </div>
-        <div className="perfil-content">
+        <div className="contenido-perfil">
           <h2>Perfil</h2>
-          <div className="perfil-card">
-            <div className="perfil-row">
+          <div className="tarjeta-perfil">
+            <div className="fila-perfil">
               <input
                 type="text"
                 name="nombre"
                 placeholder="Nombre"
-                value={perfilData.nombre}
-                onChange={handleChange}
-                disabled={!isEditing}
+                value={datosPerfil.nombre}
+                onChange={manejarCambio}
+                disabled={!estaEditando}
               />
               <input
                 type="text"
                 name="apellido"
                 placeholder="Apellido"
-                value={perfilData.apellido}
-                onChange={handleChange}
-                disabled={!isEditing}
+                value={datosPerfil.apellido}
+                onChange={manejarCambio}
+                disabled={!estaEditando}
               />
             </div>
-            <div className="perfil-row">
+            <div className="fila-perfil">
               <input
                 type="email"
-                name="email"
-                placeholder="Email"
-                value={perfilData.email}
-                onChange={handleChange}
-                disabled={!isEditing}
+                name="correo"
+                placeholder="Correo electrónico"
+                value={datosPerfil.correo}
+                onChange={manejarCambio}
+                disabled={!estaEditando}
               />
               <input
                 type="date"
                 name="fechaNacimiento"
                 placeholder="Fecha de nacimiento"
-                value={perfilData.fechaNacimiento}
-                onChange={handleChange}
-                disabled={!isEditing}
+                value={datosPerfil.fechaNacimiento}
+                onChange={manejarCambio}
+                disabled={!estaEditando}
               />
             </div>
-            <div className="perfil-row">
+            <div className="fila-perfil">
               <input
                 type="text"
                 name="dni"
                 placeholder="DNI"
-                value={perfilData.dni}
-                onChange={handleChange}
-                disabled={!isEditing}
+                value={datosPerfil.dni}
+                onChange={manejarCambio}
+                disabled={!estaEditando}
               />
               <select
                 name="genero"
-                value={perfilData.genero}
-                onChange={handleChange}
-                disabled={!isEditing}
+                value={datosPerfil.genero}
+                onChange={manejarCambio}
+                disabled={!estaEditando}
               >
                 <option value="">Seleccionar Género</option>
                 <option value="hombre">Hombre</option>
@@ -97,22 +98,22 @@ const Perfil = () => {
                 <option value="otro">Otro</option>
               </select>
             </div>
-            <div className="perfil-row">
+            <div className="fila-perfil">
               <input
                 type="text"
                 name="telefono"
                 placeholder="Teléfono"
-                value={perfilData.telefono}
-                onChange={handleChange}
-                disabled={!isEditing}
+                value={datosPerfil.telefono}
+                onChange={manejarCambio}
+                disabled={!estaEditando}
               />
             </div>
-            {isEditing ? (
-              <button className="guardar-boton" onClick={handleSaveClick}>
+            {estaEditando ? (
+              <button className="boton-guardar" onClick={manejarClickGuardar}>
                 Guardar
               </button>
             ) : (
-              <button className="editar-boton" onClick={handleEditClick}>
+              <button className="boton-editar" onClick={manejarClickEditar}>
                 Editar
               </button>
             )}

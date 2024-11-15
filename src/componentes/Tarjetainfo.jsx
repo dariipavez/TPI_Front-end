@@ -1,6 +1,8 @@
+// src/components/TarjetaInfo.jsx
 import React from 'react';
 import { useLocation } from 'wouter';
-import './Tarjetainfo.css';
+import './TarjetaInfo.css';
+
 const TarjetaInfo = () => {
   const [, navigate] = useLocation(); // Hook de navegación
 
@@ -10,12 +12,12 @@ const TarjetaInfo = () => {
   };
 
   return (
-    <div className="tarjeta-info-container">
+    <div className="tarjeta-info-contenedor">
       <div className="tarjeta-info">
         <h2 className="tarjeta-info-titulo">
-          <i className="info-icon">ℹ️</i> Identificación
+          <i className="info-icono">ℹ️</i> Identificación
         </h2>
-        <form className="tarjeta-info-form">
+        <form className="tarjeta-info-formulario">
           {/* Sección de Identificación */}
           <label>
             Correo Electrónico
@@ -49,7 +51,7 @@ const TarjetaInfo = () => {
 
           {/* Sección de Dirección */}
           <h2 className="tarjeta-info-titulo">
-            <i className="info-icon">📍</i> Dirección
+            <i className="info-icono">📍</i> Dirección
           </h2>
           <label>
             Código Postal
@@ -93,7 +95,7 @@ const TarjetaInfo = () => {
 
           {/* Nueva Sección de Pago */}
           <h2 className="tarjeta-info-titulo">
-            <i className="info-icon">💳</i> Pago
+            <i className="info-icono">💳</i> Pago
           </h2>
           <div className="tipo-tarjeta">
             <button type="button">Tarjeta de Crédito</button>
@@ -141,6 +143,5 @@ const TarjetaInfo = () => {
     </div>
   );
 };
-
 
 export default TarjetaInfo;

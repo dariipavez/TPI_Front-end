@@ -1,19 +1,18 @@
-  .menu {
-      font-family: Arial, sans-serif;
-    }
-    
-    
-    .menu-productos {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      padding: 20px;
-    }
+.menu {
+  font-family: Arial, sans-serif;
+}
 
-    button{
-      color: gray;
-    }
-  
+.menu-productos {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+button {
+  color: gray;
+}
+
     
     /* .menu-footer {
       background-color: #333;

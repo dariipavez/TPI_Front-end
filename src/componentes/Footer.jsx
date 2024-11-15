@@ -17,8 +17,6 @@ export default function Footer() {
             <p><img src="/logo wsp.png" alt="numero" /> 2901 302583</p>
           </div>
 
-
-
         </div>
 
         <div className="metodos-pago">
@@ -38,4 +36,3 @@ export default function Footer() {
   );
 
 };
-

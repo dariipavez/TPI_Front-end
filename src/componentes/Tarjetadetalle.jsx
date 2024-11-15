@@ -1,20 +1,21 @@
+// src/components/TarjetaDetalle.jsx
 import React, { useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Boton from './Boton';
-import './Tarjetadetalle.css';
+import './TarjetaDetalle.css';
 
-const Tarjetadetalle = () => {
-  const [selectedSize, setSelectedSize] = useState(null);
+const TarjetaDetalle = () => {
+  const [talleSeleccionado, setTalleSeleccionado] = useState(null);
   const [cantidad, setCantidad] = useState(1);
-  const precioIndividual = 65000;  // Puedes ajustar el precio según el producto
-  const total = precioIndividual * cantidad;
+  const precioUnitario = 65000; // Puedes ajustar el precio según el producto
+  const total = precioUnitario * cantidad;
 
-  const handleSizeSelect = (size) => {
-    setSelectedSize(size);
+  const manejarSeleccionDeTalle = (talle) => {
+    setTalleSeleccionado(talle);
   };
 
-  const handleCantidadChange = (operacion) => {
+  const manejarCambioDeCantidad = (operacion) => {
     if (operacion === 'incrementar') {
       setCantidad(cantidad + 1);
     } else if (operacion === 'decrementar' && cantidad > 1) {
@@ -24,7 +25,7 @@ const Tarjetadetalle = () => {
 
   return (
     <div className="tarjeta-pagina">
-      <Navbar /> {/* Navbar al inicio */}
+      <Navbar />
 
       <div className="tarjeta">
         <div className="tarjeta-detalle">
@@ -37,38 +38,38 @@ const Tarjetadetalle = () => {
 
           <div className="tarjeta-detalle-info">
             <h2>Nombre del Producto</h2>
-            <p className="precio">${precioIndividual}</p>
+            <p className="precio">${precioUnitario}</p>
             <p className="talle">TALLE</p>
             <div className="talles">
-              {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+              {['S', 'M', 'L', 'XL', 'XXL'].map((talle) => (
                 <span
-                  key={size}
-                  className={`talle-opcion ${selectedSize === size ? 'selected' : ''}`}
-                  onClick={() => handleSizeSelect(size)}
+                  key={talle}
+                  className={`talle-opcion ${talleSeleccionado === talle ? 'seleccionado' : ''}`}
+                  onClick={() => manejarSeleccionDeTalle(talle)}
                 >
-                  {size}
+                  {talle}
                 </span>
               ))}
             </div>
-            
+
             <div className="selector-cantidad">
-              <button onClick={() => handleCantidadChange('decrementar')}>-</button>
+              <button onClick={() => manejarCambioDeCantidad('decrementar')}>-</button>
               <span>{cantidad}</span>
-              <button onClick={() => handleCantidadChange('incrementar')}>+</button>
+              <button onClick={() => manejarCambioDeCantidad('incrementar')}>+</button>
             </div>
             <div className="tarjeta-precio">
-              <p>Precio: ${precioIndividual}</p>
+              <p>Precio: ${precioUnitario}</p>
               <p>Total: ${total}</p>
             </div>
-            
+
             <Boton texto="Agregar al carrito" onClick={() => console.log('Producto agregado')} />
           </div>
         </div>
       </div>
 
-      <Footer /> {/* Footer al final */}
+      <Footer />
     </div>
   );
 };
 
-export default Tarjetadetalle;
+export default TarjetaDetalle;
