@@ -32,7 +32,6 @@ const TarjetaProductos = ({ busqueda }) => {
           </Link>
           <h3 className="tarjeta-producto-nombre">{producto.nombre}</h3>
           <p className="tarjeta-producto-precio">{producto.precio}</p>
-          <button className="boton-carrito">🛒</button>
         </div>
       ))}
     </div>

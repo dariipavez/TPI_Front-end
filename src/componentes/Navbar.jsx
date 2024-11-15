@@ -46,54 +46,30 @@ const Navbar = ({ onBuscar, isProfileMenuOpen, setIsProfileMenuOpen }) => {
       
       <nav className="menu-categorias">
         <div className="menu-item">
-          <a href="/">Ropa Urbana</a>
+          <span onClick={() => navigate('/ropa-urbana')}>Ropa Urbana</span>
           <div className="dropdown-menu">
-            <div className="dropdown-column">
+            <div className="dropdown-column" onClick={() => navigate('/ropa-urbana/remeras')}>
               <strong>Remeras</strong>
-              <ul>
-                <button className="dropdown-button">Oversize</button>
-                <button className="dropdown-button">Boxy fit</button>
-              </ul>
             </div>
-            <div className="dropdown-column">
+            <div className="dropdown-column" onClick={() => navigate('/ropa-urbana/pantalones')}>
               <strong>Pantalones</strong>
-              <ul>
-                <button className="dropdown-button">Mom</button>
-                <button className="dropdown-button">Baggy</button>
-              </ul>
             </div>
-            <div className="dropdown-column">
+            <div className="dropdown-column" onClick={() => navigate('/ropa-urbana/zapatillas')}>
               <strong>Zapatillas</strong>
-              <ul>
-                <button className="dropdown-button">Puma</button>
-                <button className="dropdown-button">Adidas</button>
-              </ul>
             </div>
           </div>
         </div>
         <div className="menu-item">
-          <a href="/">Ropa Deportiva</a>
+          <span onClick={() => navigate('/ropa-deportiva')}>Ropa Deportiva</span>
           <div className="dropdown-menu">
-            <div className="dropdown-column">
+            <div className="dropdown-column" onClick={() => navigate('/ropa-deportiva/camisetas')}>
               <strong>Camisetas</strong>
-              <ul>
-              <button className="dropdown-button">Retro</button>  
-              <button className="dropdown-button">Actuales</button>              
-              </ul>
             </div>
-            <div className="dropdown-column">
+            <div className="dropdown-column" onClick={() => navigate('/ropa-deportiva/shorts')}>
               <strong>Shorts</strong>
-              <ul>
-                <button className="dropdown-button">Bermudas</button>
-                <button className="dropdown-button">Potrero</button>
-              </ul>
             </div>
-            <div className="dropdown-column">
+            <div className="dropdown-column" onClick={() => navigate('/ropa-deportiva/buzos')}>
               <strong>Buzos</strong>
-              <ul>
-                <button className="dropdown-button">Medio cierre</button>
-                <button className="dropdown-button">Sin capucha</button>
-              </ul>
             </div>
           </div>
         </div>

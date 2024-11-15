@@ -1,36 +1,36 @@
-.menu {
-    font-family: Arial, sans-serif;
-  }
-  
-  
-  .menu-productos {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    padding: 20px;
-  }
+  .menu {
+      font-family: Arial, sans-serif;
+    }
+    
+    
+    .menu-productos {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      padding: 20px;
+    }
 
-  button{
-    color: gray;
-  }
- 
+    button{
+      color: gray;
+    }
   
-  /* .menu-footer {
-    background-color: #333;
-    color: white;
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-    margin-top: 25px;
-    height: 180px
-  }
-  
-  .menu-footer p {
-    margin: auto;
-  }
-  
-  .menu-footer img {
-    width: 50px;
-    margin-right: 10px;
-  }
-   */
+    
+    /* .menu-footer {
+      background-color: #333;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 20px;
+      margin-top: 25px;
+      height: 180px
+    }
+    
+    .menu-footer p {
+      margin: auto;
+    }
+    
+    .menu-footer img {
+      width: 50px;
+      margin-right: 10px;
+    }
+    */
