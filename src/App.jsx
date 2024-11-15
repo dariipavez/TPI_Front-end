@@ -1,22 +1,43 @@
-import React from 'react';
+// src/App.jsx
+import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
-import Detalle from './componentes/Detalle'; // Importar el componente Detalle
-import { Router, Route } from "wouter"; // Importar Router y Route de wouter
+import Tarjetadetalle from './componentes/Tarjetadetalle';
+import TarjetaInfo from './componentes/TarjetaInfo';
+import Tarjetaconfirmacion from './componentes/Tarjetaconfirmacion';
+import Agradecimiento from './componentes/Agradecimiento';
+import Agregar from './componentes/Agregar';
+import Perfil from './componentes/Perfil';
+import RopaUrbana from './componentes/RopaUrbana';
+import RopaDeportiva from './componentes/RopaDeportiva';
+
+import { Router, Route } from "wouter";
 
 function App() {
-  return (
-    <Router>
-      <div className="App">
-        {/* Ruta principal que muestra el Menu */}
-        <Route path="/" component={Menu} />
+  const [busqueda, setBusqueda] = useState('');
 
-        {/* Ruta para la pantalla de detalles */}
-        <Route path="/detalle/:productId" component={Detalle} />
-      </div>
-    </Router>
+  const manejarBusqueda = (consulta) => {
+    setBusqueda(consulta);
+  };
+
+  return (
+    <div className="App"> 
+      <Router>
+        <Route path="/">
+          <Menu busqueda={busqueda} onBuscar={manejarBusqueda} />
+        </Route>
+
+        <Route path="/detalle/:productId" component={Tarjetadetalle} />
+        <Route path="/confirmacion" component={Tarjetaconfirmacion} />
+        <Route path="/info" component={TarjetaInfo} />
+        <Route path="/agradecimiento" component={Agradecimiento} />
+        <Route path="/agregar" component={Agregar} />
+        <Route path="/perfil" component={Perfil} />
+        <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
+        <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
+      </Router>
+    </div>
   );
 }
 
 export default App;
-

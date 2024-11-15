@@ -1,26 +1,73 @@
-import React from 'react';
+// src/components/TarjetaDetalle.jsx
+import React, { useState } from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
 import Boton from './Boton';
-import Marcador from './Marcador';
-import './Tarjetadetalle.css';
+import './TarjetaDetalle.css';
 
 const TarjetaDetalle = () => {
+  const [talleSeleccionado, setTalleSeleccionado] = useState(null);
+  const [cantidad, setCantidad] = useState(1);
+  const precioUnitario = 65000; // Puedes ajustar el precio según el producto
+  const total = precioUnitario * cantidad;
+
+  const manejarSeleccionDeTalle = (talle) => {
+    setTalleSeleccionado(talle);
+  };
+
+  const manejarCambioDeCantidad = (operacion) => {
+    if (operacion === 'incrementar') {
+      setCantidad(cantidad + 1);
+    } else if (operacion === 'decrementar' && cantidad > 1) {
+      setCantidad(cantidad - 1);
+    }
+  };
+
   return (
-    <div className="tarjeta-detalle">
-      <div className="detalle-imagen">
-        {/* Aquí iría la imagen del producto */}
-        <img src="ruta_de_la_imagen_del_producto" alt="Producto" />
-      </div>
-      <div className="detalle-info">
-        <h2>Nombre del Producto</h2>
-        <p>Descripción del producto...</p>
-        <p>Precio: $XX.XXX</p>
+    <div className="tarjeta-pagina">
+      <Navbar />
 
-        {/* Componente Marcador */}
-        <Marcador />
+      <div className="tarjeta">
+        <div className="tarjeta-detalle">
+          <div className="tarjeta-detalle-fotos">
+            <div className="foto">FOTO</div>
+            <div className="foto">FOTO</div>
+            <div className="foto">FOTO</div>
+            <div className="foto">FOTO</div>
+          </div>
 
-        {/* Componente Botón */}
-        <Boton texto="Agregar al carrito" />
+          <div className="tarjeta-detalle-info">
+            <h2>Nombre del Producto</h2>
+            <p className="precio">${precioUnitario}</p>
+            <p className="talle">TALLE</p>
+            <div className="talles">
+              {['S', 'M', 'L', 'XL', 'XXL'].map((talle) => (
+                <span
+                  key={talle}
+                  className={`talle-opcion ${talleSeleccionado === talle ? 'seleccionado' : ''}`}
+                  onClick={() => manejarSeleccionDeTalle(talle)}
+                >
+                  {talle}
+                </span>
+              ))}
+            </div>
+
+            <div className="selector-cantidad">
+              <button onClick={() => manejarCambioDeCantidad('decrementar')}>-</button>
+              <span>{cantidad}</span>
+              <button onClick={() => manejarCambioDeCantidad('incrementar')}>+</button>
+            </div>
+            <div className="tarjeta-precio">
+              <p>Precio: ${precioUnitario}</p>
+              <p>Total: ${total}</p>
+            </div>
+
+            <Boton texto="Agregar al carrito" onClick={() => console.log('Producto agregado')} />
+          </div>
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
