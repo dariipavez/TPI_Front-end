@@ -1,52 +1,40 @@
+// src/App.jsx
 import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
-import Detalle from './componentes/Detalle';
-import TarjetaInfo from './componentes/TarjetaInfo'; // Importa TarjetaInfo
-import Carrito from './componentes/Carrito';
+import Tarjetadetalle from './componentes/Tarjetadetalle';
+import TarjetaInfo from './componentes/TarjetaInfo';
+import Tarjetaconfirmacion from './componentes/Tarjetaconfirmacion';
 import Agradecimiento from './componentes/Agradecimiento';
-import Retro from './componentes/Retro';
-import Agregar from './componentes/Agregar'; // Importa el componente
-
+import Agregar from './componentes/Agregar';
+import Perfil from './componentes/Perfil';
+import RopaUrbana from './componentes/RopaUrbana';
+import RopaDeportiva from './componentes/RopaDeportiva';
 
 import { Router, Route } from "wouter";
 
 function App() {
   const [busqueda, setBusqueda] = useState('');
 
-  const handleBuscar = (query) => {
-    setBusqueda(query);
+  const manejarBusqueda = (consulta) => {
+    setBusqueda(consulta);
   };
 
   return (
     <div className="App"> 
       <Router>
-
-        <Route path="/detalle/:productId" component={Detalle} />
-
         <Route path="/">
-          <Menu busqueda={busqueda} onBuscar={handleBuscar} />
-        </Route>
-        <Route path="/carrito">
-          <Carrito />
+          <Menu busqueda={busqueda} onBuscar={manejarBusqueda} />
         </Route>
 
-        <Route path="/info">
-          <TarjetaInfo />
-        </Route>
-
-        <Route path="/agradecimiento">
-          <Agradecimiento />
-        </Route>
-
-        <Route path="/retro">
-          <Retro />
-        </Route>
-
-        <Route path="/agregar">
-         <Agregar />
-        </Route>
-
+        <Route path="/detalle/:productId" component={Tarjetadetalle} />
+        <Route path="/confirmacion" component={Tarjetaconfirmacion} />
+        <Route path="/info" component={TarjetaInfo} />
+        <Route path="/agradecimiento" component={Agradecimiento} />
+        <Route path="/agregar" component={Agregar} />
+        <Route path="/perfil" component={Perfil} />
+        <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
+        <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
       </Router>
     </div>
   );

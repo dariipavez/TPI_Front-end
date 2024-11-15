@@ -1,42 +1,75 @@
- // TarjetaDetalle.jsx
- import React from 'react';
- import Boton from './Boton';
- import Marcador from './Marcador';
- import './TarjetaDetalle.css'; // Asegúrate de tener un archivo de estilos para personalizar la tarjeta.
- 
- const TarjetaDetalle = () => {
-   return (
-     <div className="tarjeta-detalle">
-       <div className="detalle-imagenes">
-         {/* Aquí pueden ir varias imágenes del producto */}
-         <div className="detalle-imagen">
-           <img src="ruta_de_la_imagen_1" alt="Producto 1" />
-         </div>
-         <div className="detalle-imagen">
-           <img src="ruta_de_la_imagen_2" alt="Producto 2" />
-         </div>
-         <div className="detalle-imagen">
-           <img src="ruta_de_la_imagen_3" alt="Producto 3" />
-         </div>
-         <div className="detalle-imagen">
-           <img src="ruta_de_la_imagen_4" alt="Producto 4" />
-         </div>
-       </div>
-       
-       <div className="detalle-info">
-         <h2>Nombre del Producto</h2>
-         <p>Descripción del producto...</p>
-         <p>Precio: $XX.XXX</p>
-         <p>Talle:</p>
- 
-         {/* Componente Marcador */}
-         <Marcador />
- 
-         {/* Componente Botón */}
-         <Boton texto="Agregar al carrito" onClick={() => alert('Producto agregado al carrito')} />
-       </div>
-     </div>
-   );
- };
- 
- export default TarjetaDetalle;
+// src/components/TarjetaDetalle.jsx
+import React, { useState } from 'react';
+import Navbar from './Navbar';
+import Footer from './Footer';
+import Boton from './Boton';
+import './TarjetaDetalle.css';
+
+const TarjetaDetalle = () => {
+  const [talleSeleccionado, setTalleSeleccionado] = useState(null);
+  const [cantidad, setCantidad] = useState(1);
+  const precioUnitario = 65000; // Puedes ajustar el precio según el producto
+  const total = precioUnitario * cantidad;
+
+  const manejarSeleccionDeTalle = (talle) => {
+    setTalleSeleccionado(talle);
+  };
+
+  const manejarCambioDeCantidad = (operacion) => {
+    if (operacion === 'incrementar') {
+      setCantidad(cantidad + 1);
+    } else if (operacion === 'decrementar' && cantidad > 1) {
+      setCantidad(cantidad - 1);
+    }
+  };
+
+  return (
+    <div className="tarjeta-pagina">
+      <Navbar />
+
+      <div className="tarjeta">
+        <div className="tarjeta-detalle">
+          <div className="tarjeta-detalle-fotos">
+            <div className="foto">FOTO</div>
+            <div className="foto">FOTO</div>
+            <div className="foto">FOTO</div>
+            <div className="foto">FOTO</div>
+          </div>
+
+          <div className="tarjeta-detalle-info">
+            <h2>Nombre del Producto</h2>
+            <p className="precio">${precioUnitario}</p>
+            <p className="talle">TALLE</p>
+            <div className="talles">
+              {['S', 'M', 'L', 'XL', 'XXL'].map((talle) => (
+                <span
+                  key={talle}
+                  className={`talle-opcion ${talleSeleccionado === talle ? 'seleccionado' : ''}`}
+                  onClick={() => manejarSeleccionDeTalle(talle)}
+                >
+                  {talle}
+                </span>
+              ))}
+            </div>
+
+            <div className="selector-cantidad">
+              <button onClick={() => manejarCambioDeCantidad('decrementar')}>-</button>
+              <span>{cantidad}</span>
+              <button onClick={() => manejarCambioDeCantidad('incrementar')}>+</button>
+            </div>
+            <div className="tarjeta-precio">
+              <p>Precio: ${precioUnitario}</p>
+              <p>Total: ${total}</p>
+            </div>
+
+            <Boton texto="Agregar al carrito" onClick={() => console.log('Producto agregado')} />
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default TarjetaDetalle;

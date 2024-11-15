@@ -1,46 +1,83 @@
-/* Fondo del modal */
+/* Estilo para el overlay que cubre toda la pantalla */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  z-index: 1000; /* Asegúrate de que el modal esté sobre otros elementos */
 }
 
-/* Contenedor del contenido del modal */
+/* Estilo para el modal de inicio de sesión */
 .modal-contenido {
-  background: white;
+  background-color: white;
   padding: 20px;
   border-radius: 8px;
+  width: 350px; /* Ancho específico para el modal de inicio de sesión */
+  max-width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  overflow: hidden;
+  /* Esto asegura que el modal esté centrado y no se desplace */
   position: relative;
-  width: 300px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  margin: auto;
 }
 
-/* Botón de cierre en la esquina superior derecha */
+/* Estilo para el modal del carrito */
+.modal-carrito {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px; /* Ancho del modal del carrito */
+  max-width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  overflow: hidden;
+  /* Asegura que el modal de carrito esté centrado */
+  position: relative;
+  margin: auto;
+}
+
+/* Estilo para los botones dentro del modal */
 .modal-close {
-margin-left: 275px;
-margin-top: -10px;
-padding: 10px;
-height: 38px;
-font-size: 15px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+/* Estilo para el botón de "Continuar compra" en el modal del carrito */
+.boton-continuar-compra {
+  background-color: #45a049;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.boton-continuar-compra:hover {
+  background-color: #45a049;
 }
 
 .modal-close:hover {
   color: white; /* Cambia a un rojo más oscuro al pasar el mouse */
   background-color: darkred;
+  font-size: 15px;
 
 }
 
-/* Inputs dentro del modal */
 .modal-contenido input {
   display: block;
-  width: 280px;
+  min-width: 320px;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ddd;
@@ -98,14 +135,14 @@ font-size: 15px;
   }
 }
 
-/* Botón para cerrar el modal */
+/* Estilo para los botones dentro del modal */
 .modal-close {
   position: absolute;
   top: 10px;
   right: 10px;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 14px; /* Cambié de 18px a 14px para que sea más pequeña */
   cursor: pointer;
 }
 
@@ -173,10 +210,14 @@ font-size: 15px;
   transition: background-color 0.3s ease;
 }
 
-.modal-submit-dark:hover {
+.modal-submit-dark {
   background-color: #1a1a1a; /* Gris más oscuro al pasar el ratón */
+  color: white;
 }
 
+.modal-submit-dark:hover{
+  background-color: #555050; /* Gris más oscuro al pasar el ratón */
+}
 .modal-back {
   position: absolute;
   top: 10px;

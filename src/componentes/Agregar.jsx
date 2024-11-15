@@ -8,20 +8,20 @@ const Agregar = () => {
   const [estiloSeleccionado, setEstiloSeleccionado] = useState("Urbana");
   const [tipoSeleccionado, setTipoSeleccionado] = useState("Buzo");
   
-  const handleImageDrop = (event) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      setImagen(URL.createObjectURL(file));
+  const manejarSoltarImagen = (evento) => {
+    evento.preventDefault();
+    const archivo = evento.dataTransfer.files[0];
+    if (archivo && archivo.type.startsWith('image/')) {
+      setImagen(URL.createObjectURL(archivo));
     }
   };
 
-  const handleDragOver = (event) => {
-    event.preventDefault();
+  const manejarArrastreSobre = (evento) => {
+    evento.preventDefault();
   };
 
-  const handleEstiloChange = (event) => {
-    const nuevoEstilo = event.target.value;
+  const manejarCambioEstilo = (evento) => {
+    const nuevoEstilo = evento.target.value;
     setEstiloSeleccionado(nuevoEstilo);
     setTipoSeleccionado(opcionesTipoRopa[nuevoEstilo][0]); // Cambia automáticamente el tipo al primero de la lista
   };
@@ -33,16 +33,16 @@ const Agregar = () => {
   };
 
   return (
-    <div className="agregar-container">
+    <div className="contenedor-agregar">
       <Navbar />
-      <div className="agregar-content">
+      <div className="contenido-agregar">
         <h2>Añadir Nuevo Ingreso</h2>
         <div className="formulario">
           <div className="lado-izquierdo">
             <div 
-              className="foto-dropzone" 
-              onDrop={handleImageDrop} 
-              onDragOver={handleDragOver}
+              className="zona-soltar-foto" 
+              onDrop={manejarSoltarImagen} 
+              onDragOver={manejarArrastreSobre}
             >
               {imagen ? (
                 <img src={imagen} alt="Vista previa" className="imagen-preview" />
@@ -52,7 +52,7 @@ const Agregar = () => {
             </div>
             <div className="tallas">
               <h3>Talles</h3>
-              <div className="talles-options">
+              <div className="opciones-talles">
                 <button>S</button>
                 <button>M</button>
                 <button>L</button>
@@ -73,7 +73,7 @@ const Agregar = () => {
             </div>
             <div className="estilo-ropa">
               <h3>Estilo de Ropa</h3>
-              <select onChange={handleEstiloChange} value={estiloSeleccionado}>
+              <select onChange={manejarCambioEstilo} value={estiloSeleccionado}>
                 <option value="Urbana">Urbana</option>
                 <option value="Deportiva">Deportiva</option>
               </select>
@@ -86,7 +86,7 @@ const Agregar = () => {
                 ))}
               </select>
             </div>
-            <button className="add-button">Añadir Nuevo Ingreso</button>
+            <button className="boton-anadir">Añadir Nuevo Ingreso</button>
           </div>
         </div>
       </div>

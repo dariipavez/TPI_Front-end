@@ -1,5 +1,5 @@
-/* Tarjetainfo.css */
-.tarjeta-info-container {
+/* TarjetaInfo.css */
+.tarjeta-info-contenedor {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -24,18 +24,18 @@
     margin-top: 20px;
 }
 
-.tarjeta-info-titulo .info-icon {
+.tarjeta-info-titulo .info-icono {
     margin-right: 8px;
 }
 
-.tarjeta-info-form label {
+.tarjeta-info-formulario label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
 }
 
-.tarjeta-info-form input,
-.tarjeta-info-form select {
+.tarjeta-info-formulario input,
+.tarjeta-info-formulario select {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
