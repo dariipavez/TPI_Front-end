@@ -51,6 +51,8 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       .then((resp) => {
         console.log(resp.data);
         if (resp.data.status === "ok") {
+          sessionStorage.setItem('token', resp.data.token);
+          sessionStorage.setItem('usuario_id', resp.data.usuario_id);
           setToken(resp.data.token);
           setLogged(true);
           alert('Inicio de sesión exitoso');
@@ -68,9 +70,11 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
     if (token !== null) {
       const config = {
         headers: {
-          authorization: token,
+          authorization:  sessionStorage.getItem('token'),
         },
-        params: { usuario_id },
+        params: { usuario_id,
+        },
+
       };
 
       const url = `http://localhost:3000/api/usuario/actualizar/${usuario_id}`;
@@ -107,7 +111,7 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
     const datos = {
       contraseña: nuevaContraseña,
     };
-    /* const usuario_id = 1; */ 
+    const usuario_id = sessionStorage.getItem('usuario_id');
     actualizar(datos, usuario_id); 
   };  
 
@@ -177,7 +181,7 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       {esModalAbierto && (
         <div className="modal-overlay">
         <div className="modal-contenido">
-          <form onSubmit={(e) => { e.preventDefault(); loguearse({ nombre_usuario: user, contraseña: pass }); }}>
+          <form onSubmit={(e) => { e.preventDefault(); loguearse({ nombre_usuario: user, contraseña: pass, token}); }}>
             <button className="modal-close" onClick={cerrarModal}>X</button>
             <h2>Crea tu cuenta o inicia sesión para obtener beneficios exclusivos</h2>
             <input
