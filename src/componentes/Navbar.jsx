@@ -61,9 +61,14 @@ const Navbar = ({ onBuscar }) => {
       .then((resp) => {
         console.log('Respuesta completa del servidor:', resp.data);
         if (resp.data.status === "ok") {
+
           sessionStorage.setItem('token', resp.data.token); // Guardar el token en localStorage
           sessionStorage.setItem('usuario_id', resp.data.usuario_id); 
           sessionStorage.setItem('rol', resp.data.rol); // Guardar el rol en localStorage
+
+          sessionStorage.setItem('token', resp.data.token);
+          sessionStorage.setItem('usuario_id', resp.data.usuario_id);
+
           setToken(resp.data.token);
           
           setRol(resp.data.rol);
@@ -81,8 +86,46 @@ const Navbar = ({ onBuscar }) => {
       });
   };  
 
+
   // Función para manejar el registro
   const manejarEnvioRegistro = (e) => {
+
+  const actualizar = (datos, usuario_id) => {
+    if (token !== null) {
+      const config = {
+        headers: {
+          authorization:  sessionStorage.getItem('token'),
+        },
+        params: { usuario_id,
+        },
+
+      };
+
+      const url = `http://localhost:3000/api/usuario/actualizar/${usuario_id}`;
+      axios.put(url, datos, config)
+        .then((resp) => {
+          console.log(resp.data);
+          alert("Se actualizó correctamente");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      alert("Inicie sesión");
+    }
+  };
+
+  const manejarCambioContraseña = (e) => {
+    const { name, value } = e.target;
+    if (name === "nuevaContraseña") {
+      setNuevaContraseña(value);
+    } else if (name === "confirmarContraseña") {
+      setConfirmarContraseña(value);
+    }
+  };
+
+  const manejarSubmit = (e) => {
+
     e.preventDefault();
 
     // Crear los datos del registro
@@ -94,6 +137,7 @@ const Navbar = ({ onBuscar }) => {
       contraseña: contraseñaRegistro,
       telefono: telefono,
     };
+
 
     console.log("Datos del registro:", datos);
 
@@ -138,6 +182,10 @@ const Navbar = ({ onBuscar }) => {
       setLogged(true);
     }
   }, []);
+
+    const usuario_id = sessionStorage.getItem('usuario_id');
+    actualizar(datos, usuario_id); 
+  };  
 
   return (
     <header className="menu-header">
@@ -187,15 +235,14 @@ const Navbar = ({ onBuscar }) => {
         {logged ? (
           <span 
             className="icono-usuario" 
-            onClick={abrirMenuPerfil}  // Al hacer clic, abre/cierra el menú de perfil
+            onClick={abrirMenuPerfil}
           >
             👤
-            {/* Mostrar el menú de perfil si está abierto */}
             {esMenuPerfilAbierto && (
               <div className="profile-menu">
                 <button 
                   className="profile-menu-item" 
-                  onClick={() => navegar('/perfil')} // Redirige a perfil.jsx
+                  onClick={() => navegar('/perfil')}
                 >
                   Mi cuenta
                 </button>
@@ -203,13 +250,13 @@ const Navbar = ({ onBuscar }) => {
                   <>
                     <button 
                       className="profile-menu-item" 
-                      onClick={() => navegar('/usuarios')} // Redirige a usuarios.jsx
+                      onClick={() => navegar('/usuarios')}
                     >
                       Administrar usuarios
                     </button>
                     <button 
                       className="profile-menu-item" 
-                      onClick={() => navegar('/agregar')} // Redirige a Agregar.jsx
+                      onClick={() => navegar('/agregar')}
                     >
                       Ingresar nuevo producto
                     </button>
@@ -217,7 +264,7 @@ const Navbar = ({ onBuscar }) => {
                 )}
                 <button 
                   className="profile-menu-item" 
-                  onClick={cerrarSesion} // Llama a la función cerrarSesion al hacer clic
+                  onClick={cerrarSesion}
                 >
                   Cerrar sesión
                 </button>
@@ -230,7 +277,6 @@ const Navbar = ({ onBuscar }) => {
         <span className="icono-carrito" onClick={abrirModalCarrito}>🛒</span>
       </div>
 
-      {/* Mod      ales */}
       {esModalAbierto && (
         <div className="modal-overlay">
           <div className="modal-contenido">
