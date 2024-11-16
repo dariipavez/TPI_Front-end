@@ -10,7 +10,7 @@ import Agregar from './componentes/Agregar';
 import Perfil from './componentes/Perfil';
 import RopaUrbana from './componentes/RopaUrbana';
 import RopaDeportiva from './componentes/RopaDeportiva';
-
+import axios from 'axios'
 import { Router, Route } from "wouter";
 
 function App() {

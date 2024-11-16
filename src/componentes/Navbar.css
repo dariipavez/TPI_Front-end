@@ -12,6 +12,10 @@
   height: 50px; /* Define la altura específica del Navbar */
  
   }
+  .menu-header {
+    position: relative; /* Agrega esto para asegurar que se pueda usar z-index */
+    z-index: 20; /* Asegúrate de que sea mayor que el de los modales */
+  }
   
 
 .menu-header {
