@@ -7,12 +7,24 @@ import axios from 'axios';
 const Navbar = ({ onBuscar }) => {
   const [, navegar] = useLocation();
 
-  // Estados para manejar los modales
-  const [esModalAbierto, setEsModalAbierto] = useState(false);
-  const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false);
-  const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false);
-  const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false);
-  const [esMenuPerfilAbierto, setEsMenuPerfilAbierto] = useState(false); // Estado del menú de perfil
+  // Estado para controlar la apertura de cada modal
+  const [esModalAbierto, setEsModalAbierto] = useState(false); // Modal de inicio de sesión
+  const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false); // Modal de registro
+  const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false); // Modal del carrito
+  const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
+  const [esModalOlvidoContraseñaAbierto, setEsModalOlvidoContraseñaAbierto] = useState(false); // Modal de olvido contraseña
+  const [esModalVerificacionAbierto, setEsModalVerificacionAbierto] = useState(false);
+  const [mailVerificar, setMailVerificar] = useState('');
+  const [nombreCompletoVerificar, setNombreCompletoVerificar] = useState('');
+  const [telefonoVerificar, setTelefonoVerificar] = useState('');
+  
+  const abrirModalVerificacion = () => {
+    setEsModalAbierto(false);  // Cerrar el modal de login si estaba abierto
+    setEsModalVerificacionAbierto(true);
+  };
+  
+  const cerrarModalVerificacion = () => setEsModalVerificacionAbierto(false);
+  
 
   const [token, setToken] = useState(sessionStorage.getItem('token'));
   const [logged, setLogged] = useState(!!token);
@@ -21,6 +33,16 @@ const Navbar = ({ onBuscar }) => {
   const [pass, setPass] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
   const [confirmarContraseña, setConfirmarContraseña] = useState('');
+  const [mailRecuperar, setMailRecuperar] = useState(''); 
+
+  // Verificar si el usuario está logueado al cargar el componente
+  useEffect(() => {
+    const storedToken = sessionStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+      setLogged(true);
+    }
+  }, []);
 
   // Estados para el registro
   const [nombre, setNombre] = useState('');
@@ -55,6 +77,20 @@ const Navbar = ({ onBuscar }) => {
   };
 
   // Función para manejar el inicio de sesión
+
+  const abrirModalOlvidoContraseña = () => {
+    setEsModalAbierto(false);
+    setEsModalOlvidoContraseñaAbierto(true);
+  };
+  const cerrarModalOlvidoContraseña = () => setEsModalOlvidoContraseñaAbierto(false);
+
+  const manejarEnvioRegistro = (e) => {
+    e.preventDefault();
+    cerrarModalRegistro();
+    navegar('/');
+  };
+
+
   const loguearse = (datos) => {
     const url = "http://localhost:3000/api/usuario/login";
     axios.post(url, datos)
@@ -76,6 +112,7 @@ const Navbar = ({ onBuscar }) => {
           setLogged(true);
           setEsModalAbierto(false); // Cerrar el modal después del inicio de sesión
           alert('Inicio de sesión exitoso');
+          cerrarModal();
         } else {
           alert('No se pudo conectar al servidor');
         }
@@ -86,42 +123,52 @@ const Navbar = ({ onBuscar }) => {
       });
   };  
 
-
-  // Función para manejar el registro
-  const manejarEnvioRegistro = (e) => {
-
-  const actualizar = (datos, usuario_id) => {
-    if (token !== null) {
-      const config = {
-        headers: {
-          authorization:  sessionStorage.getItem('token'),
-        },
-        params: { usuario_id,
-        },
-
-      };
-
-      const url = `http://localhost:3000/api/usuario/actualizar/${usuario_id}`;
-      axios.put(url, datos, config)
-        .then((resp) => {
-          console.log(resp.data);
-          alert("Se actualizó correctamente");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+  const manejarClickPerfil = () => {
+    if (logged) {
+      navegar('/perfil'); // Si ya estás logueado, te redirige a tu perfil
     } else {
-      alert("Inicie sesión");
+      abrirModal(); // Si no estás logueado, abre el modal de login
     }
   };
 
-  const manejarCambioContraseña = (e) => {
-    const { name, value } = e.target;
-    if (name === "nuevaContraseña") {
-      setNuevaContraseña(value);
-    } else if (name === "confirmarContraseña") {
-      setConfirmarContraseña(value);
-    }
+  
+  const manejarVerificarDatos = (e) => {
+    e.preventDefault();
+
+    const datosVerificacion = {
+        mail: mailVerificar,
+        nombre_completo: nombreCompletoVerificar,
+        telefono: telefonoVerificar
+    };
+
+    axios.post("http://localhost:3000/api/usuario/verificar/datos", datosVerificacion)
+        .then((response) => {
+            if (response.data.status === "ok") {
+                sessionStorage.setItem('usuario_id', response.data.usuario_id);
+                alert("Datos verificados con éxito.");
+                cerrarModalVerificacion();
+                abrirModalContraseña(); // Procede al siguiente paso
+            } else {
+                alert("Datos incorrectos. Intente nuevamente.");
+            }
+        })
+        .catch((error) => {
+            if (error.response && error.response.status === 404) {
+                alert("El usuario no fue encontrado. Verifique los datos.");
+            } else {
+                console.error(error);
+                alert("Hubo un error al verificar los datos.");
+            }
+        });
+};
+  
+  
+  const manejarNuevaContraseña = (e) => {
+    setNuevaContraseña(e.target.value);
+  };
+  
+  const manejarConfirmarContraseña = (e) => {
+    setConfirmarContraseña(e.target.value);
   };
 
   const manejarSubmit = (e) => {
@@ -183,9 +230,41 @@ const Navbar = ({ onBuscar }) => {
     }
   }, []);
 
+  
+  const manejarCambiarContraseña = (e) => {
+    e.preventDefault();
+
+    if (nuevaContraseña !== confirmarContraseña) {
+        alert("Las contraseñas no coinciden.");
+        return;
+    }
+
+
     const usuario_id = sessionStorage.getItem('usuario_id');
-    actualizar(datos, usuario_id); 
-  };  
+
+    if (!usuario_id) {
+        alert("Usuario no encontrado.");
+        return;
+    }
+
+    const datosContraseña = {
+        nueva_contraseña: nuevaContraseña
+    };
+
+    axios.put(`http://localhost:3000/api/usuario/actualizar/${usuario_id}`, datosContraseña)
+        .then((resp) => {
+            if (resp.data.status === "ok") {
+                alert("Contraseña cambiada con éxito.");
+                cerrarModalContraseña();
+            } else {
+                alert("Error al cambiar la contraseña.");
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            alert("Hubo un error al cambiar la contraseña.");
+        });
+};
 
   return (
     <header className="menu-header">
@@ -224,11 +303,11 @@ const Navbar = ({ onBuscar }) => {
         </div>
       </nav>
 
-      <input 
-        type="text" 
-        placeholder="¿Qué estás buscando?" 
+      <input
+        type="text"
+        placeholder="¿Qué estás buscando?"
         className="buscador"
-        onChange={(e) => onBuscar(e.target.value)} 
+        onChange={(e) => onBuscar(e.target.value)}
       />
 
       <div className="menu-iconos">
