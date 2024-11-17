@@ -1,8 +1,10 @@
-// src/components/Navbar.jsx
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import './Navbar.css';
 import './Modal.css';
+
+import axios from 'axios';
+
 
 const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
   const [, navegar] = useLocation();
@@ -12,6 +14,23 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
   const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false); // Modal de registro
   const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false); // Modal del carrito
   const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
+
+  const [token, setToken] = useState(null);
+  const [logged, setLogged] = useState(false);
+  const [user, setUser] = useState('');
+  const [pass, setPass] = useState('');
+  const [nuevaContraseña, setNuevaContraseña] = useState('');
+  const [confirmarContraseña, setConfirmarContraseña] = useState('');
+
+  // Estados para el registro
+  const [nombre, setNombre] = useState('');
+  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [usuarioRegistro, setUsuarioRegistro] = useState('');
+  const [contraseñaRegistro, setContraseñaRegistro] = useState('');
+  const [telefono, setTelefono] = useState('');
+
+
 
   // Funciones para abrir y cerrar cada modal
   const abrirModal = () => setEsModalAbierto(true);
@@ -34,12 +53,114 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
 
   const manejarEnvioRegistro = (e) => {
     e.preventDefault();
-    cerrarModalRegistro();
-    navegar('/');
+
+    // Crear los datos del registro
+    const datos = {
+      nombre_completo: nombre,
+      fecha_nac: fechaNacimiento,
+      mail: correo,
+      nombre_usuario: usuarioRegistro,
+      contraseña: contraseñaRegistro,
+      telefono: telefono,
+    };
+
+    console.log("Datos del registro:", {
+      nombre_completo: nombre,
+      fecha_nac: fechaNacimiento,
+      mail: correo,
+      nombre_usuario: usuarioRegistro,
+      contraseña: contraseñaRegistro,
+      telefono: telefono,
+    });
+
+    // Enviar los datos al servidor
+    const url = "http://localhost:3000/api/usuario/registrarse";
+    axios.post(url, datos)
+      .then((resp) => {
+        console.log(resp.data);
+        if (resp.data.status === "ok") {
+          alert('Registro exitoso');
+          setEsModalRegistroAbierto(false); // Cerrar modal después de registro
+          setEsModalAbierto(true); // Abrir modal de login
+        } else {
+          alert('Error en el registro');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Hubo un problema al registrarse");
+      });
   };
 
+  const loguearse = (datos) => {
+    const url = "http://localhost:3000/api/usuario/login";
+    axios.post(url, datos)
+      .then((resp) => {
+        console.log(resp.data);
+        if (resp.data.status === "ok") {
+          setToken(resp.data.token);
+          setLogged(true);
+          alert('Inicio de sesión exitoso');
+        } else {
+          alert('no se pudo conectar al servidor');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Usuario/Contraseña incorrecta");
+      });
+  };
+
+  const actualizar = (datos, usuario_id) => {
+    if (token !== null) {
+      const config = {
+        headers: {
+          authorization: token,
+        },
+        params: { usuario_id },
+      };
+
+      const url = `http://localhost:3000/api/usuario/actualizar/${usuario_id}`;
+      axios.put(url, datos, config)
+        .then((resp) => {
+          console.log(resp.data);
+          alert("Se actualizó correctamente");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      alert("Inicie sesión");
+    }
+  };
+
+  const manejarCambioContraseña = (e) => {
+    const { name, value } = e.target;
+    if (name === "nuevaContraseña") {
+      setNuevaContraseña(value);
+    } else if (name === "confirmarContraseña") {
+      setConfirmarContraseña(value);
+    }
+  };
+
+  const manejarSubmit = (e) => {
+    e.preventDefault();
+
+    if (nuevaContraseña !== confirmarContraseña) {
+      alert("Las contraseñas no coinciden");
+      return;
+    }
+
+    const datos = {
+      contraseña: nuevaContraseña,
+    };
+    /* const usuario_id = 1; */ 
+    actualizar(datos, usuario_id); 
+  };
+
+
   return (
-    <header className="menu-header">
+      <header className="menu-header">
       <div className="logo" onClick={() => navegar('/')}>
         <img src="/MDT.png" alt="Logo MDT" className="logo-imagen" />
       </div>
@@ -104,15 +225,28 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       {esModalAbierto && (
         <div className="modal-overlay">
           <div className="modal-contenido">
-            <form>
               <button className="modal-close" onClick={cerrarModal}>X</button>
               <h2>Crea tu cuenta o inicia sesión para obtener beneficios exclusivos</h2>
-              <input type="email" placeholder="Ej: Ejemplo@gmail.com" className="modal-input" />
-              <input type="password" placeholder="Ingrese su contraseña" className="modal-input" />
+            <form onSubmit={(e) => { e.preventDefault(); loguearse({ nombre_usuario: user, contraseña: pass }); }}>
+              <input
+                type="text"
+                placeholder="Usuario"
+                className="modal-input"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Ingrese su contraseña"
+                className="modal-input"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+              />
               <button type="submit" className="modal-submit">Entrar</button>
             </form>
             <p><a href="#" onClick={abrirModalContraseña}>¿Olvidó su contraseña?</a></p>
             <p>¿No tiene una cuenta? <a href="#" onClick={abrirModalRegistro}>Regístrese</a></p>
+
           </div>
         </div>
       )}
@@ -130,6 +264,7 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
               </div>
             </div>
             <button className="boton-continuar-compra" onClick={() => navegar('/confirmacion')}>Continuar compra</button>
+
           </div>
         </div>
       )}
@@ -141,12 +276,50 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
             <form onSubmit={manejarEnvioRegistro}>
               <button className="modal-close" onClick={cerrarModalRegistro}>X</button>
               <h2>Únete a nosotros</h2>
-              <input className='modal-input' type="text" placeholder="Nombre completo" required />
-              <input type="date" placeholder="Fecha de nacimiento" required />
-              <input type="email" placeholder="Correo electrónico" required />
-              <input className='modal-input' type="text" placeholder="Nombre de usuario" required />
-              <input type="password" placeholder="Contraseña" required />
-              <input type="password" placeholder="Confirmar contraseña" required />
+              <input 
+                className="modal-input" 
+                type="text" 
+                placeholder="Nombre completo" 
+                value={nombre} 
+                onChange={(e) => setNombre(e.target.value)} 
+                required 
+              />
+              <input 
+                type="date" 
+                placeholder="Fecha de nacimiento" 
+                value={fechaNacimiento} 
+                onChange={(e) => setFechaNacimiento(e.target.value)} 
+                required 
+              />
+              <input 
+                type="email" 
+                placeholder="Correo electrónico" 
+                value={correo} 
+                onChange={(e) => setCorreo(e.target.value)} 
+                required 
+              />
+              <input 
+                className="modal-input" 
+                type="text" 
+                placeholder="Nombre de usuario" 
+                value={usuarioRegistro} 
+                onChange={(e) => setUsuarioRegistro(e.target.value)} 
+                required 
+              />
+              <input 
+                type="password" 
+                placeholder="Contraseña" 
+                value={contraseñaRegistro} 
+                onChange={(e) => setContraseñaRegistro(e.target.value)} 
+                required 
+              />
+              <input 
+                type="tel" 
+                placeholder="Telefono" 
+                value={telefono} 
+                onChange={(e) => setTelefono(e.target.value)} 
+                required 
+              />
               <button type="submit" className="modal-submit-dark">Crear</button>
             </form>
           </div>
