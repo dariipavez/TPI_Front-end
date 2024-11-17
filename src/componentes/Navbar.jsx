@@ -1,5 +1,5 @@
 // src/components/Navbar.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import './Navbar.css';
 import './Modal.css';
@@ -13,6 +13,19 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
   const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false); // Modal de registro
   const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false); // Modal del carrito
   const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
+  const [esModalOlvidoContraseñaAbierto, setEsModalOlvidoContraseñaAbierto] = useState(false); // Modal de olvido contraseña
+  const [esModalVerificacionAbierto, setEsModalVerificacionAbierto] = useState(false);
+  const [mailVerificar, setMailVerificar] = useState('');
+  const [nombreCompletoVerificar, setNombreCompletoVerificar] = useState('');
+  const [telefonoVerificar, setTelefonoVerificar] = useState('');
+  
+  const abrirModalVerificacion = () => {
+    setEsModalAbierto(false);  // Cerrar el modal de login si estaba abierto
+    setEsModalVerificacionAbierto(true);
+  };
+  
+  const cerrarModalVerificacion = () => setEsModalVerificacionAbierto(false);
+  
 
   const [token, setToken] = useState(null);
   const [logged, setLogged] = useState(false);
@@ -20,6 +33,16 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
   const [pass, setPass] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
   const [confirmarContraseña, setConfirmarContraseña] = useState('');
+  const [mailRecuperar, setMailRecuperar] = useState(''); 
+
+  // Verificar si el usuario está logueado al cargar el componente
+  useEffect(() => {
+    const storedToken = sessionStorage.getItem('token');
+    if (storedToken) {
+      setToken(storedToken);
+      setLogged(true);
+    }
+  }, []);
 
   // Funciones para abrir y cerrar cada modal
   const abrirModal = () => setEsModalAbierto(true);
@@ -40,11 +63,18 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
   };
   const cerrarModalContraseña = () => setEsModalContraseñaAbierto(false);
 
+  const abrirModalOlvidoContraseña = () => {
+    setEsModalAbierto(false);
+    setEsModalOlvidoContraseñaAbierto(true);
+  };
+  const cerrarModalOlvidoContraseña = () => setEsModalOlvidoContraseñaAbierto(false);
+
   const manejarEnvioRegistro = (e) => {
     e.preventDefault();
     cerrarModalRegistro();
     navegar('/');
   };
+
   const loguearse = (datos) => {
     const url = "http://localhost:3000/api/usuario/login";
     axios.post(url, datos)
@@ -56,8 +86,9 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
           setToken(resp.data.token);
           setLogged(true);
           alert('Inicio de sesión exitoso');
+          cerrarModal();
         } else {
-          alert('no se pudo conectar al servidor')
+          alert('No se pudo conectar al servidor');
         }
       })
       .catch((error) => {
@@ -66,54 +97,92 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       });
   };
 
-  const actualizar = (datos, usuario_id) => {
-    if (token !== null) {
-      const config = {
-        headers: {
-          authorization:  sessionStorage.getItem('token'),
-        },
-        params: { usuario_id,
-        },
+  const manejarClickPerfil = () => {
+    if (logged) {
+      navegar('/perfil'); // Si ya estás logueado, te redirige a tu perfil
+    } else {
+      abrirModal(); // Si no estás logueado, abre el modal de login
+    }
+  };
 
-      };
+  
+  const manejarVerificarDatos = (e) => {
+    e.preventDefault();
 
-      const url = `http://localhost:3000/api/usuario/actualizar/${usuario_id}`;
-      axios.put(url, datos, config)
-        .then((resp) => {
-          console.log(resp.data);
-          alert("Se actualizó correctamente");
+    const datosVerificacion = {
+        mail: mailVerificar,
+        nombre_completo: nombreCompletoVerificar,
+        telefono: telefonoVerificar
+    };
+
+    axios.post("http://localhost:3000/api/usuario/verificar/datos", datosVerificacion)
+        .then((response) => {
+            if (response.data.status === "ok") {
+                sessionStorage.setItem('usuario_id', response.data.usuario_id);
+                alert("Datos verificados con éxito.");
+                cerrarModalVerificacion();
+                abrirModalContraseña(); // Procede al siguiente paso
+            } else {
+                alert("Datos incorrectos. Intente nuevamente.");
+            }
         })
         .catch((error) => {
-          console.log(error);
+            if (error.response && error.response.status === 404) {
+                alert("El usuario no fue encontrado. Verifique los datos.");
+            } else {
+                console.error(error);
+                alert("Hubo un error al verificar los datos.");
+            }
         });
-    } else {
-      alert("Inicie sesión");
-    }
+};
+  
+  
+  const manejarNuevaContraseña = (e) => {
+    setNuevaContraseña(e.target.value);
   };
-
-  const manejarCambioContraseña = (e) => {
-    const { name, value } = e.target;
-    if (name === "nuevaContraseña") {
-      setNuevaContraseña(value);
-    } else if (name === "confirmarContraseña") {
-      setConfirmarContraseña(value);
-    }
+  
+  const manejarConfirmarContraseña = (e) => {
+    setConfirmarContraseña(e.target.value);
   };
-
-  const manejarSubmit = (e) => {
+  
+  const manejarCambiarContraseña = (e) => {
     e.preventDefault();
 
     if (nuevaContraseña !== confirmarContraseña) {
-      alert("Las contraseñas no coinciden");
-      return;
+        alert("Las contraseñas no coinciden.");
+        return;
     }
 
-    const datos = {
-      contraseña: nuevaContraseña,
-    };
     const usuario_id = sessionStorage.getItem('usuario_id');
-    actualizar(datos, usuario_id); 
-  };  
+
+    if (!usuario_id) {
+        alert("Usuario no encontrado.");
+        return;
+    }
+
+    const datosContraseña = {
+        nueva_contraseña: nuevaContraseña
+    };
+
+    axios.put(`http://localhost:3000/api/usuario/actualizar/${usuario_id}`, datosContraseña)
+        .then((resp) => {
+            if (resp.data.status === "ok") {
+                alert("Contraseña cambiada con éxito.");
+                cerrarModalContraseña();
+            } else {
+                alert("Error al cambiar la contraseña.");
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            alert("Hubo un error al cambiar la contraseña.");
+        });
+};
+  
+  
+  
+  
+  
 
   return (
     <header className="menu-header">
@@ -152,121 +221,144 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
         </div>
       </nav>
 
-      <input 
-        type="text" 
-        placeholder="¿Qué estás buscando?" 
+      <input
+        type="text"
+        placeholder="¿Qué estás buscando?"
         className="buscador"
-        onChange={(e) => onBuscar(e.target.value)} 
+        onChange={(e) => onBuscar(e.target.value)}
       />
-      
-      <div className="menu-iconos">
-        <span 
-          className="icono-usuario" 
-          onMouseEnter={() => setEsMenuPerfilAbierto(true)}
-          onMouseLeave={() => setEsMenuPerfilAbierto(false)}
-        >
-          {esMenuPerfilAbierto && (
-            <div className="profile-menu">
-              <button className="profile-menu-item">Mi cuenta</button>
-              <button className="profile-menu-item">Cerrar sesión</button>
-            </div>
-          )}
-        </span>
 
-        <span className="icono-usuario" onClick={abrirModal}>👤</span>
+      <div className="menu-iconos">
+        <span className="icono-usuario" onClick={manejarClickPerfil}>👤</span>
         <span className="icono-carrito" onClick={abrirModalCarrito}>🛒</span>
       </div>
 
-      {/* Modales */}
-      {esModalAbierto && (
+      {/* Modal de Login */}
+      {esModalAbierto && !logged && (
         <div className="modal-overlay">
-        <div className="modal-contenido">
-          <form onSubmit={(e) => { e.preventDefault(); loguearse({ nombre_usuario: user, contraseña: pass, token}); }}>
-            <button className="modal-close" onClick={cerrarModal}>X</button>
-            <h2>Crea tu cuenta o inicia sesión para obtener beneficios exclusivos</h2>
-            <input
-              type="text"
-              placeholder="Usuario"
-              className="modal-input"
-              value={user}
-              onChange={(e) => setUser(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Ingrese su contraseña"
-              className="modal-input"
-              value={pass}
-              onChange={(e) => setPass(e.target.value)}
-            />
-            <button type="submit" className="modal-submit">Entrar</button>
-          </form>
-          <p><a href="#" onClick={abrirModalContraseña}>¿Olvidó su contraseña?</a></p>
-          <p>¿No tiene una cuenta? <a href="#" onClick={abrirModalRegistro}>Regístrese</a></p>
-        </div>
-      </div>
-      )}
-
-      {esModalCarritoAbierto && (
-        <div className="modal-overlay">
-          <div className="modal-carrito">
-            <button className="modal-close" onClick={cerrarModalCarrito}>X</button>
-            <h2>Carro de compras</h2>
-            <div className="carrito-producto">
-              <img src="puma_suede_xl.jpg" alt="Puma Suede XL" className="carrito-producto-imagen" />
-              <div className="carrito-producto-info">
-                <h3>Puma Suede XL</h3>
-                <p>$65.000</p>
-              </div>
-            </div>
-            <button className="boton-continuar-compra" onClick={() => navegar('/confirmacion')}>Continuar compra</button>
+          <div className="modal-contenido">
+            <form onSubmit={(e) => { e.preventDefault(); loguearse({ nombre_usuario: user, contraseña: pass, token }); }}>
+              <button className="modal-close" onClick={cerrarModal}>X</button>
+              <h2>Crea tu cuenta o inicia sesión para obtener beneficios exclusivos</h2>
+              <input
+                type="text"
+                placeholder="Usuario"
+                className="modal-input"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Ingrese su contraseña"
+                className="modal-input"
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
+              />
+              <button type="submit" className="modal-submit">Entrar</button>
+            </form>
+            <p><a href="#" onClick={abrirModalVerificacion}>¿Olvidó su contraseña?</a></p>
+            <p>¿No tiene cuenta? <a href="#" onClick={abrirModalRegistro}>Regístrate</a></p>
           </div>
         </div>
       )}
 
+      {/* Modal de Registro */}
       {esModalRegistroAbierto && (
         <div className="modal-overlay">
           <div className="modal-contenido">
-            <button className="modal-back" onClick={() => { setEsModalRegistroAbierto(false); setEsModalAbierto(true); }}>Volver</button>
+            <button className="modal-close" onClick={cerrarModalRegistro}>X</button>
+            <h2>Regístrate para obtener tu cuenta</h2>
             <form onSubmit={manejarEnvioRegistro}>
-              <button className="modal-close" onClick={cerrarModalRegistro}>X</button>
-              <h2>Únete a nosotros</h2>
-              <input className='modal-input' type="text" placeholder="Nombre completo" required />
-              <input type="date" placeholder="Fecha de nacimiento" required />
-              <input type="email" placeholder="Correo electrónico" required />
-              <input className='modal-input' type="text" placeholder="Nombre de usuario" required />
-              <input type="password" placeholder="Contraseña" required />
-              <input type="password" placeholder="Confirmar contraseña" required />
-              <button type="submit" className="modal-submit-dark">Crear</button>
+              <input
+                type="text"
+                placeholder="Nombre de usuario"
+                className="modal-input"
+              />
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                className="modal-input"
+              />
+              <input
+                type="password"
+                placeholder="Contraseña"
+                className="modal-input"
+              />
+              <button type="submit" className="modal-submit">Registrarse</button>
             </form>
           </div>
         </div>
       )}
 
-      {esModalContraseñaAbierto && (
+      {/* Modal de Recuperación de Contraseña */}
+
+      {/* Modal de Cambio de Contraseña */}
+      {esModalVerificacionAbierto && (
         <div className="modal-overlay">
-          <div className="modal-contenido">
-            <button className="modal-back" onClick={() => { setEsModalContraseñaAbierto(false); setEsModalAbierto(true); }}>Volver</button>
-            <form onSubmit={manejarSubmit}>
+    <div className="modal-contenido">
+      <button className="modal-close" onClick={cerrarModalVerificacion}>X</button>
+      <h2>Verifica tus datos</h2>
+      <form onSubmit={manejarVerificarDatos}>
+        <input
+          type="email"
+          placeholder="Correo electrónico"
+          className="modal-input"
+          value={mailVerificar}
+          onChange={(e) => setMailVerificar(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Nombre completo"
+          className="modal-input"
+          value={nombreCompletoVerificar}
+          onChange={(e) => setNombreCompletoVerificar(e.target.value)}
+        />
+        <input
+          type="tel"
+          placeholder="Teléfono"
+          className="modal-input"
+          value={telefonoVerificar}
+          onChange={(e) => setTelefonoVerificar(e.target.value)}
+        />
+        <button type="submit" className="modal-submit">Verificar</button>
+      </form>
+    </div>
+  </div>
+)}
+        {esModalContraseñaAbierto && (
+          <div className="modal-overlay">
+            <div className="modal-contenido">
               <button className="modal-close" onClick={cerrarModalContraseña}>X</button>
               <h2>Cambiar Contraseña</h2>
-              <input
-                type="password"
-                name="nuevaContraseña"
-                placeholder="Nueva contraseña"
-                required
-                value={nuevaContraseña}
-                onChange={manejarCambioContraseña}
-              />
-              <input
-                type="password"
-                name="confirmarContraseña"
-                placeholder="Confirmar nueva contraseña"
-                required
-                value={confirmarContraseña}
-                onChange={manejarCambioContraseña}
-              />
-              <button type="submit" className="modal-submit-dark">Confirmar</button>
-            </form>
+              <form onSubmit={manejarCambiarContraseña}>
+                <input
+                  type="password"
+                  name="nuevaContraseña"
+                  placeholder="Nueva Contraseña"
+                  className="modal-input"
+                  value={nuevaContraseña}
+                  onChange={manejarNuevaContraseña}
+                />
+                <input
+                  type="password"
+                  name="confirmarContraseña"
+                  placeholder="Confirmar Contraseña"
+                  className="modal-input"
+                  value={confirmarContraseña}
+                  onChange={manejarConfirmarContraseña}
+                />
+                <button type="submit" className="modal-submit">Cambiar Contraseña</button>
+              </form>
+            </div>
+          </div>
+        )}
+      {/* Modal de Carrito */}
+      {esModalCarritoAbierto && (
+        <div className="modal-overlay">
+          <div className="modal-contenido">
+            <button className="modal-close" onClick={cerrarModalCarrito}>X</button>
+            <h2>Carrito</h2>
+            <p>Carrito vacío</p>
           </div>
         </div>
       )}
