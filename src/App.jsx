@@ -10,6 +10,7 @@ import Agregar from './componentes/Agregar';
 import Perfil from './componentes/Perfil';
 import RopaUrbana from './componentes/RopaUrbana';
 import RopaDeportiva from './componentes/RopaDeportiva';
+import Usuarios from './componentes/Usuarios';
 
 import { Router, Route } from "wouter";
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/perfil" component={Perfil} />
         <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
         <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
+        <Route path="/usuarios" component={Usuarios} />  {/* Ruta para Usuarios */}
       </Router>
     </div>
   );

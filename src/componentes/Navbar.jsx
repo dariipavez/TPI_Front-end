@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import './Navbar.css';
 import './Modal.css';
-
 import axios from 'axios';
 
-
-const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
+const Navbar = ({ onBuscar }) => {
   const [, navegar] = useLocation();
 
-  // Estado para controlar la apertura de cada modal
-  const [esModalAbierto, setEsModalAbierto] = useState(false); // Modal de inicio de sesión
-  const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false); // Modal de registro
-  const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false); // Modal del carrito
-  const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
+  // Estados para manejar los modales
+  const [esModalAbierto, setEsModalAbierto] = useState(false);
+  const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false);
+  const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false);
+  const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false);
+  const [esMenuPerfilAbierto, setEsMenuPerfilAbierto] = useState(false); // Estado del menú de perfil
 
-  const [token, setToken] = useState(null);
-  const [logged, setLogged] = useState(false);
+  const [token, setToken] = useState(sessionStorage.getItem('token'));
+  const [logged, setLogged] = useState(!!token);
+  const [rol, setRol] = useState(sessionStorage.getItem('rol') || 'usuario'); // Estado para el rol del usuario
   const [user, setUser] = useState('');
   const [pass, setPass] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
@@ -29,8 +29,6 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
   const [usuarioRegistro, setUsuarioRegistro] = useState('');
   const [contraseñaRegistro, setContraseñaRegistro] = useState('');
   const [telefono, setTelefono] = useState('');
-
-
 
   // Funciones para abrir y cerrar cada modal
   const abrirModal = () => setEsModalAbierto(true);
@@ -51,6 +49,39 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
   };
   const cerrarModalContraseña = () => setEsModalContraseñaAbierto(false);
 
+  // Función para abrir y cerrar el menú de perfil
+  const abrirMenuPerfil = () => {
+    setEsMenuPerfilAbierto(!esMenuPerfilAbierto);
+  };
+
+  // Función para manejar el inicio de sesión
+  const loguearse = (datos) => {
+    const url = "http://localhost:3000/api/usuario/login";
+    axios.post(url, datos)
+      .then((resp) => {
+        console.log('Respuesta completa del servidor:', resp.data);
+        if (resp.data.status === "ok") {
+          sessionStorage.setItem('token', resp.data.token); // Guardar el token en localStorage
+          sessionStorage.setItem('usuario_id', resp.data.usuario_id); 
+          sessionStorage.setItem('rol', resp.data.rol); // Guardar el rol en localStorage
+          setToken(resp.data.token);
+          
+          setRol(resp.data.rol);
+          console.log('Rol del usuario:', resp.data.rol); // Imprimir el rol del usuario en la consola
+          setLogged(true);
+          setEsModalAbierto(false); // Cerrar el modal después del inicio de sesión
+          alert('Inicio de sesión exitoso');
+        } else {
+          alert('No se pudo conectar al servidor');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Usuario/Contraseña incorrecta");
+      });
+  };  
+
+  // Función para manejar el registro
   const manejarEnvioRegistro = (e) => {
     e.preventDefault();
 
@@ -64,14 +95,7 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       telefono: telefono,
     };
 
-    console.log("Datos del registro:", {
-      nombre_completo: nombre,
-      fecha_nac: fechaNacimiento,
-      mail: correo,
-      nombre_usuario: usuarioRegistro,
-      contraseña: contraseñaRegistro,
-      telefono: telefono,
-    });
+    console.log("Datos del registro:", datos);
 
     // Enviar los datos al servidor
     const url = "http://localhost:3000/api/usuario/registrarse";
@@ -80,8 +104,8 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
         console.log(resp.data);
         if (resp.data.status === "ok") {
           alert('Registro exitoso');
-          setEsModalRegistroAbierto(false); // Cerrar modal después de registro
-          setEsModalAbierto(true); // Abrir modal de login
+          cerrarModalRegistro(); // Cerrar modal después de registro
+          abrirModal(); // Abrir modal de login
         } else {
           alert('Error en el registro');
         }
@@ -92,75 +116,31 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       });
   };
 
-  const loguearse = (datos) => {
-    const url = "http://localhost:3000/api/usuario/login";
-    axios.post(url, datos)
-      .then((resp) => {
-        console.log(resp.data);
-        if (resp.data.status === "ok") {
-          setToken(resp.data.token);
-          setLogged(true);
-          alert('Inicio de sesión exitoso');
-        } else {
-          alert('no se pudo conectar al servidor');
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Usuario/Contraseña incorrecta");
-      });
+  // Función para manejar el cierre de sesión
+  const cerrarSesion = () => {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('rol');
+    setToken(null);
+    setRol('usuario');
+    setLogged(false);
+    setEsMenuPerfilAbierto(false);
+    alert('Sesión cerrada correctamente');
+    navegar('/'); // Opcional: redirigir al usuario a la página principal
   };
 
-  const actualizar = (datos, usuario_id) => {
-    if (token !== null) {
-      const config = {
-        headers: {
-          authorization: token,
-        },
-        params: { usuario_id },
-      };
-
-      const url = `http://localhost:3000/api/usuario/actualizar/${usuario_id}`;
-      axios.put(url, datos, config)
-        .then((resp) => {
-          console.log(resp.data);
-          alert("Se actualizó correctamente");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      alert("Inicie sesión");
+  useEffect(() => {
+    const savedToken = localStorage.getItem('token');
+    const savedRol = localStorage.getItem('rol');
+    if (savedToken) {
+      setToken(savedToken);
+      setRol(savedRol || 'usuario');
+      console.log('Rol guardado en localStorage:', savedRol); // Imprimir el rol guardado en localStorage en la consola
+      setLogged(true);
     }
-  };
-
-  const manejarCambioContraseña = (e) => {
-    const { name, value } = e.target;
-    if (name === "nuevaContraseña") {
-      setNuevaContraseña(value);
-    } else if (name === "confirmarContraseña") {
-      setConfirmarContraseña(value);
-    }
-  };
-
-  const manejarSubmit = (e) => {
-    e.preventDefault();
-
-    if (nuevaContraseña !== confirmarContraseña) {
-      alert("Las contraseñas no coinciden");
-      return;
-    }
-
-    const datos = {
-      contraseña: nuevaContraseña,
-    };
-    /* const usuario_id = 1; */ 
-    actualizar(datos, usuario_id); 
-  };
-
+  }, []);
 
   return (
-      <header className="menu-header">
+    <header className="menu-header">
       <div className="logo" onClick={() => navegar('/')}>
         <img src="/MDT.png" alt="Logo MDT" className="logo-imagen" />
       </div>
@@ -202,31 +182,60 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
         className="buscador"
         onChange={(e) => onBuscar(e.target.value)} 
       />
-      
-      <div className="menu-iconos">
-        <span 
-          className="icono-usuario" 
-          onMouseEnter={() => setEsMenuPerfilAbierto(true)}
-          onMouseLeave={() => setEsMenuPerfilAbierto(false)}
-        >
-          {esMenuPerfilAbierto && (
-            <div className="profile-menu">
-              <button className="profile-menu-item">Mi cuenta</button>
-              <button className="profile-menu-item">Cerrar sesión</button>
-            </div>
-          )}
-        </span>
 
-        <span className="icono-usuario" onClick={abrirModal}>👤</span>
+      <div className="menu-iconos">
+        {logged ? (
+          <span 
+            className="icono-usuario" 
+            onClick={abrirMenuPerfil}  // Al hacer clic, abre/cierra el menú de perfil
+          >
+            👤
+            {/* Mostrar el menú de perfil si está abierto */}
+            {esMenuPerfilAbierto && (
+              <div className="profile-menu">
+                <button 
+                  className="profile-menu-item" 
+                  onClick={() => navegar('/perfil')} // Redirige a perfil.jsx
+                >
+                  Mi cuenta
+                </button>
+                {rol === 'administrador' && (
+                  <>
+                    <button 
+                      className="profile-menu-item" 
+                      onClick={() => navegar('/usuarios')} // Redirige a usuarios.jsx
+                    >
+                      Administrar usuarios
+                    </button>
+                    <button 
+                      className="profile-menu-item" 
+                      onClick={() => navegar('/agregar')} // Redirige a Agregar.jsx
+                    >
+                      Ingresar nuevo producto
+                    </button>
+                  </>
+                )}
+                <button 
+                  className="profile-menu-item" 
+                  onClick={cerrarSesion} // Llama a la función cerrarSesion al hacer clic
+                >
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+          </span>
+        ) : (
+          <span className="icono-usuario" onClick={abrirModal}>👤</span>
+        )}
         <span className="icono-carrito" onClick={abrirModalCarrito}>🛒</span>
       </div>
 
-      {/* Modales */}
+      {/* Mod      ales */}
       {esModalAbierto && (
         <div className="modal-overlay">
           <div className="modal-contenido">
-              <button className="modal-close" onClick={cerrarModal}>X</button>
-              <h2>Crea tu cuenta o inicia sesión para obtener beneficios exclusivos</h2>
+            <button className="modal-close" onClick={cerrarModal}>X</button>
+            <h2>Crea tu cuenta o inicia sesión para obtener beneficios exclusivos</h2>
             <form onSubmit={(e) => { e.preventDefault(); loguearse({ nombre_usuario: user, contraseña: pass }); }}>
               <input
                 type="text"
@@ -246,25 +255,6 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
             </form>
             <p><a href="#" onClick={abrirModalContraseña}>¿Olvidó su contraseña?</a></p>
             <p>¿No tiene una cuenta? <a href="#" onClick={abrirModalRegistro}>Regístrese</a></p>
-
-          </div>
-        </div>
-      )}
-
-      {esModalCarritoAbierto && (
-        <div className="modal-overlay">
-          <div className="modal-carrito">
-            <button className="modal-close" onClick={cerrarModalCarrito}>X</button>
-            <h2>Carro de compras</h2>
-            <div className="carrito-producto">
-              <img src="puma_suede_xl.jpg" alt="Puma Suede XL" className="carrito-producto-imagen" />
-              <div className="carrito-producto-info">
-                <h3>Puma Suede XL</h3>
-                <p>$65.000</p>
-              </div>
-            </div>
-            <button className="boton-continuar-compra" onClick={() => navegar('/confirmacion')}>Continuar compra</button>
-
           </div>
         </div>
       )}
@@ -272,53 +262,51 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       {esModalRegistroAbierto && (
         <div className="modal-overlay">
           <div className="modal-contenido">
-            <button className="modal-back" onClick={() => { setEsModalRegistroAbierto(false); setEsModalAbierto(true); }}>Volver</button>
+            <button className="modal-back" onClick={abrirModal}>Volver</button>
+            <button className="modal-close" onClick={cerrarModalRegistro}>X</button>
+            <h2>Únete a nosotros</h2>
             <form onSubmit={manejarEnvioRegistro}>
-              <button className="modal-close" onClick={cerrarModalRegistro}>X</button>
-              <h2>Únete a nosotros</h2>
-              <input 
-                className="modal-input" 
-                type="text" 
-                placeholder="Nombre completo" 
-                value={nombre} 
-                onChange={(e) => setNombre(e.target.value)} 
-                required 
+              <input
+                type="text"
+                placeholder="Nombre completo"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
               />
-              <input 
-                type="date" 
-                placeholder="Fecha de nacimiento" 
-                value={fechaNacimiento} 
-                onChange={(e) => setFechaNacimiento(e.target.value)} 
-                required 
+              <input
+                type="date"
+                placeholder="Fecha de nacimiento"
+                value={fechaNacimiento}
+                onChange={(e) => setFechaNacimiento(e.target.value)}
+                required
               />
-              <input 
-                type="email" 
-                placeholder="Correo electrónico" 
-                value={correo} 
-                onChange={(e) => setCorreo(e.target.value)} 
-                required 
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+                required
               />
-              <input 
-                className="modal-input" 
-                type="text" 
-                placeholder="Nombre de usuario" 
-                value={usuarioRegistro} 
-                onChange={(e) => setUsuarioRegistro(e.target.value)} 
-                required 
+              <input
+                type="text"
+                placeholder="Nombre de usuario"
+                value={usuarioRegistro}
+                onChange={(e) => setUsuarioRegistro(e.target.value)}
+                required
               />
-              <input 
-                type="password" 
-                placeholder="Contraseña" 
-                value={contraseñaRegistro} 
-                onChange={(e) => setContraseñaRegistro(e.target.value)} 
-                required 
+              <input
+                type="password"
+                placeholder="Contraseña"
+                value={contraseñaRegistro}
+                onChange={(e) => setContraseñaRegistro(e.target.value)}
+                required
               />
-              <input 
-                type="tel" 
-                placeholder="Telefono" 
-                value={telefono} 
-                onChange={(e) => setTelefono(e.target.value)} 
-                required 
+              <input
+                type="tel"
+                placeholder="Teléfono"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+                required
               />
               <button type="submit" className="modal-submit-dark">Crear</button>
             </form>
@@ -329,14 +317,37 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
       {esModalContraseñaAbierto && (
         <div className="modal-overlay">
           <div className="modal-contenido">
-            <button className="modal-back" onClick={() => { setEsModalContraseñaAbierto(false); setEsModalAbierto(true); }}>Volver</button>
-            <form>
-              <button className="modal-close" onClick={cerrarModalContraseña}>X</button>
-              <h2>Cambiar Contraseña</h2>
-              <input type="password" placeholder="Nueva contraseña" required />
-              <input type="password" placeholder="Confirmar nueva contraseña" required />
-              <button type="submit" className="modal-submit-dark">Confirmar</button>
+            <button className="modal-close" onClick={cerrarModalContraseña}>X</button>
+            <h2>Cambiar Contraseña</h2>
+            <form onSubmit={manejarSubmit}>
+              <input
+                type="password"
+                name="nuevaContraseña"
+                placeholder="Nueva contraseña"
+                value={nuevaContraseña}
+                onChange={manejarCambioContraseña}
+                required
+              />
+              <input
+                type="password"
+                name="confirmarContraseña"
+                placeholder="Confirmar nueva contraseña"
+                value={confirmarContraseña}
+                onChange={manejarCambioContraseña}
+                required
+              />
+              <button type="submit" className="modal-submit">Cambiar</button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {esModalCarritoAbierto && (
+        <div className="modal-overlay">
+          <div className="modal-contenido">
+            <button className="modal-close" onClick={cerrarModalCarrito}>X</button>
+            <h2>Tu Carrito</h2>
+            {/* Aquí puedes agregar el contenido del carrito */}
           </div>
         </div>
       )}
