@@ -17,14 +17,13 @@ const Navbar = ({ onBuscar }) => {
   const [mailVerificar, setMailVerificar] = useState('');
   const [nombreCompletoVerificar, setNombreCompletoVerificar] = useState('');
   const [telefonoVerificar, setTelefonoVerificar] = useState('');
-  
+
   const abrirModalVerificacion = () => {
     setEsModalAbierto(false);  // Cerrar el modal de login si estaba abierto
     setEsModalVerificacionAbierto(true);
   };
-  
+
   const cerrarModalVerificacion = () => setEsModalVerificacionAbierto(false);
-  
 
   const [token, setToken] = useState(sessionStorage.getItem('token'));
   const [logged, setLogged] = useState(!!token);
@@ -33,13 +32,13 @@ const Navbar = ({ onBuscar }) => {
   const [pass, setPass] = useState('');
   const [nuevaContraseña, setNuevaContraseña] = useState('');
   const [confirmarContraseña, setConfirmarContraseña] = useState('');
-  const [mailRecuperar, setMailRecuperar] = useState(''); 
+  const [mailRecuperar, setMailRecuperar] = useState('');
 
   // Verificar si el usuario está logueado al cargar el componente
   useEffect(() => {
-    const storedToken = sessionStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      setToken(token);
       setLogged(true);
     }
   }, []);
@@ -71,13 +70,6 @@ const Navbar = ({ onBuscar }) => {
   };
   const cerrarModalContraseña = () => setEsModalContraseñaAbierto(false);
 
-  // Función para abrir y cerrar el menú de perfil
-  const abrirMenuPerfil = () => {
-    setEsMenuPerfilAbierto(!esMenuPerfilAbierto);
-  };
-
-  // Función para manejar el inicio de sesión
-
   const abrirModalOlvidoContraseña = () => {
     setEsModalAbierto(false);
     setEsModalOlvidoContraseñaAbierto(true);
@@ -90,44 +82,41 @@ const Navbar = ({ onBuscar }) => {
     navegar('/');
   };
 
-
   const loguearse = (datos) => {
     const url = "http://localhost:3000/api/usuario/login";
     axios.post(url, datos)
       .then((resp) => {
         console.log('Respuesta completa del servidor:', resp.data);
         if (resp.data.status === "ok") {
-
-          sessionStorage.setItem('token', resp.data.token); // Guardar el token en localStorage
-          sessionStorage.setItem('usuario_id', resp.data.usuario_id); 
-          sessionStorage.setItem('rol', resp.data.rol); // Guardar el rol en localStorage
-
           sessionStorage.setItem('token', resp.data.token);
           sessionStorage.setItem('usuario_id', resp.data.usuario_id);
-
-          setToken(resp.data.token);
+          sessionStorage.setItem('rol', resp.data.rol);
           
-          setRol(resp.data.rol);
-          console.log('Rol del usuario:', resp.data.rol); // Imprimir el rol del usuario en la consola
-          setLogged(true);
-          setEsModalAbierto(false); // Cerrar el modal después del inicio de sesión
-          alert('Inicio de sesión exitoso');
-          cerrarModal();
-        } else {
-          alert('No se pudo conectar al servidor');
+          const { token, usuario_id, rol } = resp.data;
+          if (token) {
+            setToken(token);
+            setRol(rol);
+            console.log('Rol del usuario:', rol);
+            setLogged(true);
+            setEsModalAbierto(false);
+            alert('Inicio de sesión exitoso');
+            cerrarModal();
+          } else {
+            alert('No se pudo conectar al servidor');
+          }
         }
       })
       .catch((error) => {
         console.log(error);
         alert("Usuario/Contraseña incorrecta");
       });
-  };  
+  };
 
   const manejarClickPerfil = () => {
     if (logged) {
-      navegar('/perfil'); // Si ya estás logueado, te redirige a tu perfil
+      navegar('/perfil');
     } else {
-      abrirModal(); // Si no estás logueado, abre el modal de login
+      abrirModal();
     }
   };
 
@@ -147,7 +136,7 @@ const Navbar = ({ onBuscar }) => {
                 sessionStorage.setItem('usuario_id', response.data.usuario_id);
                 alert("Datos verificados con éxito.");
                 cerrarModalVerificacion();
-                abrirModalContraseña(); // Procede al siguiente paso
+                abrirModalContraseña();
             } else {
                 alert("Datos incorrectos. Intente nuevamente.");
             }

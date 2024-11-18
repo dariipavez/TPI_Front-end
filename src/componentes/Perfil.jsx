@@ -1,33 +1,92 @@
-// Perfil.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import './Perfil.css';
 
 const Perfil = () => {
   const [datosPerfil, setDatosPerfil] = useState({
-    nombre: '',
-    apellido: '',
-    correo: '',
-    fechaNacimiento: '',
-    dni: '',
-    genero: '',
+    nombre_usuario: '',
+    nombre_completo: '',
+    mail: '',
+    fecha_nac: '',
     telefono: ''
   });
-  const [estaEditando, setEstaEditando] = useState(false);
+  const [editando, setEditando] = useState(false);
 
-  const manejarCambio = (evento) => {
-    const { name, value } = evento.target;
-    setDatosPerfil((datosPrevios) => ({ ...datosPrevios, [name]: value }));
+  useEffect(() => {
+    const obtenerPerfil = () => {
+      const usuario_id = sessionStorage.getItem('usuario_id');
+      const token = sessionStorage.getItem('token');
+      if (!usuario_id || !token) {
+        console.error('No se encontró el ID de usuario o el token.');
+        return;
+      }
+
+      const config = {
+        headers: {
+          Authorization: token
+        }
+      };
+      const url = `http://localhost:3000/api/rutasUsuario/ver/perfil/${usuario_id}`;
+      axios.get(url, config)
+        .then((resp) => {
+          if (resp.data.usuario) {
+            const data = resp.data.usuario;
+            setDatosPerfil({
+              nombre_usuario: data.nombre_usuario,
+              nombre_completo: data.nombre_completo,
+              mail: data.mail,
+              fecha_nac: new Date(data.fecha_nac).toLocaleDateString('es-AR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }),
+            
+              telefono: data.telefono
+            });
+          } else {
+            console.error('No se encontraron datos del usuario.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error al obtener los datos del perfil:', error);
+        });
+    };
+
+    obtenerPerfil();
+  }, []);
+
+  const manejarInput = (e) => {
+    const { name, value } = e.target;
+    setDatosPerfil(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
-  const manejarClickEditar = () => {
-    setEstaEditando(true);
-  };
-
-  const manejarClickGuardar = () => {
-    setEstaEditando(false);
-    // Aquí puedes agregar lógica para guardar los datos, si es necesario
+  const guardarDatos = () => {
+    const usuario_id = sessionStorage.getItem('usuario_id');
+    const token = sessionStorage.getItem('token');
+    if (!usuario_id || !token) {
+      console.error('No se encontró el ID de usuario o el token.');
+      return;
+    }
+    const datosActualizados = { ...datosPerfil, fecha_nac: new Date(datosPerfil.fecha_nac).toISOString().split('T')[0] };
+    const config = {
+      headers: {
+        Authorization: token
+      }
+    };
+    const url = `http://localhost:3000/api/usuario/actualizar/${usuario_id}`;
+    axios.put(url, datosActualizados, config)
+      .then((resp) => {
+        console.log("Datos actualizados:", resp.data);
+        setEditando(false);
+      })
+      .catch((error) => {
+        console.error('Error al actualizar los datos del perfil:', error);
+      });
   };
 
   return (
@@ -36,87 +95,89 @@ const Perfil = () => {
       <div className="contenedor-perfil">
         <div className="barra-lateral-perfil">
           <button className="boton-barra-lateral">Perfil</button>
-          <button className="boton-barra-lateral">Cerrar sesión</button>
+          <button
+            className="boton-barra-lateral"
+            onClick={() => {
+              sessionStorage.clear();
+              window.location.href = '/';
+            }}
+          >
+            Cerrar sesión
+          </button>
         </div>
         <div className="contenido-perfil">
           <h2>Perfil</h2>
           <div className="tarjeta-perfil">
             <div className="fila-perfil">
-              <input
-                type="text"
-                name="nombre"
-                placeholder="Nombre"
-                value={datosPerfil.nombre}
-                onChange={manejarCambio}
-                disabled={!estaEditando}
-              />
-              <input
-                type="text"
-                name="apellido"
-                placeholder="Apellido"
-                value={datosPerfil.apellido}
-                onChange={manejarCambio}
-                disabled={!estaEditando}
-              />
+              <h3>Nombre de Usuario</h3>
+              {editando ? (
+                <input 
+                  type="text" 
+                  name="nombre_usuario" 
+                  value={datosPerfil.nombre_usuario} 
+                  onChange={manejarInput} 
+                />
+              ) : (
+                <p>{datosPerfil.nombre_usuario}</p>
+              )}
+              <h3>Nombre:</h3>
+              {editando ? (
+                <input 
+                  type="text" 
+                  name="nombre_completo" 
+                  value={datosPerfil.nombre_completo} 
+                  onChange={manejarInput} 
+                />
+              ) : (
+                <p>{datosPerfil.nombre_completo}</p>
+              )}
             </div>
             <div className="fila-perfil">
-              <input
-                type="email"
-                name="correo"
-                placeholder="Correo electrónico"
-                value={datosPerfil.correo}
-                onChange={manejarCambio}
-                disabled={!estaEditando}
-              />
-              <input
-                type="date"
-                name="fechaNacimiento"
-                placeholder="Fecha de nacimiento"
-                value={datosPerfil.fechaNacimiento}
-                onChange={manejarCambio}
-                disabled={!estaEditando}
-              />
+              <h3>Mail:</h3>
+              {editando ? (
+                <input 
+                  type="text" 
+                  name="mail" 
+                  value={datosPerfil.mail} 
+                  onChange={manejarInput} 
+                />
+              ) : (
+                <p>{datosPerfil.mail}</p>
+              )}
+              <h3>Fecha de Nacimiento</h3>
+              {editando ? (
+                <input 
+                  type="text" 
+                  name="fecha_nac" 
+                  value={datosPerfil.fecha_nac} 
+                  onChange={manejarInput} 
+                />
+              ) : (
+                <p>{datosPerfil.fecha_nac}</p>
+              )}
             </div>
             <div className="fila-perfil">
-              <input
-                type="text"
-                name="dni"
-                placeholder="DNI"
-                value={datosPerfil.dni}
-                onChange={manejarCambio}
-                disabled={!estaEditando}
-              />
-              <select
-                name="genero"
-                value={datosPerfil.genero}
-                onChange={manejarCambio}
-                disabled={!estaEditando}
-              >
-                <option value="">Seleccionar Género</option>
-                <option value="hombre">Hombre</option>
-                <option value="mujer">Mujer</option>
-                <option value="otro">Otro</option>
-              </select>
+              <h3>Teléfono:</h3>
+              {editando ? (
+                <input 
+                  type="text" 
+                  name="telefono" 
+                  value={datosPerfil.telefono} 
+                  onChange={manejarInput} 
+                />
+              ) : (
+                <p>{datosPerfil.telefono}</p>
+              )}
             </div>
-            <div className="fila-perfil">
-              <input
-                type="text"
-                name="telefono"
-                placeholder="Teléfono"
-                value={datosPerfil.telefono}
-                onChange={manejarCambio}
-                disabled={!estaEditando}
-              />
-            </div>
-            {estaEditando ? (
-              <button className="boton-guardar" onClick={manejarClickGuardar}>
-                Guardar
-              </button>
-            ) : (
-              <button className="boton-editar" onClick={manejarClickEditar}>
-                Editar
-              </button>
-            )}
+          <button onClick={() => {
+            if (editando) {
+              guardarDatos();
+            } else {
+              setEditando(true);
+            }
+          }}>
+            {editando ? 'Guardar' : 'Editar'}
+          </button>
           </div>
         </div>
       </div>
