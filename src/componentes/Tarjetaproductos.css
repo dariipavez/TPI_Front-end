@@ -2,12 +2,16 @@
   border: 1px solid #ccc;
   padding: 10px;
   text-align: center;
-  width: 293px;
+  width: 125%;
   height: 293px;
+  border-radius: 4px;
+  margin: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
 }
 
 .tarjeta-producto-imagen {
-  width: auto;
+  width: 100%;
   height: auto;
   max-height: 150px;
   object-fit: cover;
@@ -15,6 +19,20 @@
 }
 
 
+.tarjeta-producto-link {
+  text-decoration: none;
+  color: inherit;
+  width: 50%;
+}
+
+.tarjeta-producto:hover {
+  transform: scale(1.02);
+}
+
+
+.tarjeta-producto-nombre, .tarjeta-producto-precio {
+  text-align: center;
+}
 
 .precio {
   color: green;

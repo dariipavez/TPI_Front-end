@@ -1,22 +1,47 @@
-import React from 'react';
-import './Tarjetaproductos.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './Tarjetaproductos.css'; 
 import { Link } from "wouter";
 
-const TarjetaProductos = ({ productos, busqueda }) => {
-  const productosFiltrados = productos.filter((producto) =>
-    producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
-  );
+const TarjetaProductos = ({ busqueda }) => {
+  const [productos, setProductos] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const obtenerProductos = () => {
+      const url = `http://localhost:3000/api/rutasPublic/ver/producto`;
+      axios.get(url)
+        .then((resp) => {
+          if (resp.data.productos) {
+            setProductos(resp.data.productos);
+          } else {
+            console.error('No se encontraron datos de productos.');
+          }
+        })
+        .catch((error) => {
+          setError('Error al obtener los datos de los productos.');
+          console.error('Error al obtener los datos de los productos:', error);
+        });
+    };
+
+    obtenerProductos();
+  }, []);
 
   return (
     <div className="menu-productos">
-      {productosFiltrados.map((producto) => (
-        <div key={producto.id} className="tarjeta-producto">
-          <Link href={`/detalle/${producto.id}`}>
-            <img src={producto.imagen} alt={producto.nombre} className="tarjeta-producto-imagen" />
-          </Link>
-          <h3>{producto.nombre}</h3>
-          <p>{producto.precio}</p>
-        </div>
+      {error && <p>{error}</p>}
+      {productos.map(producto => (
+        <Link key={producto.id} href={`/detalle/${producto.id}`} className="tarjeta-producto-link">
+          <div className="tarjeta-producto">
+            <img 
+              src={`http://localhost:3000/uploads/${producto.ruta_imagen?.split('\\').pop()}`} 
+              alt={producto.nombre} 
+              className="tarjeta-producto-imagen" 
+            />
+            <h3 className="tarjeta-producto-nombre">{producto.nombre}</h3>
+            <p className="tarjeta-producto-precio">${producto.precio}</p>
+          </div>
+        </Link>
       ))}
     </div>
   );

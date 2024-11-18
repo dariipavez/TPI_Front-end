@@ -30,10 +30,21 @@ const TarjetaDetalle = () => {
       <div className="tarjeta">
         <div className="tarjeta-detalle">
           <div className="tarjeta-detalle-fotos">
+
             <div className="foto">FOTO</div>
             <div className="foto">FOTO</div>
             <div className="foto">FOTO</div>
             <div className="foto">FOTO</div>
+
+            {producto.imagenes.map((imagen, index) => (
+              <img 
+                key={index}
+                src={`http://localhost:3000/uploads/${imagen.split('\\').pop()}`} 
+                alt={producto.nombre} 
+                className="foto"
+              />
+            ))}
+
           </div>
 
           <div className="tarjeta-detalle-info">
