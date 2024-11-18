@@ -28,7 +28,7 @@ function App() {
           <Menu busqueda={busqueda} onBuscar={manejarBusqueda} />
         </Route>
 
-        <Route path="/detalle/:productId" component={Tarjetadetalle} />
+        <Route path="/detalle/:productId" component={({ params }) => <TarjetaDetalle id={params.productId} />} />
         <Route path="/confirmacion" component={Tarjetaconfirmacion} />
         <Route path="/info" component={TarjetaInfo} />
         <Route path="/agradecimiento" component={Agradecimiento} />

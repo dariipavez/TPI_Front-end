@@ -1,15 +1,37 @@
-// src/components/TarjetaDetalle.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Boton from './Boton';
 import './TarjetaDetalle.css';
 
-const TarjetaDetalle = () => {
+const TarjetaDetalle = ({ id }) => {
+  const [producto, setProducto] = useState(null);
   const [talleSeleccionado, setTalleSeleccionado] = useState(null);
   const [cantidad, setCantidad] = useState(1);
-  const precioUnitario = 65000; // Puedes ajustar el precio según el producto
-  const total = precioUnitario * cantidad;
+
+  useEffect(() => {
+    const obtenerProducto = () => {
+      const url = `http://localhost:3000/api/rutasPublic/ver/producto/${id}`;
+      axios.get(url)
+        .then((resp) => {
+          if (resp.data.producto) {
+            setProducto(resp.data.producto);
+          } else {
+            console.error('No se encontraron datos del producto.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error al obtener los datos del producto:', error);
+        });
+    };
+
+    obtenerProducto();
+  }, [id]);
+
+  if (!producto) {
+    return <div>Cargando...</div>;
+  }
 
   const manejarSeleccionDeTalle = (talle) => {
     setTalleSeleccionado(talle);
@@ -23,6 +45,8 @@ const TarjetaDetalle = () => {
     }
   };
 
+  const total = producto.precio * cantidad;
+
   return (
     <div className="tarjeta-pagina">
       <Navbar />
@@ -30,13 +54,7 @@ const TarjetaDetalle = () => {
       <div className="tarjeta">
         <div className="tarjeta-detalle">
           <div className="tarjeta-detalle-fotos">
-
-            <div className="foto">FOTO</div>
-            <div className="foto">FOTO</div>
-            <div className="foto">FOTO</div>
-            <div className="foto">FOTO</div>
-
-            {producto.imagenes.map((imagen, index) => (
+            {producto.imagenes?.map((imagen, index) => (
               <img 
                 key={index}
                 src={`http://localhost:3000/uploads/${imagen.split('\\').pop()}`} 
@@ -44,12 +62,11 @@ const TarjetaDetalle = () => {
                 className="foto"
               />
             ))}
-
           </div>
 
           <div className="tarjeta-detalle-info">
-            <h2>Nombre del Producto</h2>
-            <p className="precio">${precioUnitario}</p>
+            <h2>{producto.nombre}</h2>
+            <p className="precio">${producto.precio}</p>
             <p className="talle">TALLE</p>
             <div className="talles">
               {['S', 'M', 'L', 'XL', 'XXL'].map((talle) => (
@@ -69,7 +86,7 @@ const TarjetaDetalle = () => {
               <button onClick={() => manejarCambioDeCantidad('incrementar')}>+</button>
             </div>
             <div className="tarjeta-precio">
-              <p>Precio: ${precioUnitario}</p>
+              <p>Precio: ${producto.precio}</p>
               <p>Total: ${total}</p>
             </div>
 
