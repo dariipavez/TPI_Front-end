@@ -43,6 +43,7 @@ const TarjetaProductos = ({ busqueda }) => {
           </div>
         </Link>
       ))}
+
     </div>
   );
 };

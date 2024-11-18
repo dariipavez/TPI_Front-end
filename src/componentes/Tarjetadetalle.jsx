@@ -54,6 +54,7 @@ const TarjetaDetalle = ({ id }) => {
       <div className="tarjeta">
         <div className="tarjeta-detalle">
           <div className="tarjeta-detalle-fotos">
+
             {producto.imagenes?.map((imagen, index) => (
               <img 
                 key={index}
