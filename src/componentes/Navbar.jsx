@@ -37,9 +37,9 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
 
   // Verificar si el usuario está logueado al cargar el componente
   useEffect(() => {
-    const storedToken = sessionStorage.getItem('token');
-    if (storedToken) {
-      setToken(storedToken);
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      setToken(token);
       setLogged(true);
     }
   }, []);
@@ -79,10 +79,13 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
     const url = "http://localhost:3000/api/usuario/login";
     axios.post(url, datos)
       .then((resp) => {
-        console.log(resp.data);
-        if (resp.data.status === "ok") {
-          sessionStorage.setItem('token', resp.data.token);
-          sessionStorage.setItem('usuario_id', resp.data.usuario_id);
+        const token=resp.data.token
+        const usuario_id=resp.data.usuario_id
+        const rol=resp.data.rol
+        if (token) {
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('usuario_id',usuario_id)
+          sessionStorage.setItem('rol', rol)
           setToken(resp.data.token);
           setLogged(true);
           alert('Inicio de sesión exitoso');
@@ -99,9 +102,9 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
 
   const manejarClickPerfil = () => {
     if (logged) {
-      navegar('/perfil'); // Si ya estás logueado, te redirige a tu perfil
+      navegar('/perfil');
     } else {
-      abrirModal(); // Si no estás logueado, abre el modal de login
+      abrirModal();
     }
   };
 
@@ -121,7 +124,7 @@ const Navbar = ({ onBuscar, esMenuPerfilAbierto, setEsMenuPerfilAbierto }) => {
                 sessionStorage.setItem('usuario_id', response.data.usuario_id);
                 alert("Datos verificados con éxito.");
                 cerrarModalVerificacion();
-                abrirModalContraseña(); // Procede al siguiente paso
+                abrirModalContraseña();
             } else {
                 alert("Datos incorrectos. Intente nuevamente.");
             }
