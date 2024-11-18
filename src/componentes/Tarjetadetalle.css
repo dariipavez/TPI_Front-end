@@ -121,3 +121,122 @@
   align-items: center;
   justify-content: center;
 }
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 600px) {
+  .tarjeta {
+    margin: 0 auto;
+    width: 95%; /* Ajustamos el ancho para que ocupe casi toda la pantalla */
+    padding: 10px;
+    display: flex;
+    align-items: center; /* Centramos el contenido */
+  }
+
+  .tarjeta-detalle {
+    padding: 15px;
+    text-align: center;
+    width: 100%; /* Aseguramos que ocupe todo el ancho disponible */
+  }
+
+  .tarjeta-detalle-fotos {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las fotos se alineen en varias filas si es necesario */
+    justify-content: center;
+    gap: 10px; /* Aumentamos el espacio entre las fotos */
+  }
+
+  .foto {
+    width: 100px;
+    height: 100px;
+  }
+
+  .talles {
+    display: flex;
+    flex-direction: row; /* Alineamos los talles en una fila */
+    justify-content: center;
+    gap: 10px; /* Aumentamos el espacio entre las opciones de talles */
+  }
+
+  .selector-cantidad {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Mayor espacio entre los botones */
+  }
+
+  .selector-cantidad button {
+    width: 30px;
+    height: 30px;
+    font-size: 18px; /* Aumentamos el tamaño de la fuente para mejor legibilidad */
+  }
+
+  .selector-cantidad span {
+    font-size: 16px;
+  }
+
+  .tarjeta-precio p {
+    font-size: 16px;
+    margin-top: 10px; /* Añadimos margen superior para separarlo del contenido anterior */
+  }
+
+  footer {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    bottom: 0;
+    left: 0;
+    background-color: #333; /* Color de fondo del footer */
+    color: white; /* Color del texto del footer */
+  }
+
+  nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Asegura que el navbar esté siempre en la parte superior */
+  }
+
+  .menu-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .menu-logo {
+    order: 1;
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .menu-buscador {
+    order: 2;
+    flex-grow: 2;
+    text-align: center;
+  }
+
+  .menu-iconos {
+    order: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: auto;
+    gap: 20px;
+  }
+
+  .icono-usuario {
+    order: 1;
+  }
+
+  .icono-carrito {
+    order: 2;
+  }
+}

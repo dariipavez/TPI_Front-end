@@ -21,3 +21,16 @@
   background-color: #333;
   color: white;
 }
+
+/* Media query para pantallas pequeñas */
+@media (max-width: 600px) {
+  .marcador {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .marcador-item {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
