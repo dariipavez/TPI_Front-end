@@ -45,6 +45,29 @@ const TarjetaDetalle = ({ id }) => {
     }
   };
 
+  const agregarAlCarrito = () => {
+    const productoCarrito = {
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      imagen: producto.imagenes[0], // Asumiendo que la primera imagen es la principal
+      talle: talleSeleccionado,
+      cantidad: cantidad,
+    };
+
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const productoExistente = carrito.find(item => item.id === productoCarrito.id && item.talle === productoCarrito.talle);
+    
+    if (productoExistente) {
+      productoExistente.cantidad += cantidad;
+    } else {
+      carrito.push(productoCarrito);
+    }
+
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    alert('Producto agregado al carrito');
+  };
+
   const total = producto.precio * cantidad;
 
   return (
@@ -54,7 +77,6 @@ const TarjetaDetalle = ({ id }) => {
       <div className="tarjeta">
         <div className="tarjeta-detalle">
           <div className="tarjeta-detalle-fotos">
-
             {producto.imagenes?.map((imagen, index) => (
               <img 
                 key={index}
@@ -91,7 +113,7 @@ const TarjetaDetalle = ({ id }) => {
               <p>Total: ${total}</p>
             </div>
 
-            <Boton texto="Agregar al carrito" onClick={() => console.log('Producto agregado')} />
+            <Boton texto="Agregar al carrito" onClick={agregarAlCarrito} />
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import './Navbar.css';
 import './Modal.css';
 import axios from 'axios';
 
-const Navbar = ({ onBuscar }) => {
+const Navbar = () => {
   const [, navegar] = useLocation();
 
   // Estado para controlar la apertura de cada modal
@@ -14,6 +14,7 @@ const Navbar = ({ onBuscar }) => {
   const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
   const [esModalOlvidoContraseñaAbierto, setEsModalOlvidoContraseñaAbierto] = useState(false); // Modal de olvido contraseña
   const [esModalVerificacionAbierto, setEsModalVerificacionAbierto] = useState(false);
+  const [esMenuPerfilAbierto, setEsMenuPerfilAbierto] = useState(false);
   const [mailVerificar, setMailVerificar] = useState('');
   const [nombreCompletoVerificar, setNombreCompletoVerificar] = useState('');
   const [telefonoVerificar, setTelefonoVerificar] = useState('');
@@ -76,6 +77,10 @@ const Navbar = ({ onBuscar }) => {
   };
   const cerrarModalOlvidoContraseña = () => setEsModalOlvidoContraseñaAbierto(false);
 
+  const abrirMenuPerfil = () => {
+    setEsMenuPerfilAbierto(!esMenuPerfilAbierto);
+  };
+
   const manejarEnvioRegistro = (e) => {
     e.preventDefault();
     cerrarModalRegistro();
@@ -120,83 +125,78 @@ const Navbar = ({ onBuscar }) => {
     }
   };
 
-  
   const manejarVerificarDatos = (e) => {
     e.preventDefault();
 
     const datosVerificacion = {
-        mail: mailVerificar,
-        nombre_completo: nombreCompletoVerificar,
-        telefono: telefonoVerificar
+      mail: mailVerificar,
+      nombre_completo: nombreCompletoVerificar,
+      telefono: telefonoVerificar
     };
 
     axios.post("http://localhost:3000/api/usuario/verificar/datos", datosVerificacion)
-        .then((response) => {
-            if (response.data.status === "ok") {
-                sessionStorage.setItem('usuario_id', response.data.usuario_id);
-                alert("Datos verificados con éxito.");
-                cerrarModalVerificacion();
-                abrirModalContraseña();
-            } else {
-                alert("Datos incorrectos. Intente nuevamente.");
-            }
-        })
-        .catch((error) => {
-            if (error.response && error.response.status === 404) {
-                alert("El usuario no fue encontrado. Verifique los datos.");
-            } else {
-                console.error(error);
-                alert("Hubo un error al verificar los datos.");
-            }
-        });
-};
-  
-  
+      .then((response) => {
+        if (response.data.status === "ok") {
+          sessionStorage.setItem('usuario_id', response.data.usuario_id);
+          alert("Datos verificados con éxito.");
+          cerrarModalVerificacion();
+          abrirModalContraseña();
+        } else {
+          alert("Datos incorrectos. Intente nuevamente.");
+        }
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          alert("El usuario no fue encontrado. Verifique los datos.");
+        } else {
+          console.error(error);
+          alert("Hubo un error al verificar los datos.");
+        }
+      });
+  };
+
   const manejarNuevaContraseña = (e) => {
     setNuevaContraseña(e.target.value);
   };
-  
+
   const manejarConfirmarContraseña = (e) => {
     setConfirmarContraseña(e.target.value);
   };
 
   const manejarSubmit = (e) => {
-
     e.preventDefault();
 
-    // Crear los datos del registro
-    const datos = {
-      nombre_completo: nombre,
-      fecha_nac: fechaNacimiento,
-      mail: correo,
-      nombre_usuario: usuarioRegistro,
-      contraseña: contraseñaRegistro,
-      telefono: telefono,
+    if (nuevaContraseña !== confirmarContraseña) {
+      alert("Las contraseñas no coinciden.");
+      return;
+    }
+
+    const usuario_id = sessionStorage.getItem('usuario_id');
+
+    if (!usuario_id) {
+      alert("Usuario no encontrado.");
+      return;
+    }
+
+    const datosContraseña = {
+      nueva_contraseña: nuevaContraseña
     };
 
-
-    console.log("Datos del registro:", datos);
-
-    // Enviar los datos al servidor
-    const url = "http://localhost:3000/api/usuario/registrarse";
-    axios.post(url, datos)
+    axios.put(`http://localhost:3000/api/usuario/actualizar/${usuario_id}`, datosContraseña)
       .then((resp) => {
-        console.log(resp.data);
         if (resp.data.status === "ok") {
-          alert('Registro exitoso');
-          cerrarModalRegistro(); // Cerrar modal después de registro
-          abrirModal(); // Abrir modal de login
+          alert("Contraseña cambiada con éxito.");
+          cerrarModalContraseña();
         } else {
-          alert('Error en el registro');
+          alert("Error al cambiar la contraseña.");
         }
       })
       .catch((error) => {
         console.log(error);
-        alert("Hubo un problema al registrarse");
+        alert("Hubo un error al cambiar la contraseña.");
       });
   };
 
-  // Función para manejar el cierre de sesión
   const cerrarSesion = () => {
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('rol');
@@ -219,41 +219,55 @@ const Navbar = ({ onBuscar }) => {
     }
   }, []);
 
-  
   const manejarCambiarContraseña = (e) => {
     e.preventDefault();
 
     if (nuevaContraseña !== confirmarContraseña) {
-        alert("Las contraseñas no coinciden.");
-        return;
+      alert("Las contraseñas no coinciden.");
+      return;
     }
-
 
     const usuario_id = sessionStorage.getItem('usuario_id');
 
     if (!usuario_id) {
-        alert("Usuario no encontrado.");
-        return;
+      alert("Usuario no encontrado.");
+      return;
     }
 
     const datosContraseña = {
-        nueva_contraseña: nuevaContraseña
+      nueva_contraseña: nuevaContraseña
     };
 
     axios.put(`http://localhost:3000/api/usuario/actualizar/${usuario_id}`, datosContraseña)
-        .then((resp) => {
-            if (resp.data.status === "ok") {
-                alert("Contraseña cambiada con éxito.");
-                cerrarModalContraseña();
-            } else {
-                alert("Error al cambiar la contraseña.");
-            }
-        })
-        .catch((error) => {
-            console.log(error);
-            alert("Hubo un error al cambiar la contraseña.");
-        });
-};
+      .then((resp) => {
+        if (resp.data.status === "ok") {
+          alert("Contraseña cambiada con éxito.");
+          cerrarModalContraseña();
+        } else {
+          alert("Error al cambiar la contraseña.");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("Hubo un error al cambiar la contraseña.");
+      });
+  };
+
+  const [carrito, setCarrito] = useState([]);
+
+  useEffect(() => {
+    const obtenerCarrito = () => {
+      const carritoLocal = JSON.parse(localStorage.getItem('carrito')) || [];
+      setCarrito(carritoLocal);
+    };
+    obtenerCarrito();
+  }, [esModalCarritoAbierto]);
+
+  const eliminarProducto = (id) => {
+    const carritoActualizado = carrito.filter(producto => producto.id !== id);
+    setCarrito(carritoActualizado);
+    localStorage.setItem('carrito', JSON.stringify(carritoActualizado));
+  };
 
   return (
     <header className="menu-header">
@@ -291,13 +305,6 @@ const Navbar = ({ onBuscar }) => {
           </div>
         </div>
       </nav>
-
-      <input
-        type="text"
-        placeholder="¿Qué estás buscando?"
-        className="buscador"
-        onChange={(e) => onBuscar(e.target.value)}
-      />
 
       <div className="menu-iconos">
         {logged ? (
@@ -439,7 +446,7 @@ const Navbar = ({ onBuscar }) => {
                 name="nuevaContraseña"
                 placeholder="Nueva contraseña"
                 value={nuevaContraseña}
-                onChange={manejarCambioContraseña}
+                onChange={manejarNuevaContraseña}
                 required
               />
               <input
@@ -447,7 +454,7 @@ const Navbar = ({ onBuscar }) => {
                 name="confirmarContraseña"
                 placeholder="Confirmar nueva contraseña"
                 value={confirmarContraseña}
-                onChange={manejarCambioContraseña}
+                onChange={manejarConfirmarContraseña}
                 required
               />
               <button type="submit" className="modal-submit">Cambiar</button>
@@ -458,10 +465,26 @@ const Navbar = ({ onBuscar }) => {
 
       {esModalCarritoAbierto && (
         <div className="modal-overlay">
-          <div className="modal-contenido">
+          <div className="modal-carrito">
             <button className="modal-close" onClick={cerrarModalCarrito}>X</button>
-            <h2>Tu Carrito</h2>
-            {/* Aquí puedes agregar el contenido del carrito */}
+            <h2>Carro de compras</h2>
+            {carrito.length === 0 ? (
+              <p>El carrito está vacío</p>
+            ) : (
+              carrito.map((producto, index) => (
+                <div key={index} className="carrito-producto">
+                  <img src={`http://localhost:3000/uploads/${producto.imagen.split('\\').pop()}`} alt={producto.nombre} className="carrito-producto-imagen" />
+                  <div className="carrito-producto-info">
+                    <h3>{producto.nombre}</h3>
+                    <p>Talle: {producto.talle}</p>
+                    <p>Cantidad: {producto.cantidad}</p>
+                    <p>Precio: ${producto.precio}</p>
+                    <button onClick={() => eliminarProducto(producto.id)}>Eliminar</button>
+                  </div>
+                </div>
+              ))
+            )}
+            <button className="boton-continuar-compra" onClick={() => navegar('/confirmacion')}>Continuar compra</button>
           </div>
         </div>
       )}

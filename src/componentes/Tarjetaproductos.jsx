@@ -3,13 +3,12 @@ import axios from 'axios';
 import './Tarjetaproductos.css'; 
 import { Link } from "wouter";
 
-const TarjetaProductos = ({ busqueda }) => {
+const TarjetaProductos = () => {
   const [productos, setProductos] = useState([]);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     const obtenerProductos = () => {
-      const url = `http://localhost:3000/api/rutasPublic/ver/producto`;
+      const url = "http://localhost:3000/api/rutasPublic/ver/producto";
       axios.get(url)
         .then((resp) => {
           if (resp.data.productos) {
@@ -19,7 +18,6 @@ const TarjetaProductos = ({ busqueda }) => {
           }
         })
         .catch((error) => {
-          setError('Error al obtener los datos de los productos.');
           console.error('Error al obtener los datos de los productos:', error);
         });
     };
@@ -29,21 +27,19 @@ const TarjetaProductos = ({ busqueda }) => {
 
   return (
     <div className="menu-productos">
-      {error && <p>{error}</p>}
       {productos.map(producto => (
         <Link key={producto.id} href={`/detalle/${producto.id}`} className="tarjeta-producto-link">
           <div className="tarjeta-producto">
             <img 
-              src={`http://localhost:3000/uploads/${producto.ruta_imagen?.split('\\').pop()}`} 
-              alt={producto.nombre} 
-              className="tarjeta-producto-imagen" 
+              src={producto.ruta_imagen}
+              alt={producto.nombre}
+              className="tarjeta-producto-imagen"
             />
             <h3 className="tarjeta-producto-nombre">{producto.nombre}</h3>
             <p className="tarjeta-producto-precio">${producto.precio}</p>
           </div>
         </Link>
       ))}
-
     </div>
   );
 };

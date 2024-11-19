@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
-import Tarjetadetalle from './componentes/Tarjetadetalle';
+import TarjetaDetalle from './componentes/Tarjetadetalle';
 import TarjetaInfo from './componentes/Tarjetainfo';
 import Tarjetaconfirmacion from './componentes/Tarjetaconfirmacion';
 import Agradecimiento from './componentes/Agradecimiento';
@@ -11,6 +11,7 @@ import Perfil from './componentes/Perfil';
 import RopaUrbana from './componentes/RopaUrbana';
 import RopaDeportiva from './componentes/RopaDeportiva';
 import Usuarios from './componentes/Usuarios';
+import Carrito from './componentes/Carrito';  // Importa el componente Carrito
 
 import { Router, Route } from "wouter";
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
         <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
         <Route path="/usuarios" component={Usuarios} />  {/* Ruta para Usuarios */}
+        <Route path="/carrito" component={Carrito} />  {/* Ruta para Carrito */}
       </Router>
     </div>
   );
