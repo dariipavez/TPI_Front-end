@@ -1,13 +1,5 @@
 .menu {
   font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.content {
-  flex: 1;
-  padding-bottom: 50px; /* Añadimos espacio para el footer */
 }
 
 .menu-productos {
@@ -19,45 +11,4 @@
 
 button {
   color: gray;
-}
-
-/* Media query para pantallas pequeñas */
-@media (max-width: 600px) {
-  .menu-productos {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 10px;
-  }
-
-  button {
-    font-size: 12px;
-  }
-
-  .content {
-    padding-bottom: 70px; /* Ajustamos el espacio para el footer */
-  }
-}
-
-footer {
-  width: 100%;
-  text-align: center;
-  padding: 10px 0;
-  bottom: 0;
-  left: 0;
-  background-color: #333; /* Color de fondo del footer */
-  color: white; /* Color del texto del footer */
-}
-
-nav {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px;
-  background-color: #333;
-  color: white;
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1000; /* Asegura que el navbar esté siempre en la parte superior */
 }

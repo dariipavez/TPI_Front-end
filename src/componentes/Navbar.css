@@ -6,13 +6,25 @@
 
 .menu-header {
   display: flex;
-  align-items: center;
+  align-items: center; /* Alinea verticalmente el contenido */
   justify-content: space-between;
+  padding: 0px; /* Ajusta según tus preferencias */
+  height: 50px; /* Define la altura específica del Navbar */
+ 
+  }
+  .menu-header {
+    position: relative; /* Agrega esto para asegurar que se pueda usar z-index */
+    z-index: 20; /* Asegúrate de que sea mayor que el de los modales */
+  }
+  
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 20px;
   background-color: #f8f8f8;
   border-bottom: 1px solid #ccc;
-  position: relative;
-  z-index: 20;
 }
 
 .menu-categorias {
@@ -55,7 +67,6 @@
 .dropdown-menu li {
   margin: 5px 0;
 }
-
 /* Estilo para los enlaces principales */
 .menu-item > a {
   color: #333; /* Color del texto principal */
@@ -81,7 +92,6 @@
 .dropdown-button:hover {
   color: #007bff; /* Color azul solo al pasar el mouse */
 }
-
 /* Estilo para el contenedor de iconos */
 .menu-iconos {
   display: flex;
@@ -126,49 +136,4 @@
 
 .profile-menu-item:hover {
   background-color: #f0f0f0;
-}
-
-/* Media query para pantallas pequeñas */
-@media (max-width: 600px) {
-  .menu-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row;
-    padding: 10px;
-    width: 100%;
-  }
-
-  .menu-header .logo {
-    order: 1; /* El logo primero */
-    flex-grow: 1;
-    text-align: center;
-  }
-
-  .menu-header .buscador {
-    order: 2; /* El buscador en el medio */
-    flex-grow: 2;
-    text-align: center;
-  }
-
-  .menu-header .menu-iconos {
-    order: 3; /* Los iconos al final */
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: auto;
-    gap: 20px;
-  }
-
-  .menu-header .icono-usuario {
-    order: 1;
-  }
-
-  .menu-header .icono-carrito {
-    order: 2;
-  }
-
-  .menu-categorias {
-    display: none; /* Oculta las categorías en la vista responsive */
-  }
 }

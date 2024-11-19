@@ -14,6 +14,8 @@
   margin-bottom: 9px;
 }
 
+
+
 .precio {
   color: green;
   font-weight: bold;
@@ -33,25 +35,4 @@
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-/* Media query para pantallas pequeñas */
-@media (max-width: 600px) {
-  .tarjeta-producto {
-    width: 100%;
-    height: auto; /* Ajusta la altura para pantallas pequeñas */
-  }
-
-  .tarjeta-producto-imagen {
-    max-height: 100px; /* Reduce la altura máxima de la imagen */
-  }
-
-  .boton-carrito {
-    padding: 8px 15px; /* Ajusta el padding para pantallas pequeñas */
-  }
-
-  .campo-busqueda {
-    font-size: 14px; /* Reduce el tamaño de fuente */
-    padding: 6px; /* Ajusta el padding */
-  }
 }

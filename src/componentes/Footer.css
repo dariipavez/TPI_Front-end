@@ -1,101 +1,84 @@
-.metodos-pago img {
-  width: 50px;
-  height: 35px;
-  margin-right: 2px;
-  flex-direction: row;
-  gap: 5px;
-}
-
-.menu-footer {
-  background-color: #333;
-  color: white;
-  display: flex;
-  justify-content: space-between;
-  padding: 20px;
-  height: auto;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.menu-footer p {
-  margin: auto;
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-}
-
-.contacto img {
-  width: 40px;
-  height: 35px;
-  margin-right: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.IG {
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-}
-
-.IG img {
-  width: 60px;
-  height: 35px;
-}
-
-.Wsp {
-  margin: 0 auto;
-  display: flex;
-  gap: 60px;
-}
-
-.Wsp img {
-  width: 40px;
-  height: 35px;
-}
-
-/* Media query para pantallas pequeñas */
-@media (max-width: 600px) {
-  .menu-footer {
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    width: 100%;
+/* .footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10 px;
+    background-color: #333;
+    color: white;
   }
-
+  
   .contacto, .metodos-pago, .ayuda {
+    display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-    width: 100%;
-    text-align: center;
-  }
+    gap: 5px;
+  } */
+  
+  /* .metodos-pago{
+    margin: 0 auto;
+    display: flex;
+    
+   
+  } */
 
-  .contacto img, .metodos-pago img {
-    width: 30px;
-    height: auto;
-  }
-
-  .IG, .Wsp {
+  .metodos-pago img {
+    width: 50px;
+    height: 35px;
+    margin-right: 2px;
     flex-direction: row;
-    justify-content: center;
-    gap: 15px;
+    gap: 5px;
+  }
+  
+   .menu-footer {
+    background-color: #333;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    height: 130px;
+    gap: px;
+    
+       
+    
+  }
+  
+  .menu-footer p {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    
+    
+  }
+  
+  .contacto img {
+    width: 40px;
+    height: 35px;
+    margin-right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .IG{
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
   }
 
-  .IG img, .Wsp img {
-    width: 30px;
-    height: 30px;
+  .IG img{
+    width: 60px;
+    height: 35px;
+    
+
+  }
+  .Wsp{
+    margin: 0 auto;
+    display: flex;
+    gap: 60px;
+    
   }
 
-  .ayuda p {
-    margin: 0;
-    font-size: 14px;
+  .Wsp img{
+    width: 40px;
+    height: 35px;
+    
   }
-
-  .metodos-pago p, .ayuda p {
-    text-align: center;
-    display: block;
-  }
-}
