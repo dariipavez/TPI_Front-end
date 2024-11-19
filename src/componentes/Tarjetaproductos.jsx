@@ -26,16 +26,20 @@ const TarjetaProductos = ({ busqueda }) => {
   }, []);
 
   return (
-    <div className="menu-productos"> {productos.map(producto => ( 
-    <Link key={producto.id} href={`/detalle/${producto.id}`} className="tarjeta-producto-link"> 
-    <div className="tarjeta-producto"> 
-    <img src={`http://localhost:3000/uploads/${producto.ruta_imagen.split('\\').pop()}`} 
-    alt={producto.nombre} 
-    className="tarjeta-producto-imagen" /> 
-    <h3 className="tarjeta-producto-nombre">{producto.nombre}</h3>
-     <p className="tarjeta-producto-precio">${producto.precio}</p> 
-    </div> 
-    </Link> ))} 
+    <div className="menu-productos">
+      {productos.map(producto => (
+        <Link key={producto.id} href={`/detalle/${producto.id}`} className="tarjeta-producto-link">
+          <div className="tarjeta-producto">
+            <img 
+              src={`http://localhost:3000/uploads/${producto.ruta_imagen}`}
+              alt={producto.nombre}
+              className="tarjeta-producto-imagen"
+            />
+            <h3 className="tarjeta-producto-nombre">{producto.nombre}</h3>
+            <p className="tarjeta-producto-precio">${producto.precio}</p>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 };

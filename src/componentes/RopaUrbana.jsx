@@ -26,7 +26,7 @@ const RopaUrbana = () => {
     };
 
     obtenerProductosFiltrados();
-  }, []);
+  }, [idCategoria]);
 
   const renderContent = () => {
     return productos.length > 0 ? (

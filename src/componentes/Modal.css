@@ -11,7 +11,9 @@
   align-items: center; /* Centra verticalmente */
   z-index: 1000; /* Asegúrate de que el modal esté sobre otros elementos */
 }
-
+.registrarse{
+  color: blue;
+}
 /* Estilo para el modal de inicio de sesión */
 .modal-contenido {
   background-color: white;

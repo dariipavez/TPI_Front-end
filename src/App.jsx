@@ -3,14 +3,15 @@ import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
 import TarjetaDetalle from './componentes/Tarjetadetalle';
-import TarjetaInfo from './componentes/TarjetaInfo';
+import TarjetaInfo from './componentes/Tarjetainfo';
 import Tarjetaconfirmacion from './componentes/Tarjetaconfirmacion';
 import Agradecimiento from './componentes/Agradecimiento';
 import Agregar from './componentes/Agregar';
 import Perfil from './componentes/Perfil';
 import RopaUrbana from './componentes/RopaUrbana';
 import RopaDeportiva from './componentes/RopaDeportiva';
-import axios from 'axios'
+import Usuarios from './componentes/Usuarios';
+
 import { Router, Route } from "wouter";
 
 function App() {
@@ -35,9 +36,10 @@ function App() {
         <Route path="/perfil" component={Perfil} />
         <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
         <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
+        <Route path="/usuarios" component={Usuarios} />  {/* Ruta para Usuarios */}
       </Router>
     </div>
   );
 }
 
-export default App;
+export default App;

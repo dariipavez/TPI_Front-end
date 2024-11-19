@@ -3,6 +3,7 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Boton from './Boton';
+import { Link } from 'wouter'; // Asegúrate de importar Link
 import './TarjetaDetalle.css';
 
 const TarjetaDetalle = ({ id }) => {
@@ -54,7 +55,7 @@ const TarjetaDetalle = ({ id }) => {
       <div className="tarjeta">
         <div className="tarjeta-detalle">
           <div className="tarjeta-detalle-fotos">
-            {producto.imagenes.map((imagen, index) => (
+            {producto.imagenes?.map((imagen, index) => (
               <img 
                 key={index}
                 src={`http://localhost:3000/uploads/${imagen.split('\\').pop()}`} 
