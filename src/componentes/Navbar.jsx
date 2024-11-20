@@ -65,8 +65,11 @@ const Navbar = ({ onBuscar }) => {
   };
 
   const cerrarSesion = () => {
+    const usuarioId = sessionStorage.getItem('usuario_id');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('rol');
+    sessionStorage.removeItem('usuario_id');
+    localStorage.removeItem(`carrito_${usuarioId}`);
     setToken(null);
     setRol('usuario');
     setLogged(false);
@@ -134,3 +137,6 @@ const Navbar = ({ onBuscar }) => {
 };
 
 export default Navbar;
+
+
+      
