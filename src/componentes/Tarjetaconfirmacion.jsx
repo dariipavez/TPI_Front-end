@@ -1,4 +1,3 @@
-// src/components/TarjetaConfirmacion.jsx
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import Navbar from './Navbar';
@@ -11,7 +10,8 @@ const TarjetaConfirmacion = () => {
 
   useEffect(() => {
     const obtenerCarrito = () => {
-      const carritoLocal = JSON.parse(localStorage.getItem('carrito')) || [];
+      const usuarioId = sessionStorage.getItem('usuario_id');
+      const carritoLocal = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
       setCarrito(carritoLocal);
     };
     obtenerCarrito();
@@ -21,10 +21,11 @@ const TarjetaConfirmacion = () => {
     setUbicacion('/Info');  // Redirige a la página de TarjetaInfo
   };
 
-  const eliminarProducto = (id) => {
-    const carritoActualizado = carrito.filter(producto => producto.id !== id);
+  const eliminarProducto = (id, talle) => {
+    const usuarioId = sessionStorage.getItem('usuario_id');
+    const carritoActualizado = carrito.filter(producto => !(producto.id === id && producto.talle === talle));
     setCarrito(carritoActualizado);
-    localStorage.setItem('carrito', JSON.stringify(carritoActualizado));
+    localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carritoActualizado));
   };
 
   const total = carrito.reduce((acc, producto) => acc + (producto.precio * producto.cantidad), 0);
@@ -43,7 +44,7 @@ const TarjetaConfirmacion = () => {
               <p>Cantidad: {producto.cantidad}</p>
               <p>Precio: ${producto.precio}</p>
               <p>Total: ${producto.precio * producto.cantidad}</p>
-              <button onClick={() => eliminarProducto(producto.id)}>Eliminar</button>
+              <button onClick={() => eliminarProducto(producto.id, producto.talle)}>Eliminar</button>
             </div>
           </div>
         ))}

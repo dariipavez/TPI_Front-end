@@ -15,6 +15,7 @@ const Navbar = () => {
   const [esModalOlvidoContraseñaAbierto, setEsModalOlvidoContraseñaAbierto] = useState(false); // Modal de olvido contraseña
   const [esModalVerificacionAbierto, setEsModalVerificacionAbierto] = useState(false);
   const [esMenuPerfilAbierto, setEsMenuPerfilAbierto] = useState(false);
+  const [esModalCarritoBloqueadoAbierto, setEsModalCarritoBloqueadoAbierto] = useState(false);
   const [mailVerificar, setMailVerificar] = useState('');
   const [nombreCompletoVerificar, setNombreCompletoVerificar] = useState('');
   const [telefonoVerificar, setTelefonoVerificar] = useState('');
@@ -53,7 +54,10 @@ const Navbar = () => {
   const [telefono, setTelefono] = useState('');
 
   // Funciones para abrir y cerrar cada modal
-  const abrirModal = () => setEsModalAbierto(true);
+  const abrirModal = () => {
+    setEsModalAbierto(true);
+    cerrarModalCarritoBloqueado(); // Cerrar el modal de carrito bloqueado si está abierto
+  };
   const cerrarModal = () => setEsModalAbierto(false);
 
   const abrirModalRegistro = () => {
@@ -62,8 +66,16 @@ const Navbar = () => {
   };
   const cerrarModalRegistro = () => setEsModalRegistroAbierto(false);
 
-  const abrirModalCarrito = () => setEsModalCarritoAbierto(true);
+  const abrirModalCarrito = () => {
+    if (logged) {
+      setEsModalCarritoAbierto(true);
+    } else {
+      setEsModalCarritoBloqueadoAbierto(true);
+    }
+  };
+
   const cerrarModalCarrito = () => setEsModalCarritoAbierto(false);
+  const cerrarModalCarritoBloqueado = () => setEsModalCarritoBloqueadoAbierto(false);
 
   const abrirModalContraseña = () => {
     setEsModalAbierto(false);
@@ -188,7 +200,7 @@ const Navbar = () => {
           alert("Contraseña cambiada con éxito.");
           cerrarModalContraseña();
         } else {
-          alert("Error al cambiar la contraseña.");
+          alert("Hubo un error al cambiar la contraseña.");
         }
       })
       .catch((error) => {
@@ -198,8 +210,11 @@ const Navbar = () => {
   };
 
   const cerrarSesion = () => {
+    const usuarioId = sessionStorage.getItem('usuario_id');
     sessionStorage.removeItem('token');
     sessionStorage.removeItem('rol');
+    sessionStorage.removeItem('usuario_id');
+    localStorage.removeItem(`carrito_${usuarioId}`);
     setToken(null);
     setRol('usuario');
     setLogged(false);
@@ -227,13 +242,6 @@ const Navbar = () => {
       return;
     }
 
-    const usuario_id = sessionStorage.getItem('usuario_id');
-
-    if (!usuario_id) {
-      alert("Usuario no encontrado.");
-      return;
-    }
-
     const datosContraseña = {
       nueva_contraseña: nuevaContraseña
     };
@@ -244,7 +252,7 @@ const Navbar = () => {
           alert("Contraseña cambiada con éxito.");
           cerrarModalContraseña();
         } else {
-          alert("Error al cambiar la contraseña.");
+          alert("Hubo un error al cambiar la contraseña.");
         }
       })
       .catch((error) => {
@@ -257,16 +265,18 @@ const Navbar = () => {
 
   useEffect(() => {
     const obtenerCarrito = () => {
-      const carritoLocal = JSON.parse(localStorage.getItem('carrito')) || [];
+      const usuarioId = sessionStorage.getItem('usuario_id');
+      const carritoLocal = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
       setCarrito(carritoLocal);
     };
     obtenerCarrito();
   }, [esModalCarritoAbierto]);
 
-  const eliminarProducto = (id) => {
-    const carritoActualizado = carrito.filter(producto => producto.id !== id);
+  const eliminarProducto = (id, talle) => {
+    const usuarioId = sessionStorage.getItem('usuario_id');
+    const carritoActualizado = carrito.filter(producto => !(producto.id === id && producto.talle === talle));
     setCarrito(carritoActualizado);
-    localStorage.setItem('carrito', JSON.stringify(carritoActualizado));
+    localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carritoActualizado));
   };
 
   return (
@@ -479,7 +489,7 @@ const Navbar = () => {
                     <p>Talle: {producto.talle}</p>
                     <p>Cantidad: {producto.cantidad}</p>
                     <p>Precio: ${producto.precio}</p>
-                    <button onClick={() => eliminarProducto(producto.id)}>Eliminar</button>
+                    <button onClick={() => eliminarProducto(producto.id, producto.talle)}>Eliminar</button>
                   </div>
                 </div>
               ))
@@ -488,8 +498,21 @@ const Navbar = () => {
           </div>
         </div>
       )}
+
+      {esModalCarritoBloqueadoAbierto && (
+        <div className="modal-overlay">
+          <div className="modal-contenido">
+            <button className="modal-close" onClick={cerrarModalCarritoBloqueado}>X</button>
+            <h2>Inicia sesión para poder desbloquear esta opción</h2>
+            <button onClick={abrirModal}>Iniciar sesión</button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
 
 export default Navbar;
+
+
+      

@@ -46,6 +46,18 @@ const TarjetaDetalle = ({ id }) => {
   };
 
   const agregarAlCarrito = () => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      alert('Por favor, inicia sesión para agregar productos al carrito.');
+      return;
+    }
+
+    const usuarioId = sessionStorage.getItem('usuario_id');
+    if (!talleSeleccionado) {
+      alert('Por favor, selecciona un talle.');
+      return;
+    }
+
     const productoCarrito = {
       id: producto.id,
       nombre: producto.nombre,
@@ -55,7 +67,7 @@ const TarjetaDetalle = ({ id }) => {
       cantidad: cantidad,
     };
 
-    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const carrito = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
     const productoExistente = carrito.find(item => item.id === productoCarrito.id && item.talle === productoCarrito.talle);
     
     if (productoExistente) {
@@ -64,7 +76,7 @@ const TarjetaDetalle = ({ id }) => {
       carrito.push(productoCarrito);
     }
 
-    localStorage.setItem('carrito', JSON.stringify(carrito));
+    localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carrito));
     alert('Producto agregado al carrito');
   };
 
