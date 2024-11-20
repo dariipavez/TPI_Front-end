@@ -3,7 +3,7 @@ import axios from 'axios';
 import './Tarjetaproductos.css'; 
 import { Link } from "wouter";
 
-const TarjetaProductos = ({ busqueda }) => {
+const TarjetaProductos = () => {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const TarjetaProductos = ({ busqueda }) => {
         <Link key={producto.id} href={`/detalle/${producto.id}`} className="tarjeta-producto-link">
           <div className="tarjeta-producto">
             <img 
-              src={`http://localhost:3000/uploads/${producto.ruta_imagen}`}
+              src={producto.ruta_imagen}
               alt={producto.nombre}
               className="tarjeta-producto-imagen"
             />

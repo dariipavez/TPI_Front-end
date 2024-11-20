@@ -7,7 +7,7 @@ import './Tarjetaproductos.css';
 
 const RopaDeportiva = () => {
   const [productos, setProductos] = useState([]);
-  const idCategoria = 2;
+  const idCategoria = 2; // Asigna el ID de categoría correspondiente a "deportiva"
 
   useEffect(() => {
     const obtenerProductosFiltrados = () => {
@@ -26,7 +26,7 @@ const RopaDeportiva = () => {
     };
 
     obtenerProductosFiltrados();
-  }, []);
+  }, [idCategoria]); // Asegúrate de incluir idCategoria en las dependencias del useEffect
 
   const renderContent = () => {
     return productos.length > 0 ? (
@@ -35,7 +35,7 @@ const RopaDeportiva = () => {
           <Link key={producto.id} href={`/detalle/${producto.id}`} className="tarjeta-producto-link">
             <div className="tarjeta-producto">
               <img 
-                src={`http://localhost:3000/uploads/${producto.ruta_imagen.split('\\').pop()}`} 
+                src={producto.ruta_imagen} 
                 alt={producto.nombre}
                 className="tarjeta-producto-imagen"
               />

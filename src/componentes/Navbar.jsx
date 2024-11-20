@@ -3,6 +3,7 @@ import { useLocation } from 'wouter';
 import axios from 'axios';
 import './Navbar.css';
 import ModalLogin from './ModalLogin'; 
+import ModalCarrito from './ModalCarrito';
 const Navbar = ({ onBuscar }) => {
   const [, navegar] = useLocation();
 
@@ -124,7 +125,7 @@ const Navbar = ({ onBuscar }) => {
         ) : (
           <span className="icono-usuario" onClick={abrirModalLogin}>👤</span>
         )}
-        <span className="icono-carrito" onClick={abrirModalCarrito}>🛒</span>
+        <ModalCarrito esAbierto={esModalCarritoAbierto} cerrar={cerrarModalCarrito} />
       </div>
 
       <ModalLogin esAbierto={esModalLoginAbierto} cerrar={cerrarModalLogin} onLogin={loguearse} />

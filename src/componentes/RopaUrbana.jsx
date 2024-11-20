@@ -35,7 +35,7 @@ const RopaUrbana = () => {
           <Link key={producto.id} href={`/detalle/${producto.id}`} className="tarjeta-producto-link">
             <div className="tarjeta-producto">
               <img 
-                src={`http://localhost:3000/uploads/${producto.ruta_imagen.split('\\').pop()}`} 
+                src={producto.ruta_imagen} 
                 alt={producto.nombre}
                 className="tarjeta-producto-imagen"
               />
