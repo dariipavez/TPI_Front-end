@@ -4,7 +4,10 @@ import './Navbar.css';
 import './Modal.css';
 import axios from 'axios';
 
-const Navbar = () => {
+import ModalLogin from './ModalLogin'; 
+import ModalCarrito from './ModalCarrito';
+const Navbar = ({ onBuscar }) => {
+
   const [, navegar] = useLocation();
 
   // Estado para controlar la apertura de cada modal
@@ -359,7 +362,7 @@ const Navbar = () => {
         ) : (
           <span className="icono-usuario" onClick={abrirModal}>👤</span>
         )}
-        <span className="icono-carrito" onClick={abrirModalCarrito}>🛒</span>
+        <ModalCarrito esAbierto={esModalCarritoAbierto} cerrar={cerrarModalCarrito} />
       </div>
 
       {esModalAbierto && (
