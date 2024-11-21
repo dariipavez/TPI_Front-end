@@ -1,6 +1,6 @@
-// src/components/TarjetaInfo.jsx
 import React from 'react';
 import { useLocation } from 'wouter';
+import Navbar from './Navbar';
 import './TarjetaInfo.css';
 
 const TarjetaInfo = () => {
@@ -8,11 +8,17 @@ const TarjetaInfo = () => {
 
   const finalizarCompra = (event) => {
     event.preventDefault(); // Evita el comportamiento predeterminado del formulario
-    navigate('/agradecimiento'); // Redirige a la pantalla de agradecimiento
+
+    // Vaciar el carrito
+    localStorage.setItem('carrito', JSON.stringify([]));
+
+    // Redirige a la pantalla de agradecimiento
+    navigate('/agradecimiento');
   };
 
   return (
     <div className="tarjeta-info-contenedor">
+      <Navbar />
       <div className="tarjeta-info">
         <h2 className="tarjeta-info-titulo">
           <i className="info-icono">ℹ️</i> Identificación
