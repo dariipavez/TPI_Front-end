@@ -1,3 +1,4 @@
+/* TarjetaInfo.css */
 .tarjeta-info-contenedor {
     display: flex;
     justify-content: center;
@@ -117,3 +118,4 @@
 .boton-finalizar:hover {
     background-color: #218838;
 }
+

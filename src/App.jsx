@@ -2,15 +2,17 @@
 import React, { useState } from 'react';
 import './App.css';
 import Menu from './componentes/Menu';
-import Tarjetadetalle from './componentes/Tarjetadetalle';
-import TarjetaInfo from './componentes/TarjetaInfo';
+import TarjetaDetalle from './componentes/Tarjetadetalle';
+import TarjetaInfo from './componentes/Tarjetainfo';
 import Tarjetaconfirmacion from './componentes/Tarjetaconfirmacion';
 import Agradecimiento from './componentes/Agradecimiento';
 import Agregar from './componentes/Agregar';
 import Perfil from './componentes/Perfil';
 import RopaUrbana from './componentes/RopaUrbana';
 import RopaDeportiva from './componentes/RopaDeportiva';
-import axios from 'axios'
+import Usuarios from './componentes/Usuarios';
+import Carrito from './componentes/Carrito';  // Importa el componente Carrito
+
 import { Router, Route } from "wouter";
 
 function App() {
@@ -27,7 +29,7 @@ function App() {
           <Menu busqueda={busqueda} onBuscar={manejarBusqueda} />
         </Route>
 
-        <Route path="/detalle/:productId" component={Tarjetadetalle} />
+        <Route path="/detalle/:productId" component={({ params }) => <TarjetaDetalle id={params.productId} />} />
         <Route path="/confirmacion" component={Tarjetaconfirmacion} />
         <Route path="/info" component={TarjetaInfo} />
         <Route path="/agradecimiento" component={Agradecimiento} />
@@ -35,6 +37,8 @@ function App() {
         <Route path="/perfil" component={Perfil} />
         <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
         <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
+        <Route path="/usuarios" component={Usuarios} />  {/* Ruta para Usuarios */}
+        <Route path="/carrito" component={Carrito} />  {/* Ruta para Carrito */}
       </Router>
     </div>
   );
