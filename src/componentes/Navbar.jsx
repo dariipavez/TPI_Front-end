@@ -4,10 +4,7 @@ import './Navbar.css';
 import './Modal.css';
 import axios from 'axios';
 
-import ModalLogin from './ModalLogin'; 
-import ModalCarrito from './ModalCarrito';
 const Navbar = ({ onBuscar }) => {
-
   const [, navegar] = useLocation();
 
   // Estado para controlar la apertura de cada modal
@@ -23,13 +20,6 @@ const Navbar = ({ onBuscar }) => {
   const [nombreCompletoVerificar, setNombreCompletoVerificar] = useState('');
   const [telefonoVerificar, setTelefonoVerificar] = useState('');
 
-  const abrirModalVerificacion = () => {
-    setEsModalAbierto(false);  // Cerrar el modal de login si estaba abierto
-    setEsModalVerificacionAbierto(true);
-  };
-
-  const cerrarModalVerificacion = () => setEsModalVerificacionAbierto(false);
-
   const [token, setToken] = useState(sessionStorage.getItem('token'));
   const [logged, setLogged] = useState(!!token);
   const [rol, setRol] = useState(sessionStorage.getItem('rol') || 'usuario'); // Estado para el rol del usuario
@@ -38,6 +28,13 @@ const Navbar = ({ onBuscar }) => {
   const [nuevaContraseña, setNuevaContraseña] = useState('');
   const [confirmarContraseña, setConfirmarContraseña] = useState('');
   const [mailRecuperar, setMailRecuperar] = useState('');
+  const [carrito, setCarrito] = useState([]);
+  const [nombre, setNombre] = useState('');
+  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const [correo, setCorreo] = useState('');
+  const [usuarioRegistro, setUsuarioRegistro] = useState('');
+  const [contraseñaRegistro, setContraseñaRegistro] = useState('');
+  const [telefono, setTelefono] = useState('');
 
   // Verificar si el usuario está logueado al cargar el componente
   useEffect(() => {
@@ -48,13 +45,14 @@ const Navbar = ({ onBuscar }) => {
     }
   }, []);
 
-  // Estados para el registro
-  const [nombre, setNombre] = useState('');
-  const [fechaNacimiento, setFechaNacimiento] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [usuarioRegistro, setUsuarioRegistro] = useState('');
-  const [contraseñaRegistro, setContraseñaRegistro] = useState('');
-  const [telefono, setTelefono] = useState('');
+  useEffect(() => {
+    const obtenerCarrito = () => {
+      const usuarioId = sessionStorage.getItem('usuario_id');
+      const carritoLocal = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
+      setCarrito(carritoLocal);
+    };
+    obtenerCarrito();
+  }, [esModalCarritoAbierto]);
 
   // Funciones para abrir y cerrar cada modal
   const abrirModal = () => {
@@ -62,13 +60,11 @@ const Navbar = ({ onBuscar }) => {
     cerrarModalCarritoBloqueado(); // Cerrar el modal de carrito bloqueado si está abierto
   };
   const cerrarModal = () => setEsModalAbierto(false);
-
   const abrirModalRegistro = () => {
     setEsModalAbierto(false);
     setEsModalRegistroAbierto(true);
   };
   const cerrarModalRegistro = () => setEsModalRegistroAbierto(false);
-
   const abrirModalCarrito = () => {
     if (logged) {
       setEsModalCarritoAbierto(true);
@@ -76,47 +72,35 @@ const Navbar = ({ onBuscar }) => {
       setEsModalCarritoBloqueadoAbierto(true);
     }
   };
-
   const cerrarModalCarrito = () => setEsModalCarritoAbierto(false);
   const cerrarModalCarritoBloqueado = () => setEsModalCarritoBloqueadoAbierto(false);
-
   const abrirModalContraseña = () => {
     setEsModalAbierto(false);
     setEsModalContraseñaAbierto(true);
   };
   const cerrarModalContraseña = () => setEsModalContraseñaAbierto(false);
-
   const abrirModalOlvidoContraseña = () => {
     setEsModalAbierto(false);
     setEsModalOlvidoContraseñaAbierto(true);
   };
   const cerrarModalOlvidoContraseña = () => setEsModalOlvidoContraseñaAbierto(false);
-
   const abrirMenuPerfil = () => {
     setEsMenuPerfilAbierto(!esMenuPerfilAbierto);
-  };
-
-  const manejarEnvioRegistro = (e) => {
-    e.preventDefault();
-    cerrarModalRegistro();
-    navegar('/');
   };
 
   const loguearse = (datos) => {
     const url = "http://localhost:3000/api/usuario/login";
     axios.post(url, datos)
       .then((resp) => {
-        console.log('Respuesta completa del servidor:', resp.data);
         if (resp.data.status === "ok") {
           sessionStorage.setItem('token', resp.data.token);
           sessionStorage.setItem('usuario_id', resp.data.usuario_id);
           sessionStorage.setItem('rol', resp.data.rol);
-          
+
           const { token, usuario_id, rol } = resp.data;
           if (token) {
             setToken(token);
             setRol(rol);
-            console.log('Rol del usuario:', rol);
             setLogged(true);
             setEsModalAbierto(false);
             alert('Inicio de sesión exitoso');
@@ -130,6 +114,12 @@ const Navbar = ({ onBuscar }) => {
         console.log(error);
         alert("Usuario/Contraseña incorrecta");
       });
+  };
+
+  const manejarEnvioRegistro = (e) => {
+    e.preventDefault();
+    cerrarModalRegistro();
+    navegar('/');
   };
 
   const manejarClickPerfil = () => {
@@ -170,15 +160,7 @@ const Navbar = ({ onBuscar }) => {
       });
   };
 
-  const manejarNuevaContraseña = (e) => {
-    setNuevaContraseña(e.target.value);
-  };
-
-  const manejarConfirmarContraseña = (e) => {
-    setConfirmarContraseña(e.target.value);
-  };
-
-  const manejarSubmit = (e) => {
+  const manejarCambiarContraseña = (e) => {
     e.preventDefault();
 
     if (nuevaContraseña !== confirmarContraseña) {
@@ -223,57 +205,8 @@ const Navbar = ({ onBuscar }) => {
     setLogged(false);
     setEsMenuPerfilAbierto(false);
     alert('Sesión cerrada correctamente');
-    navegar('/'); // Opcional: redirigir al usuario a la página principal
+    navegar('/');
   };
-
-  useEffect(() => {
-    const savedToken = localStorage.getItem('token');
-    const savedRol = localStorage.getItem('rol');
-    if (savedToken) {
-      setToken(savedToken);
-      setRol(savedRol || 'usuario');
-      console.log('Rol guardado en localStorage:', savedRol); // Imprimir el rol guardado en localStorage en la consola
-      setLogged(true);
-    }
-  }, []);
-
-  const manejarCambiarContraseña = (e) => {
-    e.preventDefault();
-
-    if (nuevaContraseña !== confirmarContraseña) {
-      alert("Las contraseñas no coinciden.");
-      return;
-    }
-
-    const datosContraseña = {
-      nueva_contraseña: nuevaContraseña
-    };
-
-    axios.put(`http://localhost:3000/api/usuario/actualizar/${usuario_id}`, datosContraseña)
-      .then((resp) => {
-        if (resp.data.status === "ok") {
-          alert("Contraseña cambiada con éxito.");
-          cerrarModalContraseña();
-        } else {
-          alert("Hubo un error al cambiar la contraseña.");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-        alert("Hubo un error al cambiar la contraseña.");
-      });
-  };
-
-  const [carrito, setCarrito] = useState([]);
-
-  useEffect(() => {
-    const obtenerCarrito = () => {
-      const usuarioId = sessionStorage.getItem('usuario_id');
-      const carritoLocal = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
-      setCarrito(carritoLocal);
-    };
-    obtenerCarrito();
-  }, [esModalCarritoAbierto]);
 
   const eliminarProducto = (id, talle) => {
     const usuarioId = sessionStorage.getItem('usuario_id');
@@ -292,7 +225,7 @@ const Navbar = ({ onBuscar }) => {
         <div className="menu-item">
           <span onClick={() => navegar('/ropa-urbana')}>Ropa Urbana</span>
           <div className="dropdown-menu">
-            <div className="dropdown-column" onClick={() => navegar('/ropa-urbana/remeras')}>
+          <div className="dropdown-column" onClick={() => navegar('/ropa-urbana/remeras')}>
               <strong>Remeras</strong>
             </div>
             <div className="dropdown-column" onClick={() => navegar('/ropa-urbana/pantalones')}>
@@ -334,6 +267,12 @@ const Navbar = ({ onBuscar }) => {
                 >
                   Mi cuenta
                 </button>
+                <button 
+                  className="profile-menu-item" 
+                  onClick={() => navegar('/compras')}
+                >
+                  Mis Compras
+                </button>
                 {rol === 'administrador' && (
                   <>
                     <button 
@@ -362,7 +301,7 @@ const Navbar = ({ onBuscar }) => {
         ) : (
           <span className="icono-usuario" onClick={abrirModal}>👤</span>
         )}
-        <ModalCarrito esAbierto={esModalCarritoAbierto} cerrar={cerrarModalCarrito} />
+        <span className="icono-carrito" onClick={abrirModalCarrito}>🛒</span>
       </div>
 
       {esModalAbierto && (
@@ -516,6 +455,3 @@ const Navbar = ({ onBuscar }) => {
 };
 
 export default Navbar;
-
-
-      
