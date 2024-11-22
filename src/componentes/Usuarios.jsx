@@ -243,6 +243,5 @@ const Usuarios = () => {
       <Footer />
     </div>
   );
-};
-
-export default Usuarios;
+}
+export default Usuarios;

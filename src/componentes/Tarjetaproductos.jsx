@@ -8,7 +8,7 @@ const TarjetaProductos = () => {
 
   useEffect(() => {
     const obtenerProductos = () => {
-      const url = "http://localhost:3000/api/rutasPublic/ver/producto";
+      const url = `http://localhost:3000/api/rutasPublic/ver/producto`;
       axios.get(url)
         .then((resp) => {
           if (resp.data.productos) {
@@ -42,6 +42,7 @@ const TarjetaProductos = () => {
       ))}
     </div>
   );
+  
 };
 
 export default TarjetaProductos;

@@ -1,21 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import './Agregar.css';
 
-const Agregar = ({ onNuevoProducto }) => {
+const Agregar = () => {
+  const [formData, setFormData] = useState({
+    nombre: '',
+    id_marca: '',
+    id_tipo_producto: '',
+    precio: '',
+    stock: '',
+  });
   const [imagen, setImagen] = useState(null);
-  const [nombre, setNombre] = useState("");
-  const [idMarca, setIdMarca] = useState("");
-  const [idTipoProducto, setIdTipoProducto] = useState("");
-  const [precio, setPrecio] = useState("");
-  const [stock, setStock] = useState("");
-  const [idTalle, setIdTalle] = useState("");
+  const [talles, setTalles] = useState([]);
+  const [tallesSeleccionados, setTallesSeleccionados] = useState([]);
+  const [marcas, setMarcas] = useState([]);
+  const [tiposProducto, setTiposProducto] = useState([]);
+  const [tallesFiltrados, setTallesFiltrados] = useState([]);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      console.error('Token no encontrado en sessionStorage');
+      return;
+    }
+
+    const config = {
+      headers: { Authorization: token }
+    };
+
+    axios.get('http://localhost:3000/api/rutasPublic/ver/talle', config)
+      .then(respuesta => {
+        setTalles(respuesta.data.talles);
+      })
+      .catch(error => {
+        console.error('Error al obtener los talles:', error);
+      });
+
+    axios.get('http://localhost:3000/api/rutasPublic/ver/marca', config)
+      .then(respuesta => {
+        setMarcas(respuesta.data.marca);
+      })
+      .catch(error => {
+        console.error('Error al obtener las marcas:', error);
+      });
+
+    axios.get('http://localhost:3000/api/rutasPublic/ver/tipo_producto', config)
+      .then(respuesta => {
+        setTiposProducto(respuesta.data.tipo_producto);
+      })
+      .catch(error => {
+        console.error('Error al obtener los tipos de producto:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (formData.id_tipo_producto) {
+      const tallesFiltrados = talles.filter(talle => talle.id_tipo_producto === parseInt(formData.id_tipo_producto));
+      setTallesFiltrados(tallesFiltrados);
+    } else {
+      setTallesFiltrados([]);
+    }
+  }, [formData.id_tipo_producto, talles]);
+
+  const manejarCambio = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const manejarSoltarImagen = (evento) => {
     evento.preventDefault();
     const archivo = evento.dataTransfer.files[0];
-    if (archivo && archivo.type.startsWith("image/")) {
+    if (archivo && archivo.type.startsWith('image/')) {
       setImagen(archivo);
     }
   };
@@ -24,112 +83,111 @@ const Agregar = ({ onNuevoProducto }) => {
     evento.preventDefault();
   };
 
-  const manejarEnvio = async () => {
-    if (!onNuevoProducto || typeof onNuevoProducto !== "function") {
-      console.error("onNuevoProducto no es una función válida");
-      alert("Hubo un error al intentar añadir el producto.");
-      return;
-    }
-
-    if (!nombre || !idMarca || !idTipoProducto || !precio || !stock || !idTalle || !imagen) {
-      alert("Por favor, completa todos los campos antes de añadir el producto.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('nombre', nombre);
-    formData.append('id_marca', idMarca);
-    formData.append('id_tipo_producto', idTipoProducto);
-    formData.append('precio', precio);
-    formData.append('stock', stock);
-    formData.append('id_talle', idTalle);
-    formData.append('imagenes', imagen);
-
-    try {
-      const response = await fetch("http://localhost:3000/api/registrar/producto", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Error al registrar el producto en la base de datos");
-      }
-
-      const data = await response.json();
-      onNuevoProducto(data);
-      setNombre("");
-      setIdMarca("");
-      setIdTipoProducto("");
-      setPrecio("");
-      setStock("");
-      setIdTalle("");
-      setImagen(null);
-      alert("Producto añadido correctamente al menú y registrado en la base de datos.");
-    } catch (error) {
-      console.error("Error al añadir el producto:", error);
-      alert("Hubo un error al intentar añadir el producto.");
-    }
+  const manejarSeleccionTalle = (talle) => {
+    setTallesSeleccionados((prevTalles) =>
+      prevTalles.includes(talle) ? prevTalles.filter((t) => t !== talle) : [...prevTalles, talle]
+    );
   };
+
+  const manejarEnvioFormulario = (e) => {
+    e.preventDefault();
+
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      console.error('Token no encontrado en sessionStorage');
+      return;
+    }
+
+    const config = {
+      headers: { Authorization: token }
+    };
+
+    const formDataEnviar = new FormData();
+    for (const key in formData) {
+      formDataEnviar.append(key, formData[key]);
+    }
+    formDataEnviar.append('imagen', imagen);
+    formDataEnviar.append('talles', JSON.stringify(tallesSeleccionados));
+
+    axios.post('http://localhost:3000/api/rutasAdmin/registrar/producto', formDataEnviar, config)
+      .then(respuesta => {
+        alert('Producto registrado correctamente.');
+        window.location.reload();
+      })
+      .catch(error => {
+        console.error('Error al registrar el producto:', error);
+      });
+};
+
 
   return (
     <div className="contenedor-agregar">
       <Navbar />
       <div className="contenido-agregar">
         <h2>Añadir Nuevo Ingreso</h2>
-        <div className="formulario">
-          <div
-            className="zona-soltar-foto"
-            onDrop={manejarSoltarImagen}
-            onDragOver={manejarArrastreSobre}
-          >
-            {imagen ? (
-              <img
-                src={URL.createObjectURL(imagen)}
-                alt="Vista previa"
-                className="imagen-preview"
-              />
-            ) : (
-              <p>Arrastra y suelta la foto aquí</p>
-            )}
+        <form className="formulario" onSubmit={manejarEnvioFormulario}>
+          <div className="lado-izquierdo">
+            <div 
+              className="zona-soltar-foto" 
+              onDrop={manejarSoltarImagen} 
+              onDragOver={manejarArrastreSobre}
+            >
+              {imagen ? (
+                <img src={URL.createObjectURL(imagen)} alt="Vista previa" className="imagen-preview" />
+              ) : (
+                <p>Arrastra y suelta la foto aquí</p>
+              )}
+            </div>
+            <div className="tallas">
+              <h3>Talles</h3>
+              <div className="opciones-talles">
+                {tallesFiltrados.map((talle) => (
+                  <button 
+                    type="button" 
+                    key={talle.id} 
+                    className={tallesSeleccionados.includes(talle.id) ? 'seleccionado' : ''}
+                    onClick={() => manejarSeleccionTalle(talle.id)}
+                  >
+                    {talle.talle}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-          <input
-            type="text"
-            placeholder="Nombre del producto"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="ID de Marca"
-            value={idMarca}
-            onChange={(e) => setIdMarca(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="ID de Tipo de Producto"
-            value={idTipoProducto}
-            onChange={(e) => setIdTipoProducto(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Precio del producto"
-            value={precio}
-            onChange={(e) => setPrecio(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="Stock disponible"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
-          />
-          <input
-            type="number"
-            placeholder="ID del Talle"
-            value={idTalle}
-            onChange={(e) => setIdTalle(e.target.value)}
-          />
-          <button onClick={manejarEnvio}>Añadir Nuevo Ingreso</button>
-        </div>
+          <div className="lado-derecho">
+            <div className="precio">
+              <h3>Precio</h3>
+              <input type="text" name="precio" value={formData.precio} onChange={manejarCambio} placeholder="$" />
+            </div>
+            <div className="nombre-modelo">
+              <h3>Nombre del Modelo</h3>
+              <input type="text" name="nombre" value={formData.nombre} onChange={manejarCambio} placeholder="Nombre del modelo" />
+            </div>
+            <div className="marca">
+              <h3>Marca</h3>
+              <select name="id_marca" value={formData.id_marca} onChange={manejarCambio}>
+                <option value="">Seleccione una marca</option>
+                {marcas.map((marca) => (
+                  <option key={marca.id} value={marca.id}>{marca.nombre}</option>
+                ))}
+              </select>
+            </div>
+            <div className="tipo-producto">
+              <h3>Tipo de Producto</h3>
+              <select name="id_tipo_producto" value={formData.id_tipo_producto} onChange={manejarCambio}>
+                <option value="">Seleccione un tipo de producto</option>
+                {tiposProducto.map((tipo) => (
+                  <option key={tipo.id} value={tipo.id}>{tipo.nombre}</option>
+                ))}
+              </select>
+            </div>
+            <div className="stock">
+              <h3>Stock</h3>
+              <input type="text" name="stock" value={formData.stock} onChange={manejarCambio} placeholder="Cantidad en stock" />
+            </div>
+            <button className="boton-anadir" type="submit">Añadir Nuevo Ingreso</button>
+          </div>
+        </form>
       </div>
       <Footer />
     </div>

@@ -5,7 +5,7 @@ import Footer from './Footer';
 import './TarjetaConfirmacion.css';
 
 const TarjetaConfirmacion = () => {
-  const [, setUbicacion] = useLocation();  // Cambiado para reflejar el contexto en español
+  const [, setUbicacion] = useLocation();
   const [carrito, setCarrito] = useState([]);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const TarjetaConfirmacion = () => {
   }, []);
 
   const manejarProcederAlPago = () => {
-    setUbicacion('/Info');  // Redirige a la página de TarjetaInfo
+    setUbicacion('/Info');
   };
 
   const eliminarProducto = (id, talle) => {
@@ -37,7 +37,7 @@ const TarjetaConfirmacion = () => {
       <div className="tarjeta-confirmacion-contenido">
         {carrito.map((producto, index) => (
           <div key={index} className="tarjeta-confirmacion">
-            <img src={`http://localhost:3000/uploads/${producto.imagen.split('\\').pop()}`} alt={producto.nombre} className="tarjeta-imagen" />
+            <img src={producto.ruta_imagen} alt={producto.nombre} className="tarjeta-imagen" />
             <div className="tarjeta-detalle">
               <h3>{producto.nombre}</h3>
               <p>Talle: {producto.talle}</p>
