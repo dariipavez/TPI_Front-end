@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import ModalContraseña from './ModalContraseña'; // Importa el componente del modal de cambio de contraseña
-import './Modal.css';
 
 const ModalVerificacion = ({ esAbierto, cerrar }) => {
   const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false);

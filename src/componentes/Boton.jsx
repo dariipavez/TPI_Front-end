@@ -1,10 +1,11 @@
-// Boton.jsx
 import React from 'react';
-import './Boton.css'; // Asegúrate de tener un archivo de estilos para personalizar el botón.
 
 const Boton = ({ texto, onClick }) => {
   return (
-    <button className="boton" onClick={onClick}>
+    <button 
+      className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+      onClick={onClick}
+    >
       {texto}
     </button>
   );

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';  // Asegúrate de importar el Navbar
 import Footer from './Footer';  // Asegúrate de importar el Footer
 import axios from 'axios';
-import './Usuarios.css';  // Importamos el CSS
 
 const Usuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -130,19 +129,20 @@ const Usuarios = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
-      <div className="contenedor-admin">
-        <h2>Administrar Usuarios</h2>
+      <div className="flex-grow p-6">
+        <h2 className="text-3xl font-bold text-center mb-6">Administrar Usuarios</h2>
         
         {/* Formulario de Usuario */}
-        <form onSubmit={manejarEnvioUsuario}>
+        <form onSubmit={manejarEnvioUsuario} className="mb-6 space-y-4">
           <input
             type="text"
             placeholder="Nombre completo"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
             required
+            className="w-full p-2 border border-gray-300 rounded"
           />
           <input
             type="date"
@@ -150,6 +150,7 @@ const Usuarios = () => {
             value={fechaNacimiento}
             onChange={(e) => setFechaNacimiento(e.target.value)}
             required
+            className="w-full p-2 border border-gray-300 rounded"
           />
           <input
             type="email"
@@ -157,6 +158,7 @@ const Usuarios = () => {
             value={correo}
             onChange={(e) => setCorreo(e.target.value)}
             required
+            className="w-full p-2 border border-gray-300 rounded"
           />
           <input
             type="text"
@@ -164,6 +166,7 @@ const Usuarios = () => {
             value={usuarioRegistro}
             onChange={(e) => setUsuarioRegistro(e.target.value)}
             required
+            className="w-full p-2 border border-gray-300 rounded"
           />
           <input
             type="password"
@@ -171,6 +174,7 @@ const Usuarios = () => {
             value={contraseñaRegistro}
             onChange={(e) => setContraseñaRegistro(e.target.value)}
             required
+            className="w-full p-2 border border-gray-300 rounded"
           />
           <input
             type="tel"
@@ -178,60 +182,73 @@ const Usuarios = () => {
             value={telefono}
             onChange={(e) => setTelefono(e.target.value)}
             required
+            className="w-full p-2 border border-gray-300 rounded"
           />
-          <select value={rol} onChange={(e) => setRol(e.target.value)} required>
+          <select value={rol} onChange={(e) => setRol(e.target.value)} required className="w-full p-2 border border-gray-300 rounded">
             <option value="" disabled>Selecciona un rol</option>
             <option value="usuario">Usuario</option>
             <option value="administrador">Administrador</option>
           </select>
-          <button type="submit" className="btn-agregar">
+          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">
             Agregar Usuario
           </button>
         </form>
 
         {/* Título de la lista de usuarios */}
-        <h3>Lista de Usuarios</h3>
+        <h3 className="text-2xl font-bold mb-4">Lista de Usuarios</h3>
 
         {/* Tabla de usuarios */}
-        <div className="lista-usuarios">
-          <table>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow-md rounded-lg">
             <thead>
               <tr>
-                <th>Nombre</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Email</th>
-                <th>Nombre de Usuario</th>
-                <th>Teléfono</th>
-                <th>Rol</th>
-                <th>Acciones</th>
+                <th className="py-2 px-4 border-b">Nombre</th>
+                <th className="py-2 px-4 border-b">Fecha de Nacimiento</th>
+                <th className="py-2 px-4 border-b">Email</th>
+                <th className="py-2 px-4 border-b">Nombre de Usuario</th>
+                <th className="py-2 px-4 border-b">Teléfono</th>
+                <th className="py-2 px-4 border-b">Rol</th>
+                <th className="py-2 px-4 border-b">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {usuarios.map((usuario) => (
                 usuario && ( // Asegurarse de que usuario no sea undefined
                 <tr key={usuario.id}>
-                  <td>{usuario.nombre_completo}</td>
-                  <td>{formatFecha(usuario.fecha_nac)}</td>
-                  <td>{usuario.mail}</td>
-                  <td>{usuario.nombre_usuario}</td>
-                  <td>{usuario.telefono}</td>
-                  <td>
+                  <td className="py-2 px-4 border-b">{usuario.nombre_completo}</td>
+                  <td className="py-2 px-4 border-b">{formatFecha(usuario.fecha_nac)}</td>
+                  <td className="py-2 px-4 border-b">{usuario.mail}</td>
+                  <td className="py-2 px-4 border-b">{usuario.nombre_usuario}</td>
+                  <td className="py-2 px-4 border-b">{usuario.telefono}</td>
+                  <td className="py-2 px-4 border-b">
                     {usuarioActual && usuarioActual.id === usuario.id ? (
                       <form onSubmit={actualizarRol}>
-                        <select value={rol} onChange={manejarCambioRol} required>
+                        <select value={rol} onChange={manejarCambioRol} required className="w-full p-2 border border-gray-300 rounded">
                           <option value="" disabled>Selecciona un rol</option>
                           <option value="usuario">Usuario</option>
                           <option value="administrador">Administrador</option>
                         </select>
-                        <button type="submit">Guardar</button>
+                        <button type="submit" className="bg-green-500 text-white p-2 rounded hover:bg-green-600 mt-2">
+                          Guardar
+                        </button>
                       </form>
                     ) : (
                       usuario.rol
                     )}
                   </td>
-                  <td className="acciones">
-                    <button className="btn-editar" onClick={() => manejarEditarRol(usuario)}>Editar Rol</button>
-                    <button className="btn-eliminar" onClick={() => eliminarUsuario(usuario.id)}>Eliminar</button>
+                  <td className="py-2 px-4 border-b flex space-x-2">
+                    <button 
+                      className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                      onClick={() => manejarEditarRol(usuario)}
+                    >
+                      Editar Rol
+                    </button>
+                    <button 
+                      className="bg-red-500 text-white p-2 rounded hover:bg-red-600"
+                      onClick={() => eliminarUsuario(usuario.id)}
+                    >
+                      Eliminar
+                    </button>
                   </td>
                 </tr>
                 )
@@ -244,4 +261,4 @@ const Usuarios = () => {
     </div>
   );
 }
-export default Usuarios;
+export default Usuarios;

@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useState } from 'react';
-import './App.css';
+import './index.css';
 import Menu from './componentes/Menu';
 import TarjetaDetalle from './componentes/Tarjetadetalle';
 import TarjetaInfo from './componentes/Tarjetainfo';

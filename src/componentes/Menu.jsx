@@ -1,64 +1,64 @@
-import React, { useState } from 'react';
-import { Router, Route, useLocation } from "wouter";
-import './Menu.css';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import TarjetaProductos from './Tarjetaproductos';
-import Tarjetadetalle from './Tarjetadetalle';
-import './Modal.css';
+import { Link } from "wouter";
 
-const Menu = ({ busqueda, onBuscar }) => {
-  const [modalAbierto, setModalAbierto] = useState(false); // Modal de inicio de sesión
-  const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false); // Modal de registro
-  const [modalCarritoAbierto, setModalCarritoAbierto] = useState(false); // Modal del carrito
-  const [modalContraseñaAbierto, setModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
-  const [, navegar] = useLocation();
+const MenuProductos = () => {
+  const [productos, setProductos] = useState([]);
 
-  // Funciones para abrir y cerrar el modal de inicio de sesión
-  const abrirModal = () => setModalAbierto(true);
-  const cerrarModal = () => setModalAbierto(false);
+  useEffect(() => {
+    const obtenerProductos = () => {
+      const url = 'http://localhost:3000/api/rutasPublic/ver/producto';
+      axios.get(url)
+        .then((resp) => {
+          if (resp.data.productos) {
+            setProductos(resp.data.productos);
+          } else {
+            console.error('No se encontraron datos de productos.');
+          }
+        })
+        .catch((error) => {
+          console.error('Error al obtener los datos de los productos:', error);
+        });
+    };
 
-  // Funciones para abrir y cerrar el modal de registro
-  const abrirModalRegistro = () => {
-    setModalAbierto(false); // Cierra el modal de inicio de sesión
-    setModalRegistroAbierto(true); // Abre el modal de registro
-  };
-  const cerrarModalRegistro = () => setModalRegistroAbierto(false);
+    obtenerProductos();
+  }, []);
 
-  // Funciones para abrir y cerrar el modal del carrito
-  const abrirModalCarrito = () => setModalCarritoAbierto(true);
-  const cerrarModalCarrito = () => setModalCarritoAbierto(false);
-
-  // Funciones para abrir y cerrar el modal de cambiar contraseña
-  const abrirModalContraseña = () => {
-    setModalAbierto(false); // Cierra el modal de inicio de sesión
-    setModalContraseñaAbierto(true); // Abre el modal de cambiar contraseña
-  };
-  const cerrarModalContraseña = () => setModalContraseñaAbierto(false);
-
-  // Función para manejar el envío del formulario de registro
-  const manejarRegistroSubmit = (e) => {
-    e.preventDefault(); // Evita el comportamiento por defecto del formulario
-    cerrarModalRegistro(); // Cierra el modal de registro
-    navegar('/'); // Redirige al menú
+  const renderContent = () => {
+    return productos.length > 0 ? (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        {productos.map(producto => (
+          <Link key={producto.id} href={`/detalle/${producto.id}`} className="block group">
+            <div className="bg-white shadow-md rounded-lg overflow-hidden">
+              <img 
+                src={producto.ruta_imagen} 
+                alt={producto.nombre}
+                className="w-full h-48 object-cover group-hover:opacity-75 transition-opacity"
+              />
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-2 group-hover:text-blue-600">{producto.nombre}</h3>
+                <p className="text-gray-700">${producto.precio}</p>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    ) : (
+      <p className="text-center mt-6 text-gray-700">No se encontraron productos.</p>
+    );
   };
 
   return (
-    <Router>
-      <div className="menu">
-        <Navbar 
-          handleOpenModal={abrirModal} 
-          handleOpenCarritoModal={abrirModalCarrito} // Pasamos la función al Navbar
-          onBuscar={onBuscar} 
-        />
-
-        <Route path="/" component={() => <TarjetaProductos busqueda={busqueda} />} />
-        <Route path="/detalle/:productId" component={Tarjetadetalle} />
-
-        <Footer />
+    <div className="flex flex-col min-h-screen bg-gray-100">
+      <Navbar />
+      <div className="flex-grow p-6">
+        {renderContent()}
       </div>
-    </Router>
+      <Footer />
+    </div>
   );
 };
 
-export default Menu;
+export default MenuProductos;

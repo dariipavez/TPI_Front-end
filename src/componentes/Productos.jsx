@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import axios from 'axios';
-import './Productos.css';
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
@@ -147,82 +146,105 @@ const Productos = () => {
   };
 
   return (
-    <div className="contenedor-productos">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
-      <div className="contenido-productos">
-        <h2>Gestión de Productos</h2>
-        <div className="lista-productos">
-          <table>
+      <div className="flex-grow p-6">
+        <h2 className="text-2xl font-bold mb-4">Gestión de Productos</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow-md rounded-lg">
             <thead>
               <tr>
-                <th>Nombre</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th>Tipo de Producto</th>
-                <th>Marca</th>
-                <th>Talle</th>
-                <th>Imagen</th>
-                <th>Acciones</th>
+                <th className="py-2 px-4 border-b">Nombre</th>
+                <th className="py-2 px-4 border-b">Precio</th>
+                <th className="py-2 px-4 border-b">Stock</th>
+                <th className="py-2 px-4 border-b">Tipo de Producto</th>
+                <th className="py-2 px-4 border-b">Marca</th>
+                <th className="py-2 px-4 border-b">Talle</th>
+                <th className="py-2 px-4 border-b">Imagen</th>
+                <th className="py-2 px-4 border-b">Acciones</th>
               </tr>
             </thead>
             <tbody>
               {productos.map(producto => (
-                <tr key={producto.id}>
-                  <td>
+                <tr key={producto.id} className="hover:bg-gray-50">
+                  <td className="py-2 px-4 border-b">
                     {edicionActiva === producto.id ? (
                       <input
                         type="text"
                         value={productoActual.nombre}
                         onChange={(e) => manejarCambio(e, 'nombre')}
+                        className="p-2 border rounded w-full"
                       />
                     ) : (
                       producto.nombre
                     )}
                   </td>
-                  <td>
+                  <td className="py-2 px-4 border-b">
                     {edicionActiva === producto.id ? (
                       <input
                         type="number"
                         value={productoActual.precio}
                         onChange={(e) => manejarCambio(e, 'precio')}
+                        className="p-2 border rounded w-full"
                       />
                     ) : (
                       producto.precio
                     )}
                   </td>
-                  <td>
+                  <td className="py-2 px-4 border-b">
                     {edicionActiva === producto.id ? (
                       <input
                         type="number"
                         value={productoActual.stock}
                         onChange={(e) => manejarCambio(e, 'stock')}
+                        className="p-2 border rounded w-full"
                       />
                     ) : (
                       producto.stock
                     )}
                   </td>
-                  <td>
+                  <td className="py-2 px-4 border-b">
                     {obtenerNombreTipoProducto(producto.id_tipo_producto)}
                   </td>
-                  <td>
+                  <td className="py-2 px-4 border-b">
                     {obtenerNombreMarca(producto.id_marca)}
                   </td>
-                  <td>
+                  <td className="py-2 px-4 border-b">
                     {obtenerNombreTalle(producto.id_talle)}
                   </td>
-                  <td>
-                    <img src={producto.ruta_imagen} alt={producto.nombre} className="imagen-producto" />
+                  <td className="py-2 px-4 border-b">
+                    <img src={producto.ruta_imagen} alt={producto.nombre} className="w-16 h-16 object-cover rounded" />
                   </td>
-                  <td>
+                  <td className="py-2 px-4 border-b flex space-x-2">
                     {edicionActiva === producto.id ? (
                       <>
-                        <button onClick={manejarActualizacionProducto}>Guardar</button>
-                        <button onClick={() => setEdicionActiva(null)}>Cancelar</button>
+                        <button
+                          onClick={manejarActualizacionProducto}
+                          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                        >
+                          Guardar
+                        </button>
+                        <button
+                          onClick={() => setEdicionActiva(null)}
+                          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                        >
+                          Cancelar
+                        </button>
                       </>
                     ) : (
                       <>
-                        <button onClick={() => manejarSeleccionProducto(producto)}>Editar</button>
-                        <button onClick={() => eliminarProducto(producto.id)}>Eliminar</button>
+                        <button
+                          onClick={() => manejarSeleccionProducto(producto)}
+                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                          Editar
+                        </button>
+                        <button
+                          onClick={() => eliminarProducto(producto.id)}
+                          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        >
+                          Eliminar
+                        </button>
                       </>
                     )}
                   </td>
