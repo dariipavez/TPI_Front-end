@@ -3,38 +3,29 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Boton from './Boton';
-import { Link } from 'wouter';
 import './TarjetaDetalle.css';
 
 const TarjetaDetalle = ({ id }) => {
   const [producto, setProducto] = useState(null);
-  const [talles, setTalles] = useState([]);
-  const [talleSeleccionado, setTalleSeleccionado] = useState([]);
+  const [talleSeleccionado, setTalleSeleccionado] = useState(null);
   const [cantidad, setCantidad] = useState(1);
 
   useEffect(() => {
-    const urlProducto = `http://localhost:3000/api/rutasPublic/ver/producto/${id}`;
-    axios.get(urlProducto)
-      .then(respProducto => {
-        if (respProducto.data.producto) {
-          setProducto(respProducto.data.producto);
-          const urlTalles = `http://localhost:3000/api/rutasPublic/ver/talle/${respProducto.data.producto.id_tipo_producto}`;
-          axios.get(urlTalles)
-            .then(respTalles => {
-              if (respTalles.data.talles) {
-                setTalles(respTalles.data.talles);
-              }
-            })
-            .catch(error => {
-              console.error('Error al obtener los datos de los talles:', error);
-            });
+    const obtenerProducto = async () => {
+      try {
+        const url = `http://localhost:3000/api/rutasPublic/ver/producto/${id}`;
+        const resp = await axios.get(url);
+        if (resp.data.producto) {
+          setProducto(resp.data.producto);
         } else {
           console.error('No se encontraron datos del producto.');
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error al obtener los datos del producto:', error);
-      });
+      }
+    };
+
+    obtenerProducto();
   }, [id]);
 
   if (!producto) {
@@ -42,13 +33,7 @@ const TarjetaDetalle = ({ id }) => {
   }
 
   const manejarSeleccionDeTalle = (talle) => {
-    setTalleSeleccionado((prevTalles) => {
-      if (prevTalles.includes(talle)) {
-        return prevTalles.filter((t) => t !== talle);
-      } else {
-        return [...prevTalles, talle];
-      }
-    });
+    setTalleSeleccionado(talle);
   };
 
   const manejarCambioDeCantidad = (operacion) => {
@@ -59,23 +44,42 @@ const TarjetaDetalle = ({ id }) => {
     }
   };
 
-  const total = producto.precio * cantidad;
-
   const agregarAlCarrito = () => {
-    const urlCarrito = `http://localhost:3000/api/rutasPublic/carrito`;
-    axios.post(urlCarrito, {
-      usuario_id: 1, // Esto debería ser dinámico basado en el usuario actual
-      producto_id: producto.id,
-      cantidad,
-      // Aquí puedes añadir más campos si es necesario, como talle
-    })
-      .then(() => {
-        console.log('Producto agregado al carrito');
-      })
-      .catch(error => {
-        console.error('Error al agregar el producto al carrito:', error);
-      });
+    const token = sessionStorage.getItem('token');
+    if (!token) {
+      alert('Por favor, inicia sesión para agregar productos al carrito.');
+      return;
+    }
+
+    const usuarioId = sessionStorage.getItem('usuario_id');
+    if (!talleSeleccionado) {
+      alert('Por favor, selecciona un talle.');
+      return;
+    }
+
+    const productoCarrito = {
+      id: producto.id,
+      nombre: producto.nombre,
+      precio: producto.precio,
+      imagen: producto.ruta_imagen,
+      talle: talleSeleccionado,
+      cantidad: cantidad,
+    };
+
+    const carrito = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
+    const productoExistente = carrito.find(item => item.id === productoCarrito.id && item.talle === productoCarrito.talle);
+    
+    if (productoExistente) {
+      productoExistente.cantidad += cantidad;
+    } else {
+      carrito.push(productoCarrito);
+    }
+
+    localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carrito));
+    alert('Producto agregado al carrito');
   };
+
+  const total = producto.precio * cantidad;
 
   return (
     <div className="tarjeta-pagina">
@@ -84,11 +88,11 @@ const TarjetaDetalle = ({ id }) => {
       <div className="tarjeta">
         <div className="tarjeta-detalle">
           <div className="tarjeta-detalle-fotos">
-              <img 
-                src={producto.ruta_imagen} 
-                alt={producto.nombre} 
-                className="foto"
-              />
+            <img 
+              src={producto.ruta_imagen} 
+              alt={producto.nombre} 
+              className="foto"
+            />
           </div>
 
           <div className="tarjeta-detalle-info">
@@ -96,13 +100,13 @@ const TarjetaDetalle = ({ id }) => {
             <p className="precio">${producto.precio}</p>
             <p className="talle">TALLE</p>
             <div className="talles">
-              {talles.map((talle) => (
+              {['S', 'M', 'L', 'XL', 'XXL'].map((talle) => (
                 <span
-                  key={talle.id}
-                  className={`talle-opcion ${talleSeleccionado.includes(talle.talle) ? 'seleccionado' : ''}`}
-                  onClick={() => manejarSeleccionDeTalle(talle.talle)}
+                  key={talle}
+                  className={`talle-opcion ${talleSeleccionado === talle ? 'seleccionado' : ''}`}
+                  onClick={() => manejarSeleccionDeTalle(talle)}
                 >
-                  {talle.talle}
+                  {talle}
                 </span>
               ))}
             </div>

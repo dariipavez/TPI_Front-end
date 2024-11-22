@@ -11,9 +11,10 @@ import Perfil from './componentes/Perfil';
 import RopaUrbana from './componentes/RopaUrbana';
 import RopaDeportiva from './componentes/RopaDeportiva';
 import Usuarios from './componentes/Usuarios';
-
+import Carrito from './componentes/Carrito';  // Importa el componente Carrito
+import Compras from './componentes/Compras';
 import { Router, Route } from "wouter";
-
+import Navbar from './componentes/Navbar';
 function App() {
   const [busqueda, setBusqueda] = useState('');
 
@@ -37,6 +38,8 @@ function App() {
         <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
         <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
         <Route path="/usuarios" component={Usuarios} />  {/* Ruta para Usuarios */}
+        <Route path="/carrito" component={Carrito} />  {/* Ruta para Carrito */}
+        <Route path="/compras" component={Compras} /> 
       </Router>
     </div>
   );
