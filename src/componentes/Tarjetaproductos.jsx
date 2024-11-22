@@ -42,6 +42,7 @@ const TarjetaProductos = () => {
       ))}
     </div>
   );
+  
 };
 
 export default TarjetaProductos;

@@ -42,7 +42,6 @@ const Carrito = () => {
           producto={producto}
           eliminarProd={eliminarProd}
           setUnidCarrito={setUnidCarrito}
-          imagen={producto.ruta_imagen}
         />
       ))}
     </div>

@@ -24,15 +24,12 @@ const Compras = () => {
             <div key={index} className="compra">
               <h3>Compra #{index + 1}</h3>
               <p>Correo: {compra.email}</p>
-              <p>Nombre: {compra.nombres} {compra.apellidos}</p>
-              <p>DNI: {compra.dni}</p>
+              <p>Nombre: {compra.nombres}</p>
               <p>Teléfono: {compra.telefono}</p>
               <p>Calle: {compra.calle} {compra.numero}</p>
-              <p>Código Postal: {compra.codigoPostal}</p>
+              <p>Código Postal: {compra.codigo_postal}</p>
               <p>Ciudad: {compra.ciudad}</p>
-              <p>Destinatario: {compra.destinatario}</p>
-              <p>Método de Entrega: {compra.metodoEntrega}</p>
-              <p>Método de Pago: {compra.metodoPago}</p>
+              <p>Información Adicional: {compra.informacion_adicional}</p>
               <h4>Productos:</h4>
               <ul>
                 {compra.carrito.map((producto, idx) => (

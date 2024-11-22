@@ -34,52 +34,52 @@ const ModalVerificacion = ({ esAbierto, cerrar }) => {
       })
       .catch((error) => {
         if (error.response && error.response.status === 404) {
-            alert("El usuario no fue encontrado. Verifique los datos.");
-          } else {
-            console.error(error);
-            alert("Hubo un error al verificar los datos.");
-          }
-        });
-    };
-  
-    return (
-      <>
-        {esAbierto && (
-          <div className="modal-overlay">
-            <div className="modal-contenido">
-              <button className="modal-close" onClick={cerrar}>X</button>
-              <h2>Verifica tus datos</h2>
-              <form onSubmit={manejarVerificarDatos}>
-                <input
-                  type="email"
-                  placeholder="Correo electrónico"
-                  className="modal-input"
-                  value={mailVerificar}
-                  onChange={(e) => setMailVerificar(e.target.value)}
-                />
-                <input
-                  type="text"
-                  placeholder="Nombre completo"
-                  className="modal-input"
-                  value={nombreCompletoVerificar}
-                  onChange={(e) => setNombreCompletoVerificar(e.target.value)}
-                />
-                <input
-                  type="tel"
-                  placeholder="Teléfono"
-                  className="modal-input"
-                  value={telefonoVerificar}
-                  onChange={(e) => setTelefonoVerificar(e.target.value)}
-                />
-                <button type="submit" className="modal-submit">Verificar</button>
-              </form>
-            </div>
-          </div>
-        )}
-        
-        <ModalContraseña esAbierto={esModalContraseñaAbierto} cerrar={cerrarModalContraseña} />
-      </>
-    );
+          alert("El usuario no fue encontrado. Verifique los datos.");
+        } else {
+          console.error(error);
+          alert("Hubo un error al verificar los datos.");
+        }
+      });
   };
-  
-  export default ModalVerificacion;
+
+  return (
+    <>
+      {esAbierto && (
+        <div className="modal-overlay">
+          <div className="modal-contenido">
+            <button className="modal-close" onClick={cerrar}>X</button>
+            <h2>Verifica tus datos</h2>
+            <form onSubmit={manejarVerificarDatos}>
+              <input
+                type="email"
+                placeholder="Correo electrónico"
+                className="modal-input"
+                value={mailVerificar}
+                onChange={(e) => setMailVerificar(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Nombre completo"
+                className="modal-input"
+                value={nombreCompletoVerificar}
+                onChange={(e) => setNombreCompletoVerificar(e.target.value)}
+              />
+              <input
+                type="tel"
+                placeholder="Teléfono"
+                className="modal-input"
+                value={telefonoVerificar}
+                onChange={(e) => setTelefonoVerificar(e.target.value)}
+              />
+              <button type="submit" className="modal-submit">Verificar</button>
+            </form>
+          </div>
+        </div>
+      )}
+      
+      <ModalContraseña isOpen={esModalContraseñaAbierto} onClose={cerrarModalContraseña} />
+    </>
+  );
+};
+
+export default ModalVerificacion;
