@@ -15,6 +15,8 @@ import Carrito from './componentes/Carrito';  // Importa el componente Carrito
 import Compras from './componentes/Compras';
 import { Router, Route } from "wouter";
 import Productos from './componentes/Productos';
+import './index.css'
+
 function App() {
   const [busqueda, setBusqueda] = useState('');
 

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import './Navbar.css';
-import './Modal.css';
 import axios from 'axios';
 import ModalLogin from './ModalLogin';
 import ModalRegistro from './ModalRegistro';
@@ -98,77 +96,55 @@ const Navbar = ({ onBuscar }) => {
   };
 
   return (
-    <header className="menu-header">
-      <div className="logo" onClick={() => navegar('/')}>
-        <img src="/MDT.png" alt="Logo MDT" className="logo-imagen" />
+    <header className="menu-header flex items-center justify-between p-4 bg-gray-800 text-white">
+      <div className="logo cursor-pointer" onClick={() => navegar('/')}>
+        <img src="/MDT.png" alt="Logo MDT" className="logo-imagen w-24" />
       </div>
 
-      <nav className="menu-categorias">
-        <div className="menu-item">
-          <span onClick={() => navegar('/ropa-urbana')}>Ropa Urbana</span>
+      <nav className="menu-categorias flex space-x-4">
+        <div className="menu-item cursor-pointer hover:underline" onClick={() => navegar('/ropa-urbana')}>
+          <span>Ropa Urbana</span>
         </div>
-        <div className="menu-item">
-          <span onClick={() => navegar('/ropa-deportiva')}>Ropa Deportiva</span>
+        <div className="menu-item cursor-pointer hover:underline" onClick={() => navegar('/ropa-deportiva')}>
+          <span>Ropa Deportiva</span>
         </div>
       </nav>
 
-      <div className="menu-iconos">
-      {logged ? (
-  <span 
-    className="icono-usuario" 
-    onClick={abrirMenuPerfil}
-  >
-    👤
-    {esMenuPerfilAbierto && (
-      <div className="profile-menu">
-        <button 
-          className="profile-menu-item" 
-          onClick={() => navegar('/perfil')}
-        >
-          Mi cuenta
-        </button>
-        <button 
-          className="profile-menu-item" 
-          onClick={() => navegar('/compras')}
-        >
-          Mis Compras
-        </button>
-        {rol === 'administrador' && (
-          <>
-            <button 
-              className="profile-menu-item" 
-              onClick={() => navegar('/usuarios')}
-            >
-              Administrar usuarios
-            </button>
-            <button 
-              className="profile-menu-item" 
-              onClick={() => navegar('/agregar')}
-            >
-              Ingresar nuevo producto
-            </button>
-            <button 
-              className="profile-menu-item" 
-              onClick={() => navegar('/productos')}
-            >
-              Gestionar productos
-            </button>
-          </>
+      <div className="menu-iconos flex space-x-4">
+        {logged ? (
+          <span className="icono-usuario relative cursor-pointer" onClick={abrirMenuPerfil}>
+            👤
+            {esMenuPerfilAbierto && (
+              <div className="profile-menu absolute right-0 mt-2 w-48 bg-white text-black rounded shadow-lg z-50">
+                <button className="profile-menu-item w-full text-left px-4 py-2 hover:bg-gray-200" onClick={() => navegar('/perfil')}>
+                  Mi cuenta
+                </button>
+                <button className="profile-menu-item w-full text-left px-4 py-2 hover:bg-gray-200" onClick={() => navegar('/compras')}>
+                  Mis Compras
+                </button>
+                {rol === 'administrador' && (
+                  <>
+                    <button className="profile-menu-item w-full text-left px-4 py-2 hover:bg-gray-200" onClick={() => navegar('/usuarios')}>
+                      Administrar usuarios
+                    </button>
+                    <button className="profile-menu-item w-full text-left px-4 py-2 hover:bg-gray-200" onClick={() => navegar('/agregar')}>
+                      Ingresar nuevo producto
+                    </button>
+                    <button className="profile-menu-item w-full text-left px-4 py-2 hover:bg-gray-200" onClick={() => navegar('/productos')}>
+                      Gestionar productos
+                    </button>
+                  </>
+                )}
+                <button className="profile-menu-item w-full text-left px-4 py-2 hover:bg-gray-200" onClick={cerrarSesion}>
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+          </span>
+        ) : (
+          <span className="icono-usuario cursor-pointer" onClick={abrirModal}>👤</span>
         )}
-        <button 
-          className="profile-menu-item" 
-          onClick={cerrarSesion}
-        >
-          Cerrar sesión
-        </button>
-      </div>
-    )}
-  </span>
-) : (
-  <span className="icono-usuario" onClick={abrirModal}>👤</span>
-)}
-<span className="icono-carrito" onClick={abrirModalCarrito}>🛒</span>
-
+        <span className="icono-carrito cursor-pointer" onClick={abrirModalCarrito}>🛒</span>
       </div>
 
       <ModalLogin
@@ -222,4 +198,4 @@ const Navbar = ({ onBuscar }) => {
   );
 };
 
-export default Navbar;
+export default Navbar;

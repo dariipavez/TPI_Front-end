@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import ModalContraseña from './ModalContraseña'; // Importa el componente del modal de cambio de contraseña
-import './Modal.css';
+import ModalContraseña from './ModalContraseña';
 
 const ModalVerificacion = ({ esAbierto, cerrar }) => {
   const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false);
@@ -11,6 +10,14 @@ const ModalVerificacion = ({ esAbierto, cerrar }) => {
 
   const abrirModalContraseña = () => setEsModalContraseñaAbierto(true);
   const cerrarModalContraseña = () => setEsModalContraseñaAbierto(false);
+
+  useEffect(() => {
+    if (esAbierto) {
+      setMailVerificar('');
+      setNombreCompletoVerificar('');
+      setTelefonoVerificar('');
+    }
+  }, [esAbierto]);
 
   const manejarVerificarDatos = (e) => {
     e.preventDefault();
@@ -45,33 +52,35 @@ const ModalVerificacion = ({ esAbierto, cerrar }) => {
   return (
     <>
       {esAbierto && (
-        <div className="modal-overlay">
-          <div className="modal-contenido">
-            <button className="modal-close" onClick={cerrar}>X</button>
-            <h2>Verifica tus datos</h2>
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full relative">
+            <button className="absolute top-4 right-4 text-white text-xl font-bold" onClick={cerrar}>X</button>
+            <h2 className="text-xl font-bold mb-6 text-white text-center mt-10">Verifica tus datos</h2>
             <form onSubmit={manejarVerificarDatos}>
-              <input
-                type="email"
-                placeholder="Correo electrónico"
-                className="modal-input"
-                value={mailVerificar}
-                onChange={(e) => setMailVerificar(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Nombre completo"
-                className="modal-input"
-                value={nombreCompletoVerificar}
-                onChange={(e) => setNombreCompletoVerificar(e.target.value)}
-              />
-              <input
-                type="tel"
-                placeholder="Teléfono"
-                className="modal-input"
-                value={telefonoVerificar}
-                onChange={(e) => setTelefonoVerificar(e.target.value)}
-              />
-              <button type="submit" className="modal-submit">Verificar</button>
+              <div className="space-y-4">
+                <input
+                  type="email"
+                  placeholder="Correo electrónico"
+                  className="w-full p-3 border border-gray-700 rounded bg-gray-800 text-white"
+                  value={mailVerificar}
+                  onChange={(e) => setMailVerificar(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Nombre completo"
+                  className="w-full p-3 border border-gray-700 rounded bg-gray-800 text-white"
+                  value={nombreCompletoVerificar}
+                  onChange={(e) => setNombreCompletoVerificar(e.target.value)}
+                />
+                <input
+                  type="tel"
+                  placeholder="Teléfono"
+                  className="w-full p-3 border border-gray-700 rounded bg-gray-800 text-white"
+                  value={telefonoVerificar}
+                  onChange={(e) => setTelefonoVerificar(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded mt-6 hover:bg-blue-700">Verificar</button>
             </form>
           </div>
         </div>

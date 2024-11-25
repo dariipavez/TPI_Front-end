@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './Modal.css';
 
 const ModalContraseña = ({ isOpen, onClose }) => {
   const [nuevaContraseña, setNuevaContraseña] = useState('');
@@ -50,28 +49,32 @@ const ModalContraseña = ({ isOpen, onClose }) => {
 
   return (
     isOpen && (
-      <div className="modal-overlay">
-        <div className="modal-contenido">
-          <button className="modal-close" onClick={onClose}>X</button>
-          <h2>Cambiar Contraseña</h2>
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full relative">
+          <button className="absolute top-4 right-4 text-white text-xl font-bold" onClick={onClose}>X</button>
+          <h2 className="text-xl font-bold mb-6 text-white text-center mt-10">Cambiar Contraseña</h2>
           <form onSubmit={manejarCambiarContraseña}>
-            <input
-              type="password"
-              name="nuevaContraseña"
-              placeholder="Nueva contraseña"
-              value={nuevaContraseña}
-              onChange={manejarNuevaContraseña}
-              required
-            />
-            <input
-              type="password"
-              name="confirmarContraseña"
-              placeholder="Confirmar nueva contraseña"
-              value={confirmarContraseña}
-              onChange={manejarConfirmarContraseña}
-              required
-            />
-            <button type="submit" className="modal-submit">Cambiar</button>
+            <div className="space-y-4">
+              <input
+                type="password"
+                name="nuevaContraseña"
+                placeholder="Nueva contraseña"
+                className="w-full p-3 border border-gray-700 rounded bg-gray-800 text-white"
+                value={nuevaContraseña}
+                onChange={manejarNuevaContraseña}
+                required
+              />
+              <input
+                type="password"
+                name="confirmarContraseña"
+                placeholder="Confirmar nueva contraseña"
+                className="w-full p-3 border border-gray-700 rounded bg-gray-800 text-white"
+                value={confirmarContraseña}
+                onChange={manejarConfirmarContraseña}
+                required
+              />
+            </div>
+            <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded mt-6 hover:bg-blue-700">Cambiar</button>
           </form>
         </div>
       </div>

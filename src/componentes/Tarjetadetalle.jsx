@@ -2,12 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import Boton from './Boton';
-import './TarjetaDetalle.css';
 
 const TarjetaDetalle = ({ id }) => {
   const [producto, setProducto] = useState(null);
-  const [talles, setTalles] = useState([]);
   const [talleSeleccionado, setTalleSeleccionado] = useState(null);
   const [cantidad, setCantidad] = useState(1);
 
@@ -16,15 +13,14 @@ const TarjetaDetalle = ({ id }) => {
       .then(respuestaProducto => {
         const producto = respuestaProducto.data.producto;
         setProducto(producto);
-        return axios.get(`http://localhost:3000/api/rutasPublic/ver/talle/tipo_producto/${producto.id_tipo_producto}`);
+        setTalleSeleccionado(producto.talles[0]?.talle || null); // Selecciona el primer talle disponible por defecto
       })
-      .then(respuestaTalles => setTalles(respuestaTalles.data.talles))
       .catch(error => console.error('Error al obtener los datos:', error));
   }, [id]);
 
   const manejarSeleccionDeTalle = (talle) => {
-    const talleDisponible = talles.find(t => t.talle === talle);
-    if (!talleDisponible || producto.stock <= 0) {
+    const talleDisponible = producto.talles.find(t => t.talle === talle);
+    if (!talleDisponible) {
       alert(`El producto no está disponible en el talle seleccionado (${talle}).`);
       return;
     }
@@ -48,75 +44,84 @@ const TarjetaDetalle = ({ id }) => {
     }
 
     const usuarioId = sessionStorage.getItem('usuario_id');
-    const tallaSeleccionada = talles.find(t => t.talle === talleSeleccionado && t.id === producto.id_talle);
-    if (!tallaSeleccionada) {
-      alert('El talle seleccionado no está disponible.');
+    const tallaSeleccionada = producto.talles.find(t => t.talle === talleSeleccionado);
+    if (!tallaSeleccionada || tallaSeleccionada.stock <= 0) {
+      alert('El talle seleccionado no está disponible o no tiene stock.');
       return;
     }
-
-    if (producto.stock <= 0) {
-      alert('El producto no tiene stock.');
-      return;
-    }
-
-    const productoCarrito = {
-      id: producto.id,
-      nombre: producto.nombre,
-      precio: producto.precio,
-      imagen: producto.ruta_imagen,
-      talle: talleSeleccionado,
-      cantidad: cantidad,
-    };
+      const productoCarrito = {
+        id: producto.id, // Aquí debe estar el id_producto correcto
+        nombre: producto.nombre,
+        precio: producto.precio,
+        imagen: producto.ruta_imagen,
+        talle: talleSeleccionado,
+        cantidad: cantidad,
+        total: producto.precio * cantidad
+      }
+    
 
     const carrito = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
     const productoExistente = carrito.find(item => item.id === productoCarrito.id && item.talle === productoCarrito.talle);
 
     if (productoExistente) {
       productoExistente.cantidad += cantidad;
+      productoExistente.total += productoCarrito.total; // Actualiza el precio total
     } else {
       carrito.push(productoCarrito);
     }
 
     localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carrito));
+
+    // Calcular el precio total del carrito y guardarlo en sessionStorage
+    const precioTotalCarrito = carrito.reduce((total, producto) => total + producto.total, 0);
+    sessionStorage.setItem('precio_total', precioTotalCarrito);
+
     alert('Producto agregado al carrito');
+    // Resetear la cantidad a 1 después de agregar el producto al carrito
+    setCantidad(1);
   };
 
   return (
-    <div className="tarjeta-pagina">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
-      {!producto || talles.length === 0 ? (
-        <div>Cargando...</div>
+      {!producto ? (
+        <div className="flex-grow flex items-center justify-center text-lg">Cargando...</div>
       ) : (
-        <div className="tarjeta">
-          <div className="tarjeta-detalle">
-            <div className="tarjeta-detalle-fotos">
-              <img src={producto.ruta_imagen} alt={producto.nombre} className="foto" />
+        <div className="flex-grow flex justify-center items-center p-4">
+          <div className="bg-white shadow-md rounded-lg p-6 max-w-4xl w-full flex flex-col md:flex-row">
+            <div className="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+              <img src={producto.ruta_imagen} alt={producto.nombre} className="w-full h-auto object-cover rounded-lg" />
             </div>
-            <div className="tarjeta-detalle-info">
-              <h2>{producto.nombre}</h2>
-              <p className="precio">${producto.precio}</p>
-              <p className="talle">TALLE</p>
-              <div className="talles">
-                {talles.map(talle => (
+            <div className="flex-grow">
+              <h2 className="text-2xl font-bold mb-4">{producto.nombre}</h2>
+              <p className="text-lg text-gray-700 mb-4">Precio: ${producto.precio}</p>
+              <p className="text-lg font-semibold mb-2">TALLE</p>
+              <div className="flex flex-wrap mb-4">
+                {producto.talles.map(talle => (
                   <span
                     key={talle.id}
-                    className={`talle-opcion ${talleSeleccionado === talle.talle ? 'seleccionado' : ''}`}
+                    className={`cursor-pointer p-2 m-1 border rounded ${talleSeleccionado === talle.talle ? 'bg-yellow-500 text-white' : 'bg-gray-200 text-gray-800'}`}
                     onClick={() => manejarSeleccionDeTalle(talle.talle)}
                   >
                     {talle.talle}
                   </span>
                 ))}
               </div>
-              <div className="selector-cantidad">
-                <button onClick={() => manejarCambioDeCantidad('decrementar')}>-</button>
-                <span>{cantidad}</span>
-                <button onClick={() => manejarCambioDeCantidad('incrementar')}>+</button>
+              <div className="flex items-center mb-4">
+                <button className="px-3 py-1 bg-gray-200 rounded-l" onClick={() => manejarCambioDeCantidad('decrementar')}>-</button>
+                <span className="px-4 py-1 border-t border-b">{cantidad}</span>
+                <button className="px-3 py-1 bg-gray-200 rounded-r" onClick={() => manejarCambioDeCantidad('incrementar')}>+</button>
               </div>
-              <div className="tarjeta-precio">
-                <p>Precio: ${producto.precio}</p>
+              <div className="text-lg font-semibold mb-4">
+                <p>Precio unitario: ${producto.precio}</p>
                 <p>Total: ${producto.precio * cantidad}</p>
               </div>
-              <Boton texto="Agregar al carrito" onClick={agregarAlCarrito} />
+              <button
+                onClick={agregarAlCarrito}
+                className="w-auto bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
+              >
+                Agregar al carrito
+              </button>
             </div>
           </div>
         </div>

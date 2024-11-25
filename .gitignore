@@ -21,3 +21,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+/node_modules
+/node_modules/@eslint
+/node_modules/@eslint/plugin-kit
