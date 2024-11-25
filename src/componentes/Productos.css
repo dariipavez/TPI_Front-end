@@ -1,0 +1,109 @@
+/* src/componentes/Productos.css */
+
+/* Contenedor principal de la vista de administración */
+.contenedor-productos {
+    padding: 20px;
+    text-align: center;
+}
+
+.contenedor-productos h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+/* Título de la lista de productos */
+h3 {
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+/* Estilos para el botón de Registrar/Actualizar Producto */
+.boton-producto {
+    background-color: #28a745;  /* Verde */
+    color: white;
+    padding: 10px 20px;
+    margin: 20px 0;  /* Espacio entre el botón y la tabla */
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.boton-producto:hover {
+    background-color: #218838;
+}
+
+/* Estilos para la tabla de productos */
+.lista-productos {
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilo para la columna de acciones */
+.acciones {
+    text-align: center;
+}
+
+/* Estilos para los botones dentro de la tabla */
+button {
+    padding: 8px 15px;
+    margin: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+}
+
+/* Estilos para el botón de Editar */
+.btn-editar {
+    background-color: #007bff;  /* Azul */
+    color: white;
+}
+
+.btn-editar:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el botón de Eliminar */
+.btn-eliminar {
+    background-color: #dc3545;  /* Rojo */
+    color: white;
+}
+
+.btn-eliminar:hover {
+    background-color: #c82333;
+}
+
+/* Estilos para la imagen del producto */
+.imagen-producto {
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

@@ -1,58 +1,171 @@
-// src/components/TarjetaInfo.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useLocation } from 'wouter';
 import Navbar from './Navbar';
 import './TarjetaInfo.css';
 
 const TarjetaInfo = () => {
   const [, navigate] = useLocation(); // Hook de navegación
+  const [datosPerfil, setDatosPerfil] = useState({
+    email: '',
+    nombres: '',
+    telefono: '',
+    calle: '',
+    numero: '',
+    codigoPostal: '',
+    ciudad: '',
+    informacionAdicional: ''
+  });
 
-  const finalizarCompra = (event) => {
-    event.preventDefault(); // Evita el comportamiento predeterminado del formulario
+  useEffect(() => {
+    const obtenerPerfil = () => {
+      const usuario_id = sessionStorage.getItem('usuario_id');
+      const token = sessionStorage.getItem('token');
+      if (!usuario_id || !token) {
+        console.error('No se encontró el ID de usuario o el token.');
+        return;
+      }
 
-    // Obtener los datos del formulario
-    const formData = new FormData(event.target);
-    const email = formData.get('email');
-    const nombres = formData.get('nombres');
-    const apellidos = formData.get('apellidos');
-    const dni = formData.get('dni');
-    const telefono = formData.get('telefono');
-    const calle = formData.get('calle');
-    const numero = formData.get('numero');
-    const codigoPostal = formData.get('codigoPostal');
-    const ciudad = formData.get('ciudad');
-    const destinatario = formData.get('destinatario');
-    const metodoEntrega = formData.get('metodoEntrega');
-    const metodoPago = formData.get('metodoPago');
-
-    const usuarioId = sessionStorage.getItem('usuario_id');
-    const carrito = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
-
-    const nuevaCompra = {
-      email,
-      nombres,
-      apellidos,
-      dni,
-      telefono,
-      calle,
-      numero,
-      codigoPostal,
-      ciudad,
-      destinatario,
-      metodoEntrega,
-      metodoPago,
-      carrito
+      const config = {
+        headers: {
+          Authorization: token
+        }
+      };
+      const url = `http://localhost:3000/api/rutasUsuario/ver/perfil/${usuario_id}`;
+      axios.get(url, config)
+        .then((resp) => {
+          if (resp.data.usuario) {
+            const data = resp.data.usuario;
+            setDatosPerfil({
+              email: data.mail,
+              nombres: data.nombre_completo.split(' ')[0],
+              telefono: data.telefono,
+              calle: data.calle || '',
+              numero: data.numero || '',
+              codigoPostal: data.codigo_postal || '',
+              ciudad: data.ciudad || '',
+              informacionAdicional: data.informacion_adicional || ''
+            });
+          } else {
+            console.error('No se encontraron datos del usuario.');
+          }
+        })
+        .catch((error) => {
+          if (error.response && error.response.status === 403) {
+            alert('No tienes permisos para ver el perfil. Verifica tu token de autenticación.');
+          } else {
+            console.error('Error al obtener los datos del perfil:', error);
+          }
+        });
     };
 
-    const comprasGuardadas = JSON.parse(localStorage.getItem(`compras_${usuarioId}`)) || [];
-    comprasGuardadas.push(nuevaCompra);
-    localStorage.setItem(`compras_${usuarioId}`, JSON.stringify(comprasGuardadas));
+    obtenerPerfil();
+  }, []);
 
-    // Vaciar el carrito
-    localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify([]));
+  const finalizarCompra = async (event) => {
+    event.preventDefault(); // Evita el comportamiento predeterminado del formulario
 
-    // Redirige a la pantalla de agradecimiento
-    navigate('/agradecimiento');
+    // Verificar si todos los campos están completos
+    const { email, nombres, telefono, calle, numero, codigoPostal, ciudad } = datosPerfil;
+    if (!email || !nombres || !telefono || !calle || !numero || !codigoPostal || !ciudad) {
+      alert('Por favor, completa todos los campos requeridos.');
+      return;
+    }
+
+    const envioData = {
+      id_usuario: sessionStorage.getItem('usuario_id'),
+      codigo_postal: codigoPostal,
+      calle: calle,
+      numero: numero,
+      ciudad: ciudad,
+      informacion_adicional: datosPerfil.informacionAdicional
+    };
+
+    const token = sessionStorage.getItem('token');
+
+    try {
+      // Registrar el envío
+      const envioResponse = await axios.post('http://localhost:3000/api/rutasUsuario/registrar/envio', envioData, {
+        headers: {
+          Authorization: token
+        }
+      });
+      const id_envio = envioResponse.data.id_envio;
+
+      // Obtener los productos del carrito
+      const carrito = JSON.parse(localStorage.getItem(`carrito_${envioData.id_usuario}`)) || [];
+
+      // Calcular el precio total
+      let precioTotal = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+
+      // Datos de la compra
+      const compraData = {
+        precio_total: precioTotal, 
+        id_envio: id_envio
+      };
+
+      // Registrar la compra
+      const compraResponse = await axios.post('http://localhost:3000/api/rutasUsuario/registrar/compra', compraData, {
+        headers: {
+          Authorization: token
+        }
+      });
+      const compra_id = compraResponse.data.compra_id;
+
+      // Registrar cada producto de la compra
+      for (const producto of carrito) {
+        const productoCompraData = {
+          id_producto: producto.id, // Asume que cada producto en el carrito tiene un id
+          id_compra: compra_id,
+          cantidad: producto.cantidad,
+          precio_unitario: producto.precio
+        };
+        await axios.post('http://localhost:3000/api/rutasUsuario/registrar/producto_compra', productoCompraData, {
+          headers: {
+            Authorization: token
+          }
+        });
+      }
+
+      alert('Datos de envío y compra cargados correctamente.');
+      console.log('Compra registrada:', compraResponse.data);
+
+      // Guardar la compra localmente y redirigir al agradecimiento
+      const nuevaCompra = {
+        ...envioData,
+        email: email,
+        nombres: nombres,
+        telefono: telefono,
+        carrito: carrito
+      };
+
+      const comprasGuardadas = JSON.parse(localStorage.getItem(`compras_${envioData.id_usuario}`)) || [];
+      comprasGuardadas.push(nuevaCompra);
+      localStorage.setItem(`compras_${envioData.id_usuario}`, JSON.stringify(comprasGuardadas));
+
+      // Vaciar el carrito
+      localStorage.setItem(`carrito_${envioData.id_usuario}`, JSON.stringify([]));
+
+      // Redirige a la pantalla de agradecimiento
+      navigate('/agradecimiento');
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        alert('No tienes permisos para realizar esta acción.');
+      } else if (error.response && error.response.status === 500) {
+        alert('Error interno del servidor. Por favor, intenta nuevamente.');
+      } else {
+        alert('Error al registrar los datos de envío. Por favor, intenta nuevamente.');
+      }
+      console.error('Error al registrar el envío:', error);
+    }
+  };
+
+  const manejarInput = (e) => {
+    const { name, value } = e.target;
+    setDatosPerfil(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
   };
 
   return (
@@ -66,33 +179,18 @@ const TarjetaInfo = () => {
           {/* Sección de Identificación */}
           <label>
             Correo Electrónico
-            <input type="email" name="email" placeholder="Ejemplo@correo.com" />
+            <input type="email" name="email" value={datosPerfil.email} onChange={manejarInput} placeholder="Ejemplo@correo.com" />
           </label>
           <div className="nombre-apellido">
             <label>
-              Nombres
-              <input type="text" name="nombres" placeholder="Tus nombres" />
-            </label>
-            <label>
-              Apellidos
-              <input type="text" name="apellidos" placeholder="Tus apellidos" />
-            </label>
-          </div>
-          <div className="dni-telefono">
-            <label>
-              DNI
-              <input type="text" name="dni" placeholder="Número de DNI" />
+              Nombre
+              <input type="text" name="nombres" value={datosPerfil.nombres} onChange={manejarInput} placeholder="Tus nombres" />
             </label>
             <label>
               Teléfono/Móvil
-              <input type="text" name="telefono" placeholder="Número de teléfono" />
+              <input type="text" name="telefono" value={datosPerfil.telefono} onChange={manejarInput} placeholder="Número de teléfono" />
             </label>
           </div>
-
-          {/* Botón para continuar a dirección */}
-          <button type="button" className="boton-continuar">
-            Continuar a Dirección
-          </button>
 
           {/* Sección de Dirección */}
           <h2 className="tarjeta-info-titulo">
@@ -100,43 +198,26 @@ const TarjetaInfo = () => {
           </h2>
           <label>
             Código Postal
-            <input type="text" name="codigoPostal" placeholder="Código Postal" />
+            <input type="text" name="codigoPostal" value={datosPerfil.codigoPostal} onChange={manejarInput} placeholder="Código Postal" />
           </label>
           <div className="calle-numero">
             <label>
               Calle
-              <input type="text" name="calle" placeholder="Calle" />
+              <input type="text" name="calle" value={datosPerfil.calle} onChange={manejarInput} placeholder="Calle" />
             </label>
             <label>
               Número
-              <input type="text" name="numero" placeholder="Número" />
+              <input type="text" name="numero" value={datosPerfil.numero} onChange={manejarInput} placeholder="Número" />
             </label>
           </div>
           <label>
             Información Adicional
-            <input type="text" name="informacionAdicional" placeholder="Información Adicional" />
+            <input type="text" name="informacionAdicional" value={datosPerfil.informacionAdicional} onChange={manejarInput} placeholder="Información Adicional" />
           </label>
           <label>
             Ciudad
-            <input type="text" name="ciudad" placeholder="Ciudad" />
+            <input type="text" name="ciudad" value={datosPerfil.ciudad} onChange={manejarInput} placeholder="Ciudad" />
           </label>
-          <label>
-            Destinatario
-            <input type="text" name="destinatario" placeholder="Destinatario" />
-          </label>
-          <label>
-            Método de entrega
-            <select name="metodoEntrega">
-              <option value="andreani">Andreani</option>
-              <option value="correo-argentino">Correo Argentino</option>
-              <option value="oca">Oca</option>
-            </select>
-          </label>
-
-          {/* Botón para continuar a método de pago */}
-          <button type="submit" className="boton-continuar">
-            Continuar a Método de pago
-          </button>
 
           {/* Nueva Sección de Pago */}
           <h2 className="tarjeta-info-titulo">
@@ -158,35 +239,37 @@ const TarjetaInfo = () => {
               <option value="3">3 Cuotas</option>
               <option value="6">6 Cuotas</option>
               <option value="12">12 Cuotas</option>
-            </select>
-          </label>
-          <label>
-            Nombre y apellido como figura en la tarjeta
-            <input type="text" name="nombreTarjeta" placeholder="Nombre y Apellido" />
-          </label>
-          <div className="fecha-codigo">
-            <label>
-              Fecha de vencimiento
-              <div className="fecha-vencimiento">
-                <input type="text" name="mesVencimiento" placeholder="MM" maxLength="2" />
-                <span>/</span>
-                <input type="text" name="anioVencimiento" placeholder="AA" maxLength="2" />
-              </div>
-            </label>
-            <label>
-              Código de seguridad
-              <input type="text" name="cvv" placeholder="CVV" maxLength="3" />
-            </label>
+        </select>
+      </label>
+      <label>
+        Nombre y apellido como figura en la tarjeta
+        <input type="text" name="nombreTarjeta" placeholder="Nombre y Apellido" />
+      </label>
+      <div className="fecha-codigo">
+        <label>
+          Fecha de vencimiento
+          <div className="fecha-vencimiento">
+            <input type="text" name="mesVencimiento" placeholder="MM" maxLength="2" />
+            <span>/</span>
+            <input type="text" name="anioVencimiento" placeholder="AA" maxLength="2" />
           </div>
-
-          {/* Botón Finalizar Compra */}
-          <button type="submit" className="boton-finalizar">
-            Finalizar Compra
-          </button>
-        </form>
+        </label>
+        <label>
+          Código de seguridad
+          <input type="text" name="cvv" placeholder="CVV" maxLength="3" />
+        </label>
       </div>
-    </div>
-  );
+
+      {/* Botón Finalizar Compra */}
+      <button type="submit" className="boton-finalizar">
+        Finalizar Compra
+      </button>
+    </form>
+  </div>
+</div>
+);
 };
 
 export default TarjetaInfo;
+
+  

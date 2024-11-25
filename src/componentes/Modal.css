@@ -27,37 +27,58 @@
   margin: auto;
 }
 
-/* Estilo para el modal del carrito */
 .modal-carrito {
-  background-color: white;
+  max-height: 80vh; /* Máxima altura del modal */
+  overflow-y: auto; /* Habilitar desplazamiento vertical */
   padding: 20px;
-  border-radius: 8px;
-  width: 400px; /* Ancho del modal del carrito */
-  max-width: 100%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  z-index: 1001;
-  overflow: hidden;
-  /* Asegura que el modal de carrito esté centrado */
+  background-color: white;
+  border-radius: 10px;
   position: relative;
-  margin: auto;
 }
 
-/* Estilo para los botones dentro del modal */
+.carrito-contenido {
+  max-height: 60vh; /* Máxima altura del contenido del carrito */
+  overflow-y: auto; /* Habilitar desplazamiento vertical */
+  margin-bottom: 20px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-carrito {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+}
+
 .modal-close {
   position: absolute;
   top: 10px;
   right: 10px;
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
 }
 
-/* Estilo para el botón de "Continuar compra" en el modal del carrito */
 .boton-continuar-compra {
-  background-color: #45a049;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -68,60 +89,23 @@
   background-color: #45a049;
 }
 
-.modal-close:hover {
-  color: white; /* Cambia a un rojo más oscuro al pasar el mouse */
-  background-color: darkred;
-  font-size: 15px;
-
-}
-
-.modal-contenido input {
-  display: block;
-  min-width: 320px;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-/* Botón de "Entrar" */
-.modal-submit {
-  width: 100%;
-  padding: 10px;
-  background-color: #333;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.modal-submit:hover {
-  background-color: #555;
-}
-/* Estilo base para el overlay del modal */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+.carrito-producto {
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  margin-bottom: 10px;
 }
 
-/* Estilo del modal del carrito */
-.modal-carrito {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
-  position: relative;
-  animation: fadeIn 0.3s ease-in-out;
+.carrito-producto-imagen {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
 }
+
+.carrito-producto-info {
+  display: flex;
+  flex-direction: column;
+}
+
 
 /* Animación para el modal */
 @keyframes fadeIn {
@@ -133,42 +117,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Estilo para los botones dentro del modal */
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 14px; /* Cambié de 18px a 14px para que sea más pequeña */
-  cursor: pointer;
-}
-
-/* Contenedor del producto en el carrito */
-.carrito-producto {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* Imagen del producto en el carrito */
-.carrito-producto-imagen {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 5px;
-  margin-right: 15px;
-  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Información del producto en el carrito */
-.carrito-producto-info {
-  display: flex;
-  flex-direction: column;
 }
 
 .carrito-producto-info h3 {
