@@ -6,7 +6,7 @@ import { Link } from "wouter";
 
 const RopaDeportiva = () => {
   const [productos, setProductos] = useState([]);
-  const idCategoria = 2; // Asigna el ID de categoría correspondiente a "deportiva"
+  const idCategoria = 2;
 
   useEffect(() => {
     const obtenerProductosFiltrados = () => {
@@ -34,7 +34,7 @@ const RopaDeportiva = () => {
     obtenerProductosFiltrados();
   
     return () => {
-      setProductos([]); // Limpiar el estado cuando el componente se desmonte
+      setProductos([]);
     };
   }, [idCategoria]);
   

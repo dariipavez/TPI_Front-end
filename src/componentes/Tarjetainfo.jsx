@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useLocation } from 'wouter';
 import Navbar from './Navbar';
 
+const config = { headers: { Authorization: sessionStorage.getItem('token') } };
+
 const TarjetaInfo = () => {
   const [, navigate] = useLocation();
   const [datosPerfil, setDatosPerfil] = useState({
@@ -24,10 +26,6 @@ const TarjetaInfo = () => {
         console.error('No se encontró el ID de usuario o el token.');
         return;
       }
-
-      const config = {
-        headers: { Authorization: token }
-      };
       const url = `http://localhost:3000/api/rutasUsuario/ver/perfil/${usuario_id}`;
       axios.get(url, config)
         .then((resp) => {
@@ -61,13 +59,13 @@ const TarjetaInfo = () => {
 
   const finalizarCompra = (event) => {
     event.preventDefault();
-
+  
     const { email, nombres, telefono, calle, numero, codigoPostal, ciudad } = datosPerfil;
     if (!email || !nombres || !telefono || !calle || !numero || !codigoPostal || !ciudad) {
       alert('Por favor, completa todos los campos requeridos.');
       return;
     }
-
+  
     const envioData = {
       id_usuario: sessionStorage.getItem('usuario_id'),
       codigo_postal: codigoPostal,
@@ -76,50 +74,39 @@ const TarjetaInfo = () => {
       ciudad: ciudad,
       informacion_adicional: datosPerfil.informacionAdicional
     };
-
+  
     const token = sessionStorage.getItem('token');
     const precioTotal = sessionStorage.getItem('precio_total');
-
+    console.log('Precio total desde sessionStorage:', precioTotal);
+  
     if (!precioTotal) {
       alert('No se pudo obtener el precio total. Por favor, vuelve a la página del carrito.');
       return;
     }
-
-    // Registrar Envío
-    axios.post('http://localhost:3000/api/rutasUsuario/registrar/envio', envioData, {
-      headers: {
-        Authorization: token
-      }
-    })
+  
+    axios.post('http://localhost:3000/api/rutasUsuario/registrar/envio', envioData, config)
     .then((envioResponse) => {
       const id_envio = envioResponse.data.id_envio;
-      // Obtener los productos del carrito
+  
       const carrito = JSON.parse(localStorage.getItem(`carrito_${envioData.id_usuario}`)) || [];
-
-      // Verificar los productos del carrito
+  
       carrito.forEach(producto => {
-        if (!producto.id || !producto.cantidad || !producto.precio) {
-          throw new Error('Faltan datos en los productos del carrito.');
+        if (!producto.id_producto || !producto.cantidad || !producto.precio_unitario) {
+          console.error('Producto incompleto:', producto);
         }
       });
-
-      // Datos de la compra
+  
       const compraData = {
-        precio_total: parseFloat(precioTotal), // Asegúrate de que sea un número
+        precio_total: parseFloat(precioTotal),
         id_envio: id_envio,
-        carrito: carrito // Pasar el carrito para el registro de productos
+        carrito: carrito
       };
-
-      // Registrar la compra
-      return axios.post('http://localhost:3000/api/rutasUsuario/registrar/compra', compraData, {
-        headers: {
-          Authorization: token
-        }
-      });
+  
+      return axios.post('http://localhost:3000/api/rutasUsuario/registrar/compra', compraData, config);
     })
     .then((compraResponse) => {
       alert('Datos de envío y compra cargados correctamente.');
-
+  
       const nuevaCompra = {
         ...envioData,
         email: datosPerfil.email,
@@ -127,13 +114,12 @@ const TarjetaInfo = () => {
         telefono: datosPerfil.telefono,
         carrito: JSON.parse(localStorage.getItem(`carrito_${envioData.id_usuario}`)) || []
       };
-
+  
       const comprasGuardadas = JSON.parse(localStorage.getItem(`compras_${envioData.id_usuario}`)) || [];
       comprasGuardadas.push(nuevaCompra);
       localStorage.setItem(`compras_${envioData.id_usuario}`, JSON.stringify(comprasGuardadas));
-
+  
       localStorage.setItem(`carrito_${envioData.id_usuario}`, JSON.stringify([]));
-
       navigate('/agradecimiento');
     })
     .catch((error) => {
@@ -169,7 +155,6 @@ const TarjetaInfo = () => {
             <i className="info-icono">ℹ</i> Identificación
           </h2>
           <form className="space-y-4" onSubmit={finalizarCompra}>
-            {/* Sección de Identificación */}
             <label className="block">
               Correo Electrónico
               <input
@@ -205,8 +190,6 @@ const TarjetaInfo = () => {
                 />
               </label>
             </div>
-
-            {/* Sección de Dirección */}
             <h2 className="text-2xl font-bold mb-4">
               <i className="info-icono">📍</i> Dirección
             </h2>
@@ -267,8 +250,6 @@ const TarjetaInfo = () => {
                 className="mt-1 p-2 w-full border border-gray-300 rounded"
               />
             </label>
-
-            {/* Sección de Pago */}
             <h2 className="text-2xl font-bold mb-4">
               <i className="info-icono">💳</i> Pago
             </h2>
@@ -338,8 +319,6 @@ const TarjetaInfo = () => {
                 />
               </label>
             </div>
-
-            {/* Botón Finalizar Compra */}
             <button type="submit" onSubmit={finalizarCompra} className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
               Finalizar Compra
             </button>

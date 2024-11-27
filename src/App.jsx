@@ -1,7 +1,6 @@
-// src/App.jsx
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
-import Menu from './componentes/Menu';
+import PáginaPrincipal from './componentes/Principal';
 import TarjetaDetalle from './componentes/Tarjetadetalle';
 import TarjetaInfo from './componentes/Tarjetainfo';
 import Tarjetaconfirmacion from './componentes/Tarjetaconfirmacion';
@@ -11,24 +10,18 @@ import Perfil from './componentes/Perfil';
 import RopaUrbana from './componentes/RopaUrbana';
 import RopaDeportiva from './componentes/RopaDeportiva';
 import Usuarios from './componentes/Usuarios';
-import Carrito from './componentes/Carrito';  // Importa el componente Carrito
+import Carrito from './componentes/Carrito';
 import Compras from './componentes/Compras';
 import { Router, Route } from "wouter";
 import Productos from './componentes/Productos';
 import './index.css'
 
 function App() {
-  const [busqueda, setBusqueda] = useState('');
-
-  const manejarBusqueda = (consulta) => {
-    setBusqueda(consulta);
-  };
-
   return (
     <div className="App"> 
       <Router>
         <Route path="/">
-          <Menu busqueda={busqueda} onBuscar={manejarBusqueda} />
+          <PáginaPrincipal />
         </Route>
 
         <Route path="/detalle/:productId" component={({ params }) => <TarjetaDetalle id={params.productId} />} />
@@ -39,8 +32,8 @@ function App() {
         <Route path="/perfil" component={Perfil} />
         <Route path="/ropa-urbana/:section?" component={RopaUrbana} />
         <Route path="/ropa-deportiva/:section?" component={RopaDeportiva} />
-        <Route path="/usuarios" component={Usuarios} />  {/* Ruta para Usuarios */}
-        <Route path="/carrito" component={Carrito} />  {/* Ruta para Carrito */}
+        <Route path="/usuarios" component={Usuarios} />
+        <Route path="/carrito" component={Carrito} />
         <Route path="/compras" component={Compras} /> 
         <Route path="/productos" component={Productos} />
       </Router>

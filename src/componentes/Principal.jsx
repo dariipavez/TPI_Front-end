@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { Link } from "wouter";
 
-const MenuProductos = () => {
+const PáginaPrincipal = () => {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
@@ -61,4 +61,4 @@ const MenuProductos = () => {
   );
 };
 
-export default MenuProductos;
+export default PáginaPrincipal;

@@ -17,6 +17,10 @@ const TarjetaConfirmacion = () => {
   }, []);
 
   const manejarProcederAlPago = () => {
+    if (carrito.length === 0) {
+      alert('Tu carrito está vacío. Agrega productos antes de proceder al pago.');
+      return;
+    }
     setUbicacion('/Info');
   };
 
@@ -27,7 +31,7 @@ const TarjetaConfirmacion = () => {
     localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carritoActualizado));
   };
 
-  const total = carrito.reduce((acc, producto) => acc + (producto.precio * producto.cantidad), 0);
+  const total = carrito.reduce((acc, producto) => acc + (producto.precio_unitario * producto.cantidad), 0);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -40,13 +44,13 @@ const TarjetaConfirmacion = () => {
           <div className="space-y-4">
             {carrito.map((producto, index) => (
               <div key={index} className="bg-white shadow-md rounded-lg p-6 flex items-center">
-                <img src={producto.ruta_imagen} alt={producto.nombre} className="w-24 h-24 object-cover rounded-lg mr-6" />
+                <img src={producto.imagen} alt={producto.nombre} className="w-24 h-24 object-cover rounded-lg mr-6" />
                 <div className="flex-grow">
                   <h3 className="text-xl font-bold mb-2">{producto.nombre}</h3>
                   <p className="text-gray-700">Talle: {producto.talle}</p>
                   <p className="text-gray-700">Cantidad: {producto.cantidad}</p>
-                  <p className="text-gray-700">Precio: ${producto.precio}</p>
-                  <p className="text-gray-700">Total: ${producto.precio * producto.cantidad}</p>
+                  <p className="text-gray-700">Precio: ${producto.precio_unitario}</p>
+                  <p className="text-gray-700">Total: ${producto.precio_unitario * producto.cantidad}</p>
                 </div>
                 <button
                   onClick={() => eliminarProducto(producto.id, producto.talle)}
@@ -67,6 +71,7 @@ const TarjetaConfirmacion = () => {
           <button
             onClick={manejarProcederAlPago}
             className="w-full max-w-xs bg-yellow-500 text-white px-6 py-3 rounded hover:bg-yellow-600"
+            disabled={carrito.length === 0} 
           >
             Proceder al pago
           </button>

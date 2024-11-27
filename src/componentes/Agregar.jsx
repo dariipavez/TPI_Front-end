@@ -3,6 +3,8 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
+const config = { headers: { Authorization: sessionStorage.getItem('token') } };
+
 const Agregar = () => {
   const [formData, setFormData] = useState({
     nombre: '',
@@ -23,52 +25,42 @@ const Agregar = () => {
       console.error('Token no encontrado en sessionStorage');
       return;
     }
-
-    const config = {
-      headers: { Authorization: token }
-    };
-
-    // Obtener las marcas
-    axios.get('http://localhost:3000/api/rutasPublic/ver/marca', config)
-      .then(res => {
-        setMarcas(res.data.marca);
-      })
-      .catch(err => {
-        console.error('Error al obtener las marcas:', err);
-      });
-
-    // Obtener los tipos de producto
-    axios.get('http://localhost:3000/api/rutasPublic/ver/tipo_producto', config)
-      .then(res => {
-        setTiposProducto(res.data.tipo_producto);
-      })
-      .catch(err => {
-        console.error('Error al obtener los tipos de producto:', err);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (formData.id_tipo_producto) {
-      const token = sessionStorage.getItem('token');
-      if (!token) {
-        console.error('Token no encontrado en sessionStorage');
-        return;
-      }
-
-      const config = {
-        headers: { Authorization: token }
-      };
-
-      axios.get(`http://localhost:3000/api/rutasPublic/ver/talle/tipo_producto/${formData.id_tipo_producto}`, config)
+  
+    const verMarcasYProductos = () => {
+      axios.get('http://localhost:3000/api/rutasPublic/ver/marca', config)
         .then(res => {
-          console.log('Respuesta de la API:', res.data); // Verifica la respuesta de la API
-          setTalles(res.data.talles);
+          setMarcas(res.data.marca);
         })
         .catch(err => {
-          console.error('Error al obtener los talles:', err);
+          console.error('Error al obtener las marcas:', err);
         });
-    }
+  
+      axios.get('http://localhost:3000/api/rutasPublic/ver/tipo_producto', config)
+        .then(res => {
+          setTiposProducto(res.data.tipo_producto);
+        })
+        .catch(err => {
+          console.error('Error al obtener los tipos de producto:', err);
+        });
+    };
+  
+    const verTalles = () => {
+      if (formData.id_tipo_producto) {
+        axios.get(`http://localhost:3000/api/rutasPublic/ver/talle/tipo_producto/${formData.id_tipo_producto}`, config)
+          .then(res => {
+            console.log('Respuesta de la API:', res.data);
+            setTalles(res.data.talles);
+          })
+          .catch(err => {
+            console.error('Error al obtener los talles:', err);
+          });
+      }
+    };
+  
+    verMarcasYProductos();
+    verTalles();
   }, [formData.id_tipo_producto]);
+  
 
   const manejarCambio = (e) => {
     setFormData({
@@ -101,15 +93,22 @@ const Agregar = () => {
   const manejarEnvioFormulario = (e) => {
     e.preventDefault();
   
+    if (talles.length === 0) {
+      alert('Debe seleccionar al menos un talle.');
+      return;
+    }
+  
+    const tallesNoSeleccionados = talles.filter(talle => !tallesSeleccionados.includes(talle.id));
+    if (tallesNoSeleccionados.length > 0) {
+      alert('Debe seleccionar todos los talles.');
+      return;
+    }
+  
     const token = sessionStorage.getItem('token');
     if (!token) {
       console.error('Token no encontrado en sessionStorage');
       return;
     }
-  
-    const config = {
-      headers: { Authorization: token }
-    };
   
     const formDataEnviar = new FormData();
     for (const key in formData) {

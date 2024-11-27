@@ -4,9 +4,9 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { Link } from "wouter";
 
-const RopaDeportiva = () => {
+const RopaUrbana = () => {
   const [productos, setProductos] = useState([]);
-  const idCategoria = 1; // Asigna el ID de categoría correspondiente a "deportiva"
+  const idCategoria = 1;
 
   useEffect(() => {
     const obtenerProductosFiltrados = () => {
@@ -34,7 +34,7 @@ const RopaDeportiva = () => {
     obtenerProductosFiltrados();
   
     return () => {
-      setProductos([]); // Limpiar el estado cuando el componente se desmonte
+      setProductos([]);
     };
   }, [idCategoria]);
   
@@ -66,7 +66,7 @@ const RopaDeportiva = () => {
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
       <div className="flex-grow p-6">
-        <h1 className="text-3xl font-bold text-center mb-6">Ropa Deportiva</h1>
+        <h1 className="text-3xl font-bold text-center mb-6">Ropa Urbana</h1>
         {renderContent()}
       </div>
       <Footer />
@@ -74,4 +74,4 @@ const RopaDeportiva = () => {
   );
 };
 
-export default RopaDeportiva;
+export default RopaUrbana;

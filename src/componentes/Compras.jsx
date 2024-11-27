@@ -34,7 +34,7 @@ const Compras = () => {
                 <ul className="list-disc list-inside">
                   {compra.carrito.map((producto, idx) => (
                     <li key={idx}>
-                      {producto.nombre} - {producto.talle} - {producto.cantidad} unidades - ${producto.precio}
+                      {producto.nombre} - {producto.talle} - {producto.cantidad} unidades - ${producto.precio_unitario} - Total:${producto.total}
                     </li>
                   ))}
                 </ul>

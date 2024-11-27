@@ -2,10 +2,10 @@ import React from 'react';
 import { useLocation } from 'wouter';
 
 const Agradecimiento = () => {
-  const [, navegar] = useLocation(); // Hook de navegación
+  const [, navegar] = useLocation();
 
   const volverAlMenu = () => {
-    navegar('/'); // Redirige a la pantalla de menú
+    navegar('/');
   };
 
   return (
@@ -15,7 +15,6 @@ const Agradecimiento = () => {
         <p className="text-gray-700 mb-6">
           A continuación, te enviaremos un correo electrónico con tu número de envío y la factura de tu compra.
         </p>
-        {/* Botón para volver al menú */}
         <button 
           className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
           onClick={volverAlMenu}

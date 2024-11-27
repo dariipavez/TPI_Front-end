@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from './Navbar';  // Asegúrate de importar el Navbar
-import Footer from './Footer';  // Asegúrate de importar el Footer
+import Navbar from './Navbar';
+import Footer from './Footer';
 import axios from 'axios';
 
 const Usuarios = () => {
@@ -14,7 +14,6 @@ const Usuarios = () => {
   const [rol, setRol] = useState('usuario');
   const [usuarioActual, setUsuarioActual] = useState(null);
 
-  // Obtener usuarios desde la base de datos
   const obtenerUsuarios = () => {
     const token = sessionStorage.getItem('token');
     axios.get('http://localhost:3000/api/rutasAdmin/ver/usuario', {
@@ -50,14 +49,13 @@ const Usuarios = () => {
 
     const token = sessionStorage.getItem('token');
 
-    // Agregar nuevo usuario
     axios.post('http://localhost:3000/api/usuario/crear', datos, {
       headers: {
         Authorization: token
       }
     })
     .then((response) => {
-      obtenerUsuarios(); // Volver a obtener la lista de usuarios después de agregar uno nuevo
+      obtenerUsuarios();
       setNombre('');
       setFechaNacimiento('');
       setCorreo('');
@@ -80,7 +78,7 @@ const Usuarios = () => {
       }
     })
     .then(() => {
-      obtenerUsuarios(); // Volver a obtener la lista de usuarios después de eliminar uno
+      obtenerUsuarios();
       alert('Usuario eliminado exitosamente');
     })
     .catch((error) => {
@@ -90,7 +88,7 @@ const Usuarios = () => {
 
   const manejarEditarRol = (usuario) => {
     setUsuarioActual(usuario);
-    setRol(''); // Dejar el campo de rol vacío inicialmente
+    setRol('');
   };
 
   const manejarCambioRol = (e) => {
@@ -123,7 +121,7 @@ const Usuarios = () => {
   const formatFecha = (fecha) => {
     const date = new Date(fecha);
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   };
@@ -134,7 +132,6 @@ const Usuarios = () => {
       <div className="flex-grow p-6">
         <h2 className="text-3xl font-bold text-center mb-6">Administrar Usuarios</h2>
         
-        {/* Formulario de Usuario */}
         <form onSubmit={manejarEnvioUsuario} className="mb-6 space-y-4">
           <input
             type="text"

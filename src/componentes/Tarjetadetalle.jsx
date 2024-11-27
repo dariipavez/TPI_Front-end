@@ -13,7 +13,7 @@ const TarjetaDetalle = ({ id }) => {
       .then(respuestaProducto => {
         const producto = respuestaProducto.data.producto;
         setProducto(producto);
-        setTalleSeleccionado(producto.talles[0]?.talle || null); // Selecciona el primer talle disponible por defecto
+        setTalleSeleccionado(producto.talles[0]?.talle || null);
       })
       .catch(error => console.error('Error al obtener los datos:', error));
   }, [id]);
@@ -37,49 +37,53 @@ const TarjetaDetalle = ({ id }) => {
       alert('Por favor, inicia sesión para agregar productos al carrito.');
       return;
     }
-
+  
     if (!talleSeleccionado) {
       alert('Por favor, selecciona un talle.');
       return;
     }
-
+  
     const usuarioId = sessionStorage.getItem('usuario_id');
     const tallaSeleccionada = producto.talles.find(t => t.talle === talleSeleccionado);
     if (!tallaSeleccionada || tallaSeleccionada.stock <= 0) {
       alert('El talle seleccionado no está disponible o no tiene stock.');
       return;
     }
-      const productoCarrito = {
-        id: producto.id, // Aquí debe estar el id_producto correcto
-        nombre: producto.nombre,
-        precio: producto.precio,
-        imagen: producto.ruta_imagen,
-        talle: talleSeleccionado,
-        cantidad: cantidad,
-        total: producto.precio * cantidad
-      }
-    
-
+    const productoCarrito = {
+      id_producto: producto.id,
+      nombre: producto.nombre,
+      precio_unitario: producto.precio,
+      imagen: producto.ruta_imagen,
+      talle: talleSeleccionado,
+      id_talle: tallaSeleccionada.id,
+      cantidad: cantidad,
+      total: producto.precio * cantidad
+    };
+  
+  
     const carrito = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
-    const productoExistente = carrito.find(item => item.id === productoCarrito.id && item.talle === productoCarrito.talle);
-
+    const productoExistente = carrito.find(item => item.id_producto === productoCarrito.id_producto && item.talle === productoCarrito.talle);
+  
     if (productoExistente) {
       productoExistente.cantidad += cantidad;
-      productoExistente.total += productoCarrito.total; // Actualiza el precio total
+      productoExistente.total += productoCarrito.total;
     } else {
       carrito.push(productoCarrito);
     }
-
+  
     localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carrito));
+  
+    const id_productos = carrito.map(producto => producto.id_producto);
+    sessionStorage.setItem('id_productos', JSON.stringify(id_productos));
+  
 
-    // Calcular el precio total del carrito y guardarlo en sessionStorage
     const precioTotalCarrito = carrito.reduce((total, producto) => total + producto.total, 0);
     sessionStorage.setItem('precio_total', precioTotalCarrito);
-
+  
     alert('Producto agregado al carrito');
-    // Resetear la cantidad a 1 después de agregar el producto al carrito
     setCantidad(1);
   };
+  
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">

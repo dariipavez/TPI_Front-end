@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 
 const ModalCarrito = ({ isOpen, onClose, carrito, eliminarProducto, navegar }) => {
-  const precioTotalCarrito = carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+  const precioTotalCarrito = carrito.reduce((total, producto) => total + (producto.precio_unitario * producto.cantidad), 0);
 
   useEffect(() => {
-    // Guardar el precio total y carrito con id_producto en sessionStorage
     sessionStorage.setItem('precio_total', precioTotalCarrito);
     sessionStorage.setItem('carrito', JSON.stringify(carrito));
   }, [precioTotalCarrito, carrito]);
@@ -24,7 +23,7 @@ const ModalCarrito = ({ isOpen, onClose, carrito, eliminarProducto, navegar }) =
               {carrito.map((producto, index) => (
                 <div key={index} className="flex items-center bg-gray-800 p-4 rounded-lg">
                   <img
-                    src={producto.ruta_imagen}
+                    src={producto.imagen}
                     alt={producto.nombre}
                     className="w-16 h-16 object-cover rounded mr-4"
                   />
@@ -32,8 +31,8 @@ const ModalCarrito = ({ isOpen, onClose, carrito, eliminarProducto, navegar }) =
                     <h3 className="font-bold">{producto.nombre}</h3>
                     <p>Talle: {producto.talle}</p>
                     <p>Cantidad: {producto.cantidad}</p>
-                    <p>Precio unitario: ${producto.precio}</p>
-                    <p>Precio total: ${producto.precio * producto.cantidad}</p> {/* Precio total por producto */}
+                    <p>Precio unitario: ${producto.precio_unitario}</p>
+                    <p>Precio total: ${producto.precio_unitario * producto.cantidad}</p>
                   </div>
                   <button
                     className="ml-4 bg-red-600 text-white p-2 rounded hover:bg-red-700"

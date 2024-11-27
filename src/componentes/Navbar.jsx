@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import axios from 'axios';
 import ModalLogin from './ModalLogin';
 import ModalRegistro from './ModalRegistro';
 import ModalContraseña from './ModalContraseña';
@@ -8,15 +7,14 @@ import ModalCarrito from './ModalCarrito';
 import ModalCarritoBloqueado from './ModalCarritoBloqueado';
 import ModalVerificacion from './ModalVerificacion';
 
-const Navbar = ({ onBuscar }) => {
+const Navbar = ({}) => {
   const [, navegar] = useLocation();
 
-  // Estado para controlar la apertura de cada modal
-  const [esModalAbierto, setEsModalAbierto] = useState(false); // Modal de inicio de sesión
-  const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false); // Modal de registro
-  const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false); // Modal del carrito
-  const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false); // Modal de cambiar contraseña
-  const [esModalVerificacionAbierto, setEsModalVerificacionAbierto] = useState(false); // Modal de verificación
+  const [esModalAbierto, setEsModalAbierto] = useState(false);
+  const [esModalRegistroAbierto, setEsModalRegistroAbierto] = useState(false);
+  const [esModalCarritoAbierto, setEsModalCarritoAbierto] = useState(false);
+  const [esModalContraseñaAbierto, setEsModalContraseñaAbierto] = useState(false);
+  const [esModalVerificacionAbierto, setEsModalVerificacionAbierto] = useState(false);
   const [esMenuPerfilAbierto, setEsMenuPerfilAbierto] = useState(false);
   const [esModalCarritoBloqueadoAbierto, setEsModalCarritoBloqueadoAbierto] = useState(false);
   const [carrito, setCarrito] = useState([]);
@@ -24,23 +22,22 @@ const Navbar = ({ onBuscar }) => {
   const [logged, setLogged] = useState(!!token);
   const [rol, setRol] = useState(sessionStorage.getItem('rol') || 'usuario');
 
-  // Verificar si el usuario está logueado al cargar el componente
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
       setToken(token);
       setLogged(true);
     }
-  }, []);
-
-  useEffect(() => {
+  
     const obtenerCarrito = () => {
       const usuarioId = sessionStorage.getItem('usuario_id');
       const carritoLocal = JSON.parse(localStorage.getItem(`carrito_${usuarioId}`)) || [];
       setCarrito(carritoLocal);
     };
+  
     obtenerCarrito();
   }, [esModalCarritoAbierto]);
+  
 
   
   const abrirModal = () => {
