@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useLocation } from 'wouter';
 import Navbar from './Navbar';
 
-const config = { headers: { Authorization: sessionStorage.getItem('token') } };
 
 const TarjetaInfo = () => {
   const [, navigate] = useLocation();
@@ -26,6 +25,7 @@ const TarjetaInfo = () => {
         console.error('No se encontró el ID de usuario o el token.');
         return;
       }
+      const config={ headers: { Authorization: sessionStorage.getItem('token') } }
       const url = `http://localhost:3000/api/rutasUsuario/ver/perfil/${usuario_id}`;
       axios.get(url, config)
         .then((resp) => {
@@ -84,7 +84,7 @@ const TarjetaInfo = () => {
       return;
     }
 
-    axios.post('http://localhost:3000/api/rutasUsuario/registrar/envio', envioData, config)
+    axios.post('http://localhost:3000/api/rutasUsuario/registrar/envio', envioData, { headers: { Authorization: sessionStorage.getItem('token') } })
       .then((envioResponse) => {
         const id_envio = envioResponse.data.id_envio;
 
@@ -102,7 +102,7 @@ const TarjetaInfo = () => {
           carrito: carrito
         };
 
-        return axios.post('http://localhost:3000/api/rutasUsuario/registrar/compra', compraData, config);
+        return axios.post('http://localhost:3000/api/rutasUsuario/registrar/compra', compraData, { headers: { Authorization: sessionStorage.getItem('token') } });
       })
       .then((compraResponse) => {
         alert('Datos de envío y compra cargados correctamente.');

@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
-
-const config = { headers: { Authorization: sessionStorage.getItem('token') } };
-
 const Agregar = () => {
   const [formData, setFormData] = useState({
     nombre: '',
@@ -25,7 +22,9 @@ const Agregar = () => {
       console.error('Token no encontrado en sessionStorage');
       return;
     }
-  
+
+    const config = { headers: { Authorization: token } };
+
     const verMarcasYProductos = () => {
       axios.get('http://localhost:3000/api/rutasPublic/ver/marca', config)
         .then(res => {
@@ -34,7 +33,7 @@ const Agregar = () => {
         .catch(err => {
           console.error('Error al obtener las marcas:', err);
         });
-  
+
       axios.get('http://localhost:3000/api/rutasPublic/ver/tipo_producto', config)
         .then(res => {
           setTiposProducto(res.data.tipo_producto);
@@ -43,7 +42,7 @@ const Agregar = () => {
           console.error('Error al obtener los tipos de producto:', err);
         });
     };
-  
+
     const verTalles = () => {
       if (formData.id_tipo_producto) {
         axios.get(`http://localhost:3000/api/rutasPublic/ver/talle/tipo_producto/${formData.id_tipo_producto}`, config)
@@ -56,11 +55,10 @@ const Agregar = () => {
           });
       }
     };
-  
+
     verMarcasYProductos();
     verTalles();
   }, [formData.id_tipo_producto]);
-  
 
   const manejarCambio = (e) => {
     setFormData({
@@ -92,40 +90,42 @@ const Agregar = () => {
 
   const manejarEnvioFormulario = (e) => {
     e.preventDefault();
-  
+
     if (talles.length === 0) {
       alert('Debe seleccionar al menos un talle.');
       return;
     }
-  
+
     const tallesNoSeleccionados = talles.filter(talle => !tallesSeleccionados.includes(talle.id));
     if (tallesNoSeleccionados.length > 0) {
       alert('Debe seleccionar todos los talles.');
       return;
     }
-  
+
     const token = sessionStorage.getItem('token');
     if (!token) {
       console.error('Token no encontrado en sessionStorage');
       return;
     }
-  
+
+    const config = { headers: { Authorization: token } };
+
     const formDataEnviar = new FormData();
     for (const key in formData) {
       formDataEnviar.append(key, formData[key]);
     }
     formDataEnviar.append('imagen', imagen);
-  
+
     axios.post('http://localhost:3000/api/rutasAdmin/registrar/producto', formDataEnviar, config)
       .then((res) => {
         const id_producto = res.data.id_producto;
-  
+
         const datosTalles = {
           id_producto,
           talles: JSON.stringify(tallesSeleccionados),
           stock: JSON.stringify(tallesSeleccionados.map(talle => stocksSeleccionados[talle] || 0))
         };
-  
+
         return axios.post('http://localhost:3000/api/rutasAdmin/registrar/producto_talle', datosTalles, config);
       })
       .then(() => {
@@ -136,7 +136,6 @@ const Agregar = () => {
         console.error('Error al registrar el producto o los talles:', err);
       });
   };
-  
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">

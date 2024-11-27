@@ -42,10 +42,9 @@ const Usuarios = () => {
       fecha_nac: fechaNacimiento,
       mail: correo,
       nombre_usuario: usuarioRegistro,
-      contraseña: contraseñaRegistro,
       telefono: telefono,
-      rol: rol
-    };
+      rol: rol,
+      contraseña: contraseñaRegistro    };
 
     const token = sessionStorage.getItem('token');
 
@@ -60,9 +59,9 @@ const Usuarios = () => {
       setFechaNacimiento('');
       setCorreo('');
       setUsuarioRegistro('');
-      setContraseñaRegistro('');
       setTelefono('');
       setRol('usuario');
+      setContraseñaRegistro('');
       alert('Usuario creado exitosamente');
     })
     .catch((error) => {
@@ -200,7 +199,7 @@ const Usuarios = () => {
                 <th className="py-2 px-4 border-b">Fecha de Nacimiento</th>
                 <th className="py-2 px-4 border-b">Email</th>
                 <th className="py-2 px-4 border-b">Nombre de Usuario</th>
-                <th className="py-2 px-4 border-b">Teléfono</th>
+               
                 <th className="py-2 px-4 border-b">Rol</th>
                 <th className="py-2 px-4 border-b">Acciones</th>
               </tr>
@@ -212,8 +211,8 @@ const Usuarios = () => {
                   <td className="py-2 px-4 border-b">{usuario.nombre_completo}</td>
                   <td className="py-2 px-4 border-b">{formatFecha(usuario.fecha_nac)}</td>
                   <td className="py-2 px-4 border-b">{usuario.mail}</td>
-                  <td className="py-2 px-4 border-b">{usuario.nombre_usuario}</td>
                   <td className="py-2 px-4 border-b">{usuario.telefono}</td>
+                 
                   <td className="py-2 px-4 border-b">
                     {usuarioActual && usuarioActual.id === usuario.id ? (
                       <form onSubmit={actualizarRol}>

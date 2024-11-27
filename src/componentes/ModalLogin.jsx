@@ -43,7 +43,8 @@ const ModalLogin = ({ isOpen, onClose, onLoginSuccess, abrirModalVerificacion, a
         <div className="bg-gray-900 p-8 rounded-lg shadow-lg max-w-md w-full relative">
           <button className="absolute top-4 right-4 text-white text-xl font-bold" onClick={onClose}>X</button>
           <h2 className="text-xl font-bold mb-6 text-white">Crea tu cuenta o inicia sesión para obtener beneficios exclusivos</h2>
-          <form onSubmit={(e) => { e.preventDefault(); loguearse({ nombre_usuario: user, contraseña: pass }); }}>
+          <form onSubmit={(e) => { e.preventDefault(); 
+            loguearse({ nombre_usuario: user, contraseña: pass }); }}>
             <div className="space-y-4">
               <input
                 type="text"

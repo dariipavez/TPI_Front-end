@@ -151,7 +151,6 @@ const Navbar = ({}) => {
           setToken(token);
           setRol(rol);
           setLogged(true);
-          alert('Inicio de sesión exitoso');
           cerrarModal();
         }}
         abrirModalVerificacion={abrirModalVerificacion}

@@ -73,9 +73,6 @@ const TarjetaDetalle = ({ id }) => {
   
     localStorage.setItem(`carrito_${usuarioId}`, JSON.stringify(carrito));
   
-    const id_productos = carrito.map(producto => producto.id_producto);
-    sessionStorage.setItem('id_productos', JSON.stringify(id_productos));
-  
 
     const precioTotalCarrito = carrito.reduce((total, producto) => total + producto.total, 0);
     sessionStorage.setItem('precio_total', precioTotalCarrito);

@@ -3,7 +3,6 @@ import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
-const config = { headers: { Authorization: sessionStorage.getItem('token') } };
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
@@ -11,7 +10,7 @@ const Productos = () => {
   const [editingProducto, setEditingProducto] = useState(null);
 
   const obtenerDatos = () => {
-    axios.get('http://localhost:3000/api/rutasPublic/ver/producto', config)
+    axios.get('http://localhost:3000/api/rutasPublic/ver/producto', { headers: { Authorization: sessionStorage.getItem('token') } })
       .then((response) => {
         setProductos(response.data.productos);
       })
@@ -21,7 +20,7 @@ const Productos = () => {
   };
 
   const eliminarProducto = (id) => {
-    axios.delete(`http://localhost:3000/api/rutasAdmin/eliminar/producto/${id}`, config)
+    axios.delete(`http://localhost:3000/api/rutasAdmin/eliminar/producto/${id}`, { headers: { Authorization: sessionStorage.getItem('token') } })
       .then(() => {
         obtenerDatos();
         alert('Producto eliminado exitosamente');
@@ -36,7 +35,7 @@ const Productos = () => {
   
     for (let idTalle in talles) {
       axios.put(
-        `http://localhost:3000/api/rutasAdmin/actualizar/stock/${idTalle}`,{ stock: talles[idTalle] },config
+        `http://localhost:3000/api/rutasAdmin/actualizar/stock/${idTalle}`,{ stock: talles[idTalle] },{ headers: { Authorization: sessionStorage.getItem('token') } }
       )
         .then(() => {
           obtenerDatos();
