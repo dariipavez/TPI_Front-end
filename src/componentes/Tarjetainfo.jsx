@@ -59,13 +59,13 @@ const TarjetaInfo = () => {
 
   const finalizarCompra = (event) => {
     event.preventDefault();
-  
+
     const { email, nombres, telefono, calle, numero, codigoPostal, ciudad } = datosPerfil;
     if (!email || !nombres || !telefono || !calle || !numero || !codigoPostal || !ciudad) {
       alert('Por favor, completa todos los campos requeridos.');
       return;
     }
-  
+
     const envioData = {
       id_usuario: sessionStorage.getItem('usuario_id'),
       codigo_postal: codigoPostal,
@@ -74,70 +74,71 @@ const TarjetaInfo = () => {
       ciudad: ciudad,
       informacion_adicional: datosPerfil.informacionAdicional
     };
-  
+
     const token = sessionStorage.getItem('token');
     const precioTotal = sessionStorage.getItem('precio_total');
     console.log('Precio total desde sessionStorage:', precioTotal);
-  
+
     if (!precioTotal) {
       alert('No se pudo obtener el precio total. Por favor, vuelve a la página del carrito.');
       return;
     }
-  
+
     axios.post('http://localhost:3000/api/rutasUsuario/registrar/envio', envioData, config)
-    .then((envioResponse) => {
-      const id_envio = envioResponse.data.id_envio;
-  
-      const carrito = JSON.parse(localStorage.getItem(`carrito_${envioData.id_usuario}`)) || [];
-  
-      carrito.forEach(producto => {
-        if (!producto.id_producto || !producto.cantidad || !producto.precio_unitario) {
-          console.error('Producto incompleto:', producto);
-        }
-      });
-  
-      const compraData = {
-        precio_total: parseFloat(precioTotal),
-        id_envio: id_envio,
-        carrito: carrito
-      };
-  
-      return axios.post('http://localhost:3000/api/rutasUsuario/registrar/compra', compraData, config);
-    })
-    .then((compraResponse) => {
-      alert('Datos de envío y compra cargados correctamente.');
-  
-      const nuevaCompra = {
-        ...envioData,
-        email: datosPerfil.email,
-        nombres: datosPerfil.nombres,
-        telefono: datosPerfil.telefono,
-        carrito: JSON.parse(localStorage.getItem(`carrito_${envioData.id_usuario}`)) || []
-      };
-  
-      const comprasGuardadas = JSON.parse(localStorage.getItem(`compras_${envioData.id_usuario}`)) || [];
-      comprasGuardadas.push(nuevaCompra);
-      localStorage.setItem(`compras_${envioData.id_usuario}`, JSON.stringify(comprasGuardadas));
-  
-      localStorage.setItem(`carrito_${envioData.id_usuario}`, JSON.stringify([]));
-      navigate('/agradecimiento');
-    })
-    .catch((error) => {
-      if (error.response) {
-        if (error.response.status === 403) {
-          alert('No tienes permisos para realizar esta acción.');
-        } else if (error.response.status === 500) {
-          alert('Error interno del servidor. Por favor, intenta nuevamente.');
+      .then((envioResponse) => {
+        const id_envio = envioResponse.data.id_envio;
+
+        const carrito = JSON.parse(localStorage.getItem(`carrito_${envioData.id_usuario}`)) || [];
+
+        carrito.forEach(producto => {
+          if (!producto.id_producto || !producto.cantidad || !producto.precio_unitario) {
+            console.error('Producto incompleto:', producto);
+          }
+        });
+
+        const compraData = {
+          precio_total: parseFloat(precioTotal),
+          id_envio: id_envio,
+          carrito: carrito
+        };
+
+        return axios.post('http://localhost:3000/api/rutasUsuario/registrar/compra', compraData, config);
+      })
+      .then((compraResponse) => {
+        alert('Datos de envío y compra cargados correctamente.');
+
+        const nuevaCompra = {
+          ...envioData,
+          email: datosPerfil.email,
+          nombres: datosPerfil.nombres,
+          telefono: datosPerfil.telefono,
+          carrito: JSON.parse(localStorage.getItem(`carrito_${envioData.id_usuario}`)) || []
+        };
+
+        const comprasGuardadas = JSON.parse(localStorage.getItem(`compras_${envioData.id_usuario}`)) || [];
+        comprasGuardadas.push(nuevaCompra);
+        localStorage.setItem(`compras_${envioData.id_usuario}`, JSON.stringify(comprasGuardadas));
+
+        localStorage.setItem(`carrito_${envioData.id_usuario}`, JSON.stringify([]));
+        navigate('/agradecimiento');
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 400) {
+            alert('Error: ' + error.response.data.error);
+          } else if (error.response.status === 500) {
+            alert('Error interno del servidor. Por favor, intenta nuevamente.');
+          } else {
+            alert('Error al registrar los datos de envío. Por favor, intenta nuevamente.');
+          }
+          console.error('Detalles del error:', error.response.data);
         } else {
           alert('Error al registrar los datos de envío. Por favor, intenta nuevamente.');
+          console.error('Detalles del error:', error.message);
         }
-        console.error('Detalles del error:', error.response.data);
-      } else {
-        alert('Error al registrar los datos de envío. Por favor, intenta nuevamente.');
-        console.error('Detalles del error:', error.message);
-      }
-    });
-  };
+      });
+};
+
 
   const manejarInput = (e) => {
     const { name, value } = e.target;
